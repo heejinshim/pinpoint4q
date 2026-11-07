@@ -291,8 +291,8 @@
       svg.append(g);
     });
     svg.append(s('text', { x: x0 + 0.2 * cw, y: y0 - 10, class: 'muted', text: '충남' }));
-    svg.append(s('text', { x: x0 + 4.5 * cw, y: y0 + ch + 14, class: 'muted', text: '세종' }));
-    svg.append(s('text', { x: x0 + 6.5 * cw + 2, y: y0 + 2 * ch + 20, class: 'muted', text: '대전' }));
+    svg.append(s('text', { x: x0 + 5 * cw + 6, y: y0 + ch + 36, class: 'muted', text: '← 세종' }));
+    svg.append(s('text', { x: x0 + 7 * cw - 2, y: y0 + 2 * ch - 8, 'text-anchor': 'end', class: 'muted', text: '대전 ↓' }));
     const lg = s('g', {}, ['1순위', '2순위', '3순위', '지키기'].map((p, i) => s('g', {}, [
       s('rect', { x: x0 + i * 92, y: H - 22, width: 12, height: 12, rx: 3, fill: PRI[p] ? 'var(--accent)' : 'var(--grey)', 'fill-opacity': PRI[p] || 0.25 }),
       s('text', { x: x0 + 18 + i * 92, y: H - 12, class: 'muted', text: p === '지키기' ? '지키기(대차)' : p + ' 집중' }),
@@ -311,7 +311,7 @@
       h('span', { class: 'tag ' + (r.maker === '현대' ? 'tag-hy' : 'tag-cp'), text: r.maker === '현대' ? '현대' : '경쟁' }),
     ]);
     const hyBest = top.find((r) => r.maker === '현대');
-    $('#map-panel').replaceChildren(
+    $('#map-panel').replaceChildren(...[
       h('p', { class: 'chap-no', text: `${sd} ${mapSel} · ${foc[0] ? foc[0].priority : '지키기'}` }),
       h('h3', { text: area && area.target ? area.target : mapSel }),
       h('p', { class: 'sub-h', text: `많이 팔린 차 Top 3 — ${sd}${sd === '충남' ? '(계룡·공주·금산)' : ''} 2025년 신규 등록 비중` }),
@@ -326,7 +326,7 @@
         h('a', { href: 'ch6-plan.html', text: '지역별 판촉방안 →' }), ' ',
         h('a', { href: 'ch2-region.html', text: '이 지역 인구 구성 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: sd, sgg: mapSel })); } catch (e) { /* 저장소 없음 */ } } }),
       ]),
-    );
+    ].filter(Boolean));
   }
   if ($('#mapsum')) mapsum();
 
