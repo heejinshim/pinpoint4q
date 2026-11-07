@@ -459,3 +459,19 @@ svg text:not([font-size]) { font-size: 13px; }
     linear-gradient(90deg, rgba(0, 22, 52, .97) 0%, rgba(0, 28, 66, .92) 46%, rgba(0, 32, 72, .6) 66%, rgba(0, 32, 72, .1) 86%, rgba(0, 32, 72, 0) 100%),
     url(img/hero-avante.jpg) right 80% / cover no-repeat, #001a3d; }
 }
+
+/* 드릴다운 사용 예시 */
+.guide { border: 1px dashed var(--accent); border-radius: 12px; padding: 10px 16px 6px; margin: 4px 0 18px; background: var(--accent-soft); }
+.guide summary { cursor: pointer; font-weight: 700; color: var(--navy); font-size: 17px; padding: 4px 0; }
+.guide-steps { list-style: none; margin: 12px 0 6px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; counter-reset: none; }
+.guide-steps li { position: relative; }
+.guide-steps li:not(:last-child)::after { content: '→'; position: absolute; right: -16px; top: 40%; font-size: 20px; color: #e0533f; font-weight: 700; }
+.guide-steps li:nth-child(2)::after { content: '↓'; right: 50%; top: auto; bottom: -22px; }
+.guide-steps figure { margin: 0; }
+.guide-steps img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); background: #fff; display: block; }
+.guide-steps figcaption { font-size: 15px; margin-top: 6px; line-height: 1.55; }
+.guide-steps figcaption b { color: #c0412f; }
+@media (prefers-color-scheme: dark) { .guide summary { color: var(--fg); } }
+@media (max-width: 760px) { .guide-steps { grid-template-columns: 1fr; } .guide-steps li::after { display: none; } }
+.guide-steps li:nth-child(2)::after, .guide-steps li:nth-child(4)::after { display: none; }
+.guide-steps li:nth-child(3)::after { content: '→'; right: -16px; top: 40%; bottom: auto; }
