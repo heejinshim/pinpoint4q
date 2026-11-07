@@ -204,3 +204,13 @@ h3.ico-h .ico { width: 34px; height: 34px; }
   .reply { max-width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .scene-fig .cust, .reply { animation: none !important; } }
+
+/* 고객 유형 맞춤 */
+.who-box { border: 2px solid var(--navy); border-radius: 12px; padding: 12px 16px; margin: 14px 0 4px; background: rgba(0, 44, 95, .04); }
+.who-box h3 { margin: 0 0 8px; font-size: 16px; color: var(--navy); }
+.who-box ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 15px; line-height: 1.55; }
+.who-box li b { display: inline-block; min-width: 8.5rem; margin-right: 8px; color: #9a6a2a; }
+.check li.who-item { font-weight: 600; }
+.check li.who-item::after { content: '고객 유형'; margin-left: 6px; font-size: 11px; font-weight: 700; color: #fff; background: var(--navy); border-radius: 999px; padding: 1px 7px; vertical-align: 1px; }
+@media (max-width: 600px) { .who-box li b { display: block; } }
+@media (prefers-color-scheme: dark) { .who-box h3 { color: var(--fg); } }
