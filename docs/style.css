@@ -262,3 +262,14 @@ img.kv { max-width: 420px; }
 dl.five dt { color: var(--navy); }
 .verdict { border-left-color: var(--navy); }
 .pill.p1 { color: #b0402f; }
+
+/* 한글 줄바꿈: 단어 중간에서 끊지 않기 */
+body { word-break: keep-all; overflow-wrap: break-word; }
+.hero-sub { max-width: none; }
+@media (max-width: 760px) { .hero-sub br { display: none; } }
+/* 로고 크기 */
+.topbar .logo { height: 12px; }
+.hero-brand img { height: 17px; }
+.hero-brand b { font-size: 16px; }
+
+@media (max-width: 760px) { .topbar .brand-sub { display: none; } }
