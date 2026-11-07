@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>대전충남 금융상품 추천기 — 2026년 11월 조건</title>
+<meta name="description" content="지역·차종·가격대·고객 유형을 고르면 타겟 고객, 적용 가능한 11월 금융상품, 예상 최종 가격, 상담 가이드를 보여주는 대전충남지역본부 상담 도구">
+<meta name="theme-color" content="#002c5f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="style.css?v=202611071544">
+<link rel="stylesheet" href="advisor.css?v=202611071544">
+</head>
+<body data-page="advisor" class="adv">
+<header class="topbar">
+  <a class="brand" href="advisor.html"><img src="img/hyundai-logo-white.png" alt="HYUNDAI" class="logo"><span class="bar"></span><b>대전충남지역본부</b><span class="brand-sub">11월 금융상품 추천기</span></a>
+  <nav class="chapnav"><a href="index.html">4Q Pin Point 판촉방안 보고서 →</a></nav>
+</header>
+<main class="adv-main">
+  <section class="adv-hero">
+    <p class="chap-no">상담 도구 · 2026년 11월 금융 조건</p>
+    <h1>대전충남 금융상품 추천기</h1>
+    <p class="lede">지역, 차종, 가격대, 고객 유형을 고르면 <b>타겟 고객</b>, 지금 쓸 수 있는 <b>11월 금융상품 조합</b>, <b>예상 최종 가격</b>, <b>상담 가이드</b>를 한 번에 보여드립니다.</p>
+    <div class="dday" id="adv-dday"></div>
+  </section>
+
+  <div class="adv-grid">
+    <form class="card adv-form" id="adv-form" autocomplete="off" onsubmit="return false">
+      <h2>1. 조건 고르기</h2>
+      <label class="fld"><span>지역 (시군구)</span><select id="f-area"></select></label>
+      <label class="fld"><span>차종</span><select id="f-car"></select></label>
+      <div class="fld"><span>가격대</span><div class="chips-sel" id="f-band"></div></div>
+      <label class="fld"><span>차량 가격 (만원) <small id="f-ref"></small></span><input type="number" id="f-price" min="1000" max="20000" step="10"></label>
+      <div class="fld"><span>고객 유형 <small>해당하는 것을 모두 고르세요</small></span><div class="chips-sel multi" id="f-who"></div></div>
+      <label class="fld"><span>선수율 <b id="v-down"></b></span><input type="range" id="f-down" min="0" max="50" step="1" value="10"></label>
+      <label class="fld"><span>할부 기간</span><select id="f-months"><option value="36">36개월</option><option value="48">48개월</option><option value="60" selected>60개월</option></select></label>
+      <p class="muted small">금액은 11월 금융 프로모션 자료의 금리·유예율·보조금 예시로 계산한 <b>추정치</b>입니다. 실제 견적은 트림·옵션·할인·지자체 보조금에 따라 달라집니다.</p>
+    </form>
+
+    <div class="adv-out" id="adv-out" aria-live="polite">
+      <section class="card" id="o-target"></section>
+      <section class="card" id="o-products"></section>
+      <section class="card" id="o-price"></section>
+      <section class="card" id="o-guide"></section>
+    </div>
+  </div>
+
+  <section class="card" id="o-scripts">
+    <h2>고객군별 상담 한 마디 (대전충남 7개 고객군)</h2>
+    <div class="table">
+      <table class="plain match">
+        <thead><tr><th>고객군</th><th>1순위 금융</th><th>상담 한 마디</th></tr></thead>
+        <tbody>
+          <tr><td><b>세종</b> 영유아 3040 가구</td><td>싼타페 무이자 · 다자녀 이주 1.9%</td><td>“60개월 무이자면 싼타페 HEV 이자만 약 580만 원 아낍니다. 선착순 2,000대예요.”</td></tr>
+          <tr><td><b>대전 유성구</b> 고소득 3040·수입차 고려층</td><td>현대 EV 부담 Down · 제네시스 THE BETTER CHOICE</td><td>“지자체 보조금이 소진돼도 리스 추가 보조금으로 아이오닉을 출고할 수 있어요.”</td></tr>
+          <tr><td><b>대전 서구·천안</b> 2030 첫차</td><td>아반떼 퍼스트 무브</td><td>“첫 차 아반떼, 월 14만 원대로 시작하고 3년 뒤엔 반납만 해도 됩니다.”</td></tr>
+          <tr><td><b>아산·당진</b> 산단·그룹사 가구</td><td>임직원·그룹사 특화 할부 · 싼타페 무이자</td><td>“그룹사 임직원이시면 팰리세이드 HEV 특화 할부로 월 부담을 크게 줄일 수 있어요.”</td></tr>
+          <tr><td><b>계룡</b> 군 간부 3040</td><td>현대 EV 부담 Down</td><td>“코나 EV 월 16만 원, 만기 땐 반납하고 새 EV로 바꾸시면 됩니다.”</td></tr>
+          <tr><td><b>대전 원도심</b> 60대·택시·소상공인</td><td>쏘나타 전용카드 · EV 택시 · 포터 EV</td><td>“택시를 아이오닉5로 바꾸시면 60개월 2.9%, 이자만 약 260만 원 아낍니다.”</td></tr>
+          <tr><td><b>충남 남부·농촌</b> 생업 운전자</td><td>포터 EV 부담 Down</td><td>“농업인이시면 포터 EV 월 15만 원, 하루 5,100원이면 됩니다.”</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <p class="muted small adv-foot">근거: 대전충남지역본부 11월 금융 프로모션 자료(2026.11), 현대자동차 K-세일페스타 이벤트(2026.11), 주민등록 인구(2026.9.30), 2025년 신규 등록. 금융 프로모션끼리는 중복 적용되지 않으며, 적용 여부와 세부 조건은 영업점 공문과 현대캐피탈 확인을 따릅니다. 내부 상담 참고용입니다.</p>
+</main>
+<div id="tip" class="tip" hidden></div>
+<script src="data.js?v=202611071544"></script>
+<script src="advisor.js?v=202611071544"></script>
+</body>
+</html>

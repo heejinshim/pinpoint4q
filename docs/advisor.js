@@ -1,0 +1,404 @@
+/* 대전충남 11월 금융상품 추천기 — 2026년 11월 금융 프로모션 자료 기준 계산 (추정치) */
+(function () {
+  const D = window.DATA;
+  const $ = (s) => document.querySelector(s);
+  const NS = 'http://www.w3.org/2000/svg';
+  const won = (v) => `${Math.round(v).toLocaleString('ko-KR')}만원`;
+  const won1 = (v) => `${(Math.round(v * 10) / 10).toLocaleString('ko-KR')}만원`;
+  const pct = (v, d = 1) => `${(v * 100).toFixed(d)}%`;
+  function h(tag, attrs = {}, kids = []) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) { if (k === 'text') e.textContent = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else if (v != null && v !== false) e.setAttribute(k, v === true ? '' : v); }
+    [].concat(kids).forEach((c) => c != null && c !== false && e.append(c));
+    return e;
+  }
+  function s(tag, attrs = {}, kids = []) {
+    const e = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) { if (k === 'text') e.textContent = v; else if (v != null) e.setAttribute(k, v); }
+    [].concat(kids).forEach((c) => c != null && e.append(c));
+    return e;
+  }
+
+  /* ---------- 차종 (가격은 11월 자료의 산출 예시 가격) ---------- */
+  const CARS = [
+    { id: 'avante', name: '디 올 뉴 아반떼', ref: 2559, range: [2398, 2987], type: 'young', persona: '첫 차를 고르는 2030 직장인·사회초년생' },
+    { id: 'avante_hev', name: '디 올 뉴 아반떼 하이브리드', ref: 3183, range: [3042, 3577], type: 'young', persona: '연비를 따지는 2030~40 출퇴근 고객' },
+    { id: 'sonata', name: '쏘나타 디 엣지 (HEV 포함)', ref: 2933, type: 'senior', persona: '실속 중형 세단을 찾는 40~60대 재구매 고객' },
+    { id: 'grandeur', name: '그랜저', ref: 4245, type: 'senior', persona: '그랜저·쏘나타를 오래 탄 50~60대 대차 고객' },
+    { id: 'grandeur_hev', name: '그랜저 하이브리드', ref: 4833, type: 'senior', persona: '연비와 정숙성을 원하는 50~60대 대차 고객' },
+    { id: 'kona', name: '코나 (HEV 포함)', ref: null, type: 'young', persona: '첫 SUV를 찾는 2030' },
+    { id: 'tucson', name: '디 올 뉴 투싼', ref: 3140, type: 'family', persona: '실속 SUV를 찾는 3040 신혼·영유아 가구' },
+    { id: 'santafe', name: '싼타페', ref: 4547, range: [3657, 4547], type: 'family', persona: '영유아·초등 자녀를 둔 3040 가구' },
+    { id: 'santafe_hev', name: '싼타페 하이브리드', ref: 4977, type: 'family', persona: '연비까지 챙기는 3040 패밀리 가구' },
+    { id: 'palisade', name: '팰리세이드', ref: 5586, range: [4383, 5586], type: 'family', persona: '대가족·다자녀 3040~50 고소득 가구' },
+    { id: 'palisade_hev', name: '팰리세이드 하이브리드', ref: 6186, range: [4982, 6186], type: 'family', persona: '대가족·다자녀 3040~50 고소득 가구' },
+    { id: 'staria', name: '더 뉴 스타리아 (HEV 포함)', ref: null, type: 'family', persona: '다자녀·조부모 동반 가구, 소상공인' },
+    { id: 'casper', name: '캐스퍼', ref: null, type: 'senior', persona: '60대 이상 근거리 생활차·세컨드카 고객' },
+    { id: 'ioniq5', name: '아이오닉 5', ref: 4735, ev: true, subsidy: 860, type: 'family', persona: '충전 여건이 있는 3040 맞벌이 가구' },
+    { id: 'ioniq6', name: '아이오닉 6', ref: 4856, ev: true, subsidy: 996, type: 'young', persona: '주행거리를 중시하는 2030~40 출퇴근 고객' },
+    { id: 'ioniq9', name: '아이오닉 9', ref: 6759, ev: true, subsidy: 487, type: 'family', persona: '다자녀·캠핑을 즐기는 3040 대가족' },
+    { id: 'kona_ev', name: '코나 일렉트릭', ref: 4152, ev: true, subsidy: 778, type: 'young', persona: '출퇴근 거리가 짧은 2030~40' },
+    { id: 'nexo', name: '디 올 뉴 넥쏘', ref: 8045, ev: true, subsidy: 3335, type: 'eco', persona: '수소충전소 인근 친환경 관심 고객' },
+    { id: 'porter_ev', name: '포터 일렉트릭', ref: 4350, ev: true, subsidy: 1483, type: 'biz', persona: '소상공인·농업인 생업 운전자' },
+    { id: 'porter', name: '포터 (LPG)', ref: null, type: 'biz', persona: '노후 1톤 트럭을 바꿀 생업 운전자' },
+    { id: 'avante_n', name: '아반떼 N', ref: 3356, type: 'young', persona: '고성능에 관심 많은 2030' },
+    { id: 'ioniq5n', name: '아이오닉 5 N', ref: 7879, ev: true, subsidy: 0, type: 'young', persona: '고성능 EV에 관심 많은 2030~40' },
+    { id: 'ioniq6n', name: '아이오닉 6 N', ref: 7999, ev: true, subsidy: 444, type: 'young', persona: '고성능 EV에 관심 많은 2030~40' },
+    { id: 'g80', name: '제네시스 G80', ref: 6063, genesis: true, type: 'premium', persona: '수입차를 타던 고소득 전문직·임원' },
+    { id: 'gv70', name: '제네시스 GV70', ref: 5473, genesis: true, type: 'premium', persona: '수입 SUV를 고려하는 고소득 3040~50' },
+    { id: 'gv80', name: '제네시스 GV80', ref: 6886, genesis: true, type: 'premium', persona: '대형 프리미엄 SUV를 찾는 40~50대' },
+    { id: 'gv80_hev', name: '제네시스 GV80 하이브리드', ref: 7680, genesis: true, type: 'premium', persona: '대형 프리미엄 SUV를 찾는 40~50대' },
+    { id: 'g90', name: '제네시스 G90', ref: 9748, genesis: true, type: 'premium', persona: '법인 임원·최고급 세단 고객' },
+  ];
+  const WHO = [
+    ['indiv', '개인'], ['biz', '개인사업자'], ['corp', '법인'], ['small', '소상공인'], ['farm', '농업인'],
+    ['multi', '다자녀 이주 가구'], ['staff', '임직원·그룹사'], ['taxi', '택시'], ['owner', '수입차·제네시스·현대EV 보유'], ['evre', '현대 EV 재구매'],
+  ];
+  const STD = { 36: 5.4, 48: 5.5, 60: 5.6 }; // 모빌리티 표준 할부 금리 (11월 자료 무이자 비교 금리)
+  const LEASE = { // 60개월·연 2만km 월 납입금 (만원) [자료 As-is, To-be 일반리스, To-be 이용자명의리스]
+    ioniq9: [103, 93, 88], ioniq5: [69, 53, 48], ioniq6: [70, 54, 50], kona_ev: [61, 50, 47],
+  };
+  const GLEASE = { // 제네시스 파이낸스 리스 60개월·2만km [기본, THE BETTER CHOICE, 생산월 조건]
+    g90: [165, 157, 157], g80: [98, 93, 88], gv80: [106, 100, 100], gv80_hev: [115, 108, 108], gv70: [84, 79, 77],
+  };
+  const EVREF = { ioniq5: [25, 20], ioniq6: [23, 17], kona_ev: [21, 16] }; // 자료 예시 월 납입금 [선수 1%, 5%]
+
+  function pay(F, B, rate, n) { const r = rate / 100 / 12; if (r === 0) return (F - B) / n; return (F - B / (1 + r) ** n) * r / (1 - (1 + r) ** -n); }
+  function loan({ price, net, down, balloon, rate, n }) {
+    const dn = price * down; const F = Math.max(0, net - dn); const B = Math.min(price * balloon, F);
+    const m = pay(F, B, rate, n); const interest = m * n + B - F;
+    return { dn, F, B, m, interest, rate, n };
+  }
+
+  /* ---------- 11월 금융상품 규칙 ---------- */
+  function evaluate(ctx) {
+    const { car, price, who, down, months } = ctx;
+    const personal = who.indiv || who.biz || who.small || who.farm;
+    const out = [];
+    const add = (o) => out.push(Object.assign({ ok: true, why: [], extra: [], lost: 0, discount: 0, subsidy: 0 }, o));
+    const id = car.id;
+    let subsidy = car.ev ? car.subsidy || 0 : 0;
+    if (id === 'porter_ev') subsidy += who.small ? 290 : who.farm ? 97 : 0;
+    const net0 = price - subsidy;
+
+    // 1. 싼타페·팰리세이드 무이자
+    if (/^(santafe|palisade)/.test(id)) {
+      const ok = personal && !who.taxi;
+      const d = Math.max(down, 0.2), L = loan({ price, net: net0, down: d, balloon: 0, rate: 0, n: months });
+      const S = loan({ price, net: net0, down: d, balloon: 0, rate: STD[months], n: months });
+      const lost = /^santafe/.test(id) ? 100 : 200;
+      add({ id: 'zero', name: '싼타페·팰리세이드 최대 60개월 무이자', kind: '할부', deadline: '11.30 출고', ok, why: ok ? [] : ['개인·개인사업자만 대상'],
+        loan: L, std: S, saved: S.interest - L.interest, lost, value: S.interest - L.interest - lost, downUsed: d,
+        terms: `${months}개월 무이자(표준 ${STD[months]}%) · 선수율 20% 이상 · 모빌리티 할부 · 차종별 선착순 2,000대`,
+        lostNote: /^santafe/.test(id) ? '싼타페 K-세일페스타 기본혜택 100만원 차감' : '팰리세이드 런칭 모델 생산월 조건 200만원 차감' });
+    }
+    // 2. 다자녀 이주 가구 싼타페 1.9%
+    if (/^santafe/.test(id)) {
+      const ok = who.multi && (who.indiv || who.biz) && !who.corp;
+      const L = loan({ price, net: net0 - 100, down, balloon: 0, rate: 1.9, n: months }), S = loan({ price, net: net0 - 100, down, balloon: 0, rate: STD[months], n: months });
+      add({ id: 'multi', name: '지방 이주 다자녀 가구 싼타페 1.9%', kind: '할부', deadline: '11.30 출고', ok, why: ok ? [] : ['2025년 이후 서울→지방 이주 + 미성년 자녀 2명 이상 가구(개인)만'],
+        loan: L, std: S, saved: S.interest - L.interest, value: S.interest - L.interest, discount: 100, downUsed: down,
+        terms: `전 구간 금리 1.9% · 리스·렌트는 10% 혜택 + 안전용품 키트 · K-세일페스타 100만원 혜택과 중복 여부는 영업점 확인` });
+    }
+    // 3. 쏘나타·스타리아 전용카드
+    if (id === 'sonata' || id === 'staria') {
+      const ok = personal && !who.taxi && !who.corp;
+      const L = loan({ price, net: net0 - 25, down, balloon: 0, rate: STD[months], n: months });
+      add({ id: 'card', name: '쏘나타·스타리아 전용카드 50만원', kind: '전용카드', deadline: '11.30 출고', ok, why: ok ? [] : ['개인·개인사업자만, 영업용·EV 제외'],
+        loan: L, std: L, saved: 0, discount: 25, cashback: 25, value: 50, downUsed: down,
+        terms: '차량가 25만원 할인 + 25만원 캐시백 · 현대·제네시스 전용카드로 1,000만원 이상 결제 및 세이브오토 · 현대캐피탈 할부와 중복 가능' });
+    }
+    // 4. 아반떼 퍼스트 무브
+    if (id === 'avante' || id === 'avante_hev') {
+      const ok = !who.staff;
+      const d = Math.max(down, 0.01), L = loan({ price, net: net0, down: d, balloon: 0.7, rate: 2.8, n: 36 }), S = loan({ price, net: net0, down: d, balloon: 0.7, rate: 6.3, n: 36 });
+      add({ id: 'firstmove', name: '디 올 뉴 아반떼 퍼스트 무브 플랜', kind: '유예형 할부', deadline: '12.31 출고', ok, why: ok ? [] : ['당사 임직원·대리점 등록인원 불가'],
+        loan: L, std: S, saved: S.interest - L.interest, value: S.interest - L.interest, downUsed: d,
+        terms: `36개월 금리 6.3% → 2.8% · 유예율 최대 70% · 만기 시 차량 반납으로 유예금 상환(신차 재구매 조건 없음)${who.corp ? ' · 법인은 잔가 보장 불가' : ''}` });
+    }
+    // 5. N-FINANCE
+    if (/^(avante_n|ioniq5n|ioniq6n)$/.test(id)) {
+      const ok = !who.staff; const rate = id === 'avante_n' ? 6.3 : 5.8; const d = Math.max(down, 0.1);
+      const L = loan({ price, net: net0 - (id === 'avante_n' ? 0 : 100), down: d, balloon: 0.9, rate, n: 36 });
+      add({ id: 'nfin', name: 'N-FINANCE 할부', kind: '유예형 할부', deadline: '11.30 출고', ok, why: ok ? [] : ['당사 임직원·대리점 등록인원 불가'],
+        loan: L, std: L, saved: 0, value: 30, downUsed: d, discount: id === 'avante_n' ? 0 : 100,
+        terms: `36개월 ${rate}% · 유예율 최대 90% · 중도상환 수수료 전 기간 면제 · 전용 사은품 4종${id === 'avante_n' ? '' : ' · 아이오닉 N은 현대·제네시스 재구매 필수'}` });
+    }
+    // 6. 현대 EV 부담 Down
+    if (/^(ioniq5|ioniq6|kona_ev)$/.test(id)) {
+      const ok = !who.staff && !who.taxi; const rate = who.evre ? 2.3 : 2.8; const d = Math.max(down, 0.01);
+      const L = loan({ price, net: net0, down: d, balloon: 0.6, rate, n: 36 }), S = loan({ price, net: net0, down: d, balloon: 0.6, rate: 5.8, n: 36 });
+      add({ id: 'evdown', name: '현대 EV 부담 Down', kind: '유예형 할부', deadline: '11.30 출고', ok, why: ok ? [] : [who.taxi ? '택시는 EV 택시 동반자 플랜 대상' : '당사 임직원·대리점 등록인원 불가'],
+        loan: L, std: S, saved: S.interest - L.interest, value: S.interest - L.interest, subsidy, downUsed: d, ref: EVREF[id],
+        terms: `36개월 금리 5.8% → ${rate}%${who.evre ? '(재구매 −0.5%p)' : ''} · 유예율 최대 60%(EV 재구매) 또는 55%(현대·제네시스 전 차종 재구매) · 스트레스 프리 패키지` });
+    }
+    // 7. EV 렌트·리스
+    if (LEASE[id]) {
+      const [asis, gen, own] = LEASE[id]; const ok = !who.staff && !who.taxi;
+      add({ id: 'evlease', name: '현대 EV 렌트·리스 프로모션', kind: '렌트·리스', deadline: '11.30 출고', ok, why: ok ? [] : ['영업용 불가'],
+        lease: { gen, own, asis }, value: (asis - gen) * 60 * 0.5, saved: 0, subsidy,
+        terms: `60개월·연 2만km 월 ${gen}만원(일반리스)·${own}만원(이용자명의리스, 개인) — 기존 ${asis}만원 · 지자체 보조금이 소진돼도 리스 추가 보조금` });
+    }
+    // 8. 넥쏘 부담 Down
+    if (id === 'nexo') {
+      const d = Math.max(down, 0.05); const L = loan({ price, net: net0 - 200, down: d, balloon: 0.45, rate: 1.8, n: 39 }), S = loan({ price, net: net0 - 200, down: d, balloon: 0.45, rate: 5.9, n: 39 });
+      add({ id: 'nexo', name: '넥쏘 부담 Down', kind: '유예형 할부', deadline: '11.30 출고', ok: !who.staff, why: who.staff ? ['당사 임직원 불가'] : [],
+        loan: L, std: S, saved: S.interest - L.interest, value: S.interest - L.interest, subsidy, discount: 200, downUsed: d,
+        terms: '39개월 금리 5.9% → 1.8% · 유예율 45% · 자료 예시 월 약 8만원(선수 5%, 트레이드인 200만 기준) · EV·FCEV 재구입 시 잔가 보장' });
+    }
+    // 9. 포터 EV 부담 Down
+    if (id === 'porter_ev') {
+      const d = Math.max(down, 0.01); const L = loan({ price, net: net0 - 200, down: d, balloon: 0.5, rate: 2.8, n: 36 }), S = loan({ price, net: net0 - 200, down: d, balloon: 0.5, rate: 5.4, n: 36 });
+      add({ id: 'porterev', name: '포터 EV 부담 Down', kind: '유예형 할부', deadline: '11.30 출고', ok: !who.staff, why: who.staff ? ['당사 임직원 불가'] : [],
+        loan: L, std: S, saved: S.interest - L.interest, value: S.interest - L.interest, subsidy, discount: 200, downUsed: d,
+        terms: `36개월 금리 5.4% → 2.8% · 유예율 50% · 자료 예시 소상공인 월 10만원·농업인 15만원·일반 18만원 · 유예금은 반납 상환 불가(만기 후 2년 분납 가능)` });
+    }
+    // 10. EV 택시 동반자
+    if (/^(ioniq5|ioniq6|kona_ev)$/.test(id)) {
+      const R = { 36: 2.7, 48: 2.8, 60: 2.9 }, SR = { 36: 4.9, 48: 5.0, 60: 5.1 };
+      const L = loan({ price, net: net0, down, balloon: 0, rate: R[months], n: months }), S = loan({ price, net: net0, down, balloon: 0, rate: SR[months], n: months });
+      add({ id: 'taxi', name: 'EV 택시 동반자 플랜', kind: '할부', deadline: '11.30 출고', ok: !!who.taxi, why: who.taxi ? [] : ['개인·법인 택시만'],
+        loan: L, std: S, saved: S.interest - L.interest, value: S.interest - L.interest, subsidy, downUsed: down,
+        terms: `${months}개월 ${R[months]}%(표준 ${SR[months]}%) · 영업용·자가용 트림 모두` });
+    }
+    // 11. 임직원·그룹사 특화 할부
+    if (/^(grandeur|palisade)/.test(id) || id === 'ioniq9' || /^(g80|gv80|gv70)$/.test(id)) {
+      const isG = /^grandeur/.test(id); const rate = isG ? 5.8 : id === 'ioniq9' || /^g/.test(id) ? 5.8 : 6.3; const bal = id === 'ioniq9' ? 0.7 : 0.65;
+      const L = loan({ price, net: net0, down: Math.max(down, 0.01), balloon: bal, rate, n: 36 }), S = loan({ price, net: net0, down: Math.max(down, 0.01), balloon: 0, rate, n: 36 });
+      add({ id: 'staff', name: '임직원·그룹사 특화 할부', kind: '유예형 할부', deadline: '11.30 출고', ok: !!who.staff, why: who.staff ? [] : ['당사·계열사·관계사 재직자, 지정 블루핸즈 대표·임직원만'],
+        loan: L, std: S, saved: 0, value: who.staff ? 300 : 0, subsidy, downUsed: Math.max(down, 0.01), monthlyCut: S.m - L.m,
+        terms: `36개월 ${rate}% · 유예율 ${Math.round(bal * 100)}%로 상향 · 직원 할인 적용 시 월 납입금이 더 낮아짐(자료 예시: 할인 20% 기준 그랜저 HEV 월 35만·팰리세이드 HEV 월 39만·아이오닉 9 월 23만)` });
+    }
+    // 12. 제네시스 파이낸스
+    if (car.genesis) {
+      const g = GLEASE[id];
+      add({ id: 'gfin', name: '제네시스 파이낸스 리스·렌트', kind: '렌트·리스', deadline: '11.30 출고', ok: true,
+        lease: g ? { gen: who.owner ? g[1] : g[0], own: g[2], asis: g[0] } : null, value: who.owner ? 200 : 60, saved: 0,
+        terms: `${g ? `60개월·2만km 리스 월 ${g[0]}만원` : '시장 내 최저 수준 월 납입금'}${who.owner ? ` → THE BETTER CHOICE 4% 적용 월 ${g ? g[1] : ''}만원` : ''} · DOUBLE-PICK(12·24개월) 4% 추가 · 중도상환 수수료 면제 프로그램` });
+    }
+    // 13. 표준 할부 (비교용)
+    const ksfBase = /^santafe/.test(id) ? 100 : 0;
+    const Ls = loan({ price, net: net0 - ksfBase, down, balloon: 0, rate: STD[months], n: months });
+    add({ id: 'std', name: ksfBase ? '표준 할부 + 싼타페 K-세일페스타 100만원' : '표준 할부 (11월 전용 금융 없음)', kind: '할부', deadline: '—', ok: true,
+      loan: Ls, std: Ls, saved: 0, value: ksfBase, discount: ksfBase, subsidy, downUsed: down,
+      terms: `${months}개월 ${STD[months]}%(모빌리티 표준 할부 가정)${ksfBase ? ' · 싼타페 K-세일페스타 기본혜택 100만원' : ''}` });
+
+    // 선택지 점수: 가능한 것 중 고객 혜택(이자 절감 + 할인 − 포기 혜택)이 가장 큰 것을 추천
+    const usable = out.filter((p) => p.ok);
+    usable.forEach((p) => { p.score = p.value + (p.discount || 0) + (p.cashback || 0) - (p.lost || 0); });
+    const best = usable.filter((p) => p.id !== 'std').sort((a, b) => b.score - a.score)[0] || usable.find((p) => p.id === 'std');
+    best.best = true;
+    return { list: out, best, subsidy };
+  }
+  function ksfOk(ctx) {
+    const { car, who } = ctx;
+    if (['casper', 'tucson', 'gv80_hev'].includes(car.id)) return [false, '캐스퍼·캐스퍼 일렉트릭·디 올 뉴 투싼·GV80 하이브리드는 쿠폰 제외'];
+    if (who.taxi) return [false, '택시는 쿠폰 제외'];
+    if (who.corp && !(who.indiv || who.biz)) return [false, '개인·개인사업자만 사용 가능'];
+    if (who.staff) return [false, '현대자동차·유관사 직원은 사용 불가'];
+    return [true, ''];
+  }
+
+  /* ---------- 정장 차림 상담원 일러스트 ---------- */
+  function man() {
+    const sv = s('svg', { viewBox: '0 0 140 210', class: 'advisor-man', 'aria-hidden': 'true' }, [
+      s('ellipse', { cx: 70, cy: 204, rx: 38, ry: 5, fill: 'rgba(0,0,0,.12)' }),
+      s('rect', { x: 50, y: 150, width: 17, height: 48, rx: 4, fill: '#0b1f3f' }), s('rect', { x: 73, y: 150, width: 17, height: 48, rx: 4, fill: '#0b1f3f' }),
+      s('path', { d: 'M46 198 h24 v6 h-26 z M72 198 h24 v6 h-26 z', fill: '#1b1b1b' }),
+      s('path', { d: 'M40 100 Q42 88 56 86 L84 86 Q98 88 100 100 L102 156 L38 156 Z', fill: '#002c5f' }),
+      s('path', { d: 'M38 104 Q30 128 34 150 Q36 156 42 154 L46 112 Z', fill: '#002c5f' }),
+      s('circle', { cx: 39, cy: 154, r: 6, fill: '#f2c9a5' }),
+      s('path', { d: 'M98 98 Q112 84 118 64 L127 68 Q122 92 104 110 Z', fill: '#002c5f', class: 'advisor-arm' }),
+      s('circle', { cx: 123, cy: 60, r: 7, fill: '#f2c9a5', class: 'advisor-arm' }),
+      s('path', { d: 'M58 86 L70 112 L82 86 Z', fill: '#ffffff' }),
+      s('path', { d: 'M67 92 L73 92 L75 98 L72 120 L70 124 L68 120 L65 98 Z', fill: '#c8893a' }),
+      s('path', { d: 'M56 86 L66 112 L60 96 Z M84 86 L74 112 L80 96 Z', fill: '#001a3d' }),
+      s('rect', { x: 63, y: 74, width: 14, height: 14, rx: 4, fill: '#eab894' }),
+      s('circle', { cx: 70, cy: 58, r: 22, fill: '#f2c9a5' }),
+      s('path', { d: 'M48 56 Q47 34 70 33 Q92 33 92 54 Q86 44 74 44 Q60 45 52 50 Z', fill: '#2a1d16' }),
+      s('circle', { cx: 62, cy: 59, r: 2.4, fill: '#2a1d16' }), s('circle', { cx: 78, cy: 59, r: 2.4, fill: '#2a1d16' }),
+      s('ellipse', { cx: 70, cy: 68, rx: 6, ry: 4.5, fill: '#8a4b33', class: 'mouth' }),
+      s('circle', { cx: 57, cy: 66, r: 3, fill: '#f0a58a', opacity: 0.5 }), s('circle', { cx: 83, cy: 66, r: 3, fill: '#f0a58a', opacity: 0.5 }),
+    ]);
+    [[18, 30], [124, 22], [12, 92]].forEach(([x, y], i) => sv.append(s('path', { d: `M${x} ${y - 7} L${x + 2} ${y - 2} L${x + 7} ${y} L${x + 2} ${y + 2} L${x} ${y + 7} L${x - 2} ${y + 2} L${x - 7} ${y} L${x - 2} ${y - 2} Z`, fill: '#e2b66f', class: `spark sp${i}` })));
+    return sv;
+  }
+  const josa = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '은' : '는'; return '는'; };
+  const josaR = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '을' : '를'; return '를'; };
+
+  /* ---------- 입력 ---------- */
+  const st = { area: '세종시', car: 'santafe_hev', band: null, price: 4977, who: { indiv: true }, down: 0.2, months: 60, pick: null };
+  const sidoOf = (sgg) => (D.sgg.find((r) => r.sgg === sgg) || {}).sido;
+  function initForm() {
+    const area = $('#f-area');
+    ['대전', '세종', '충남'].forEach((sd) => {
+      const g = h('optgroup', { label: sd });
+      D.sgg.filter((r) => r.sido === sd).sort((a, b) => b.pop - a.pop).forEach((r) => g.append(h('option', { value: r.sgg, text: `${sd} ${r.sgg}` })));
+      area.append(g);
+    });
+    area.value = st.area;
+    const car = $('#f-car');
+    [['현대 승용', (c) => !c.ev && !c.genesis && !/porter/.test(c.id)], ['전기·수소', (c) => c.ev && !/porter/.test(c.id)], ['소형 상용', (c) => /porter/.test(c.id)], ['제네시스', (c) => c.genesis]].forEach(([lab, f]) => {
+      const g = h('optgroup', { label: lab }); CARS.filter(f).forEach((c) => g.append(h('option', { value: c.id, text: c.name }))); car.append(g);
+    });
+    car.value = st.car;
+    $('#f-who').replaceChildren(...WHO.map(([k, lab]) => h('button', { type: 'button', 'aria-pressed': String(!!st.who[k]), 'data-k': k, text: lab, onclick: (e) => { st.who[k] = !st.who[k]; if (!Object.values(st.who).some(Boolean)) st.who.indiv = true; st.pick = null; e.currentTarget.setAttribute('aria-pressed', String(!!st.who[k])); render(); } })));
+    area.addEventListener('change', () => { st.area = area.value; st.pick = null; render(); });
+    car.addEventListener('change', () => { st.car = car.value; const c = CARS.find((x) => x.id === st.car); st.price = c.ref || (st.band ? st.band * 1000 + 500 : 3500); st.band = null; st.pick = null; st.down = /^(santafe|palisade)/.test(c.id) ? 0.2 : c.id === 'nexo' ? 0.05 : c.ev ? 0.01 : 0.1; syncPrice(); render(); });
+    $('#f-price').addEventListener('input', (e) => { const v = Number(e.target.value); if (v > 0) { st.price = v; st.band = null; drawBands(); render(); } });
+    $('#f-down').addEventListener('input', (e) => { st.down = Number(e.target.value) / 100; st.pick = null; render(); });
+    $('#f-months').addEventListener('change', (e) => { st.months = Number(e.target.value); st.pick = null; render(); });
+    syncPrice();
+  }
+  function drawBands() {
+    const cur = Math.floor(st.price / 1000);
+    $('#f-band').replaceChildren(...[2, 3, 4, 5, 6, 7, 8, 9].map((b) => h('button', { type: 'button', 'aria-pressed': String(cur === b), text: `${b}000만원대`, onclick: () => {
+      const c = CARS.find((x) => x.id === st.car); st.band = b;
+      st.price = c.ref && Math.floor(c.ref / 1000) === b ? c.ref : b * 1000 + 500; syncPrice(); st.pick = null; render();
+    } })));
+  }
+  function syncPrice() {
+    const c = CARS.find((x) => x.id === st.car);
+    $('#f-price').value = st.price; $('#f-down').value = Math.round(st.down * 100); $('#f-months').value = st.months;
+    $('#f-ref').textContent = c.ref ? `자료 산출 예시 가격 ${c.ref.toLocaleString('ko-KR')}만원${c.range ? ` (예시 범위 ${c.range[0].toLocaleString('ko-KR')}~${c.range[1].toLocaleString('ko-KR')})` : ''}` : '자료에 예시 가격 없음 — 견적 가격을 입력하세요';
+    drawBands();
+  }
+
+  /* ---------- 출력 ---------- */
+  function dday() {
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    const d = (iso) => Math.round((new Date(iso + 'T00:00:00') - t) / 86400000);
+    const tag = (n) => (n > 0 ? `D-${n}` : n === 0 ? 'D-DAY' : '마감');
+    $('#adv-dday').replaceChildren(
+      h('div', { class: 'dd hot' }, [h('b', { text: tag(d('2026-11-15')) }), h('span', { text: '11.15 K-세일페스타 쿠폰 응모 마감' })]),
+      h('div', { class: 'dd hot' }, [h('b', { text: tag(d('2026-11-30')) }), h('span', { text: '11.30 출고 마감 — 11월 금융 프로모션·쿠폰' })]),
+      h('div', { class: 'dd' }, [h('b', { text: tag(d('2026-12-31')) }), h('span', { text: '12.31 출고 마감 — 아반떼 퍼스트 무브, HEV·EV 세제 감면' })]),
+    );
+  }
+  function targetBlock(car, res, chosen) {
+    const ins = (D.insight || []).find((q) => q.sgg === st.area) || {};
+    const sd = sidoOf(st.area), sg = D.sgg.find((r) => r.sgg === st.area) || {};
+    const focus = (D.focus || []).filter((f) => f.sgg === st.area);
+    const key = car.name.replace(/디 올 뉴 |더 뉴 | \(.*\)|하이브리드| HEV/g, '').trim().split(' ')[0];
+    const fits = focus.some((f) => f.focus.includes(key));
+    const metric = { family: ['family_idx', '영패밀리 지수'], young: ['age20_29', '20–29세'], senior: ['age60p', '60세 이상'], biz: ['age60p', '60세 이상'], eco: ['age30_44', '30–44세'], premium: ['age45_59', '45–59세'] }[car.type];
+    const dongs = D.dong.filter((r) => r.sgg === st.area && r.pop >= 3000).sort((a, b) => (car.type === 'senior' || car.type === 'biz' ? b.age60p * b.pop - a.age60p * a.pop : b[metric[0]] - a[metric[0]])).slice(0, 3);
+    const ks = ksfOk({ car, who: st.who });
+    const p = chosen;
+    const say = [h('b', { text: `${st.area}` }), `에서 `, h('b', { text: car.name }), `${josa(car.name)} `, h('b', { text: car.persona }), '에게 맞습니다. ',
+      p && p.id !== 'std' ? [h('b', { text: p.name }), `${josaR(p.name)} 먼저 제안해 보세요.`] : '11월 전용 금융은 없으니 쿠폰·트레이드인으로 부담을 낮춰 보세요.'];
+    const box = $('#o-target');
+    box.replaceChildren(
+      h('h2', { text: '2. 타겟 고객 추천' }),
+      h('div', { class: 'adv-talk' }, [man(), h('div', { class: 'advisor-bubble adv-bubble' }, [
+        h('p', { class: 'chap-no', text: `${sd} ${st.area} · ${car.name}` }),
+        h('p', { class: 'advisor-say' }, say.flat()),
+        h('ul', {}, [
+          h('li', {}, [h('span', { text: '지역 고객' }), `${ins.customer || sg.target || '—'} · 인구 ${(sg.pop || 0).toLocaleString('ko-KR')}명`]),
+          h('li', {}, [h('span', { text: '추천 동' }), dongs.map((d) => `${d.dong}(${metric[1]} ${car.type === 'senior' || car.type === 'biz' ? `${pct(d.age60p, 0)}·${Math.round(d.age60p * d.pop).toLocaleString('ko-KR')}명` : pct(d[metric[0]])})`).join(' · ') || '—']),
+          h('li', {}, [h('span', { text: '지역 적합도' }), fits ? `이 지역 판촉 집중 차종입니다.` : `이 지역 집중 차종은 ${focus.map((f) => f.focus).join('·') || '—'}입니다. 함께 비교 제안하세요.`]),
+          h('li', {}, [h('span', { text: 'K-세일페스타' }), ks[0] ? '쿠폰 대상 차종 — 오늘 응모 안내(당첨 시 50·100만원, 11.30 출고)' : `쿠폰 제외 — ${ks[1]}`]),
+        ]),
+      ])]),
+    );
+    const sv = box.querySelector('.advisor-man'); if (sv) { sv.classList.remove('talk'); void sv.getBoundingClientRect(); sv.classList.add('talk'); }
+  }
+  function productsBlock(res) {
+    const box = $('#o-products');
+    const items = res.list.slice().sort((a, b) => (b.ok - a.ok) || ((b.score || 0) - (a.score || 0)));
+    box.replaceChildren(
+      h('h2', { text: '3. 지금 쓸 수 있는 11월 금융상품' }),
+      h('p', { class: 'muted small', text: '금융 프로모션끼리는 중복 적용되지 않습니다. 고객에게 가장 큰 혜택 하나를 고르세요. 카드를 누르면 아래 가격 계산이 그 상품으로 바뀝니다.' }),
+      h('div', { class: 'prod-list' }, items.map((p) => h('button', { type: 'button', class: `prod ${p.ok ? 'ok' : 'no'} ${p.best ? 'best' : ''} ${st.pick === p.id || (!st.pick && p.best) ? 'on' : ''}`, disabled: !p.ok, onclick: () => { st.pick = p.id; render(); } }, [
+        h('span', { class: 'prod-badge', text: !p.ok ? '대상 아님' : p.best ? '추천' : p.kind }),
+        h('b', { text: p.name }),
+        h('span', { class: 'prod-terms', text: p.terms }),
+        p.ok ? h('span', { class: 'prod-val', text: p.lease ? `월 ${p.lease.gen}만원~ (렌트·리스)` : p.saved > 0 ? `이자 약 ${won(p.saved)} 절감${p.lost ? ` · ${p.lostNote}` : ''}` : p.cashback ? '할인 25만 + 캐시백 25만' : p.id === 'staff' ? `월 납입금 약 ${won1(p.monthlyCut)} 낮아짐(유예형)` : p.discount ? `할인 ${won(p.discount)}` : '' }) : h('span', { class: 'prod-why', text: p.why.join(' · ') }),
+        h('span', { class: 'prod-dl', text: p.deadline !== '—' ? `${p.deadline}까지` : '' }),
+      ]))),
+    );
+  }
+  function priceBlock(res, p) {
+    const box = $('#o-price'); const car = CARS.find((c) => c.id === st.car);
+    const rows = [['차량 가격', won(st.price)]];
+    if (p.discount) rows.push([p.id === 'std' && p.discount === 100 ? '싼타페 K-세일페스타 기본혜택' : p.id === 'card' ? '전용카드 차량가 할인' : '할인(자료 예시 조건)', `−${won(p.discount)}`]);
+    if (p.subsidy) rows.push(['보조금(국고+지자체 평균)', `−${won(p.subsidy)}`]);
+    const net = st.price - (p.discount || 0) - (p.subsidy || 0);
+    rows.push(['실구매가', won(net), 'strong']);
+    let body;
+    if (p.lease) {
+      body = [h('table', { class: 'plain price-t' }, h('tbody', {}, [...rows, ['월 납입금(60개월·연 2만km)', `${p.lease.gen}만원 (일반리스)`, 'strong'], p.lease.own ? ['이용자명의리스(개인)', `${p.lease.own}만원`] : null, ['기존 조건 대비', `월 ${p.lease.asis - p.lease.gen}만원 인하`]].filter(Boolean).map(([a, b, c]) => h('tr', { class: c || '' }, [h('th', { text: a }), h('td', { text: b })]))))];
+    } else {
+      const L = p.loan;
+      const r2 = [...rows,
+        [`선수금 (${Math.round(p.downUsed * 100)}%)`, won(L.dn)],
+        ['할부 원금', won(L.F)],
+        L.B > 0 ? ['만기 유예금', `${won(L.B)}${p.id === 'porterev' ? ' (반납 상환 불가·2년 분납 가능)' : ' (반납 시 상환)'}`] : null,
+        [`월 납입금 (${L.n}개월, ${L.rate}%)`, `약 ${won1(L.m)}`, 'big'],
+        ['총 이자', won(L.interest)],
+        p.saved > 0 ? ['표준 할부 대비 이자 절감', `약 ${won(p.saved)}`, 'good'] : null,
+        p.cashback ? ['전용카드 캐시백 (출고 후 환급)', `+${won(p.cashback)}`, 'good'] : null,
+        p.lost ? ['포기하는 혜택', `−${won(p.lost)} (${p.lostNote})`, 'warn'] : null,
+      ].filter(Boolean);
+      body = [h('table', { class: 'plain price-t' }, h('tbody', {}, r2.map(([a, b, c]) => h('tr', { class: c || '' }, [h('th', { text: a }), h('td', { text: b })])))),
+        p.ref ? h('p', { class: 'note', text: `자료 예시: ${car.name} 선수 1% 시 월 ${p.ref[0]}만원, 선수 5% 시 월 ${p.ref[1]}만원(트레이드인·생산월 200만 기준). 위 계산은 유예금 산정 기준 차이로 2~4만원 높게 나올 수 있습니다.` }) : null,
+        p.downUsed > st.down ? h('p', { class: 'note', text: `이 상품은 선수율 최소 ${Math.round(p.downUsed * 100)}%가 필요해 그 기준으로 계산했습니다.` }) : null];
+    }
+    box.replaceChildren(h('h2', { text: '4. 예상 최종 가격' }), h('p', { class: 'chap-no', text: `${p.name}${p.best ? ' · 추천' : ''}` }), ...body.filter(Boolean),
+      h('p', { class: 'muted small', text: '추정치입니다. 트림·옵션·선수금·할인·지자체 보조금(대전·세종·충남 실제 공고, ev.or.kr)과 현대캐피탈 심사에 따라 달라집니다.' }));
+  }
+  const GUIDE = {
+    zero: { say: (p, car) => `선착순 2,000대 한정 ${st.months}개월 무이자입니다. ${car.name} 기준 이자만 약 ${won(p.saved)} 아끼실 수 있어요.`, check: ['선수율 20% 이상, 모빌리티 할부만', '11.30 이전 출고 — 즉시 출고 재고 확인', '개인·개인사업자만', '싼타페는 K-세일페스타 100만원, 팰리세이드는 생산월 200만원이 차감됨을 미리 안내'], qa: [['선수금 20%가 부담돼요', '서울에서 이주한 다자녀 가구면 1.9%(선수 1%~), 아니면 표준 할부와 월 납입금을 나란히 비교해 드립니다.'], ['쏘렌토가 더 싸던데요', '무이자로 이자를 아끼면 실제 총 부담이 더 낮을 수 있어요. 공간·연비 비교표를 함께 보여 드리세요.']] },
+    multi: { say: () => '서울에서 이사 오신 두 자녀 가정이면 싼타페 할부 금리가 전 구간 1.9%입니다.', check: ['선택형 주민등록등본(과거 주소 변동·세대원 포함) 수령', '2025년 이후 서울→서울 외 이주, 2007년 이후 출생 미성년 자녀 2명 이상', '개인 고객만(법인 불가)', '리스·렌트는 10% 혜택 + 안전용품 키트'], qa: [['서류가 번거로워요', '등본 한 장이면 됩니다. 금리 차이로 이자를 크게 아낄 수 있어요.']] },
+    card: { say: () => '현대·제네시스 전용카드로 1,000만원 이상 결제하시면 25만원 할인에 25만원 캐시백, 총 50만원 혜택입니다.', check: ['현대·제네시스 전용카드(모빌리티·EV)로 1,000만원 이상 + 세이브오토', '출고 전 대상 입력 필수(출고 후 불가)', '블루멤버스 전용카드·3-BODY 카드 불가', '영업용·EV 제외, 현대캐피탈 할부와 중복 가능'], qa: [['카드가 없어요', '신규 발급도 대상입니다. 발급 후 결제하시면 됩니다.']] },
+    firstmove: { say: (p) => `월 ${won1(p.loan.m)}으로 시작하고, 3년 뒤엔 차를 반납하면 유예금이 정리됩니다. 신차 재구매 조건도 없어요.`, check: ['12.31 출고분까지(계약일 무관)', '유예율 30% 이상', '당사 임직원·대리점 등록인원 불가', '법인은 유예 가능하나 잔가 보장 불가'], qa: [['3년 뒤에 목돈이 들지 않나요?', '반납하면 유예금이 상환되고, 계속 타고 싶으면 일시 상환하거나 재할부를 안내합니다.'], ['쿠폰도 같이 되나요?', 'K-세일페스타 쿠폰은 11.30 출고 조건이라 시기를 맞춰야 하고, 중복 여부는 영업점에서 확인합니다.']] },
+    nfin: { say: () => '유예율 최대 90%로 고성능 N을 낮은 월 납입금으로 타실 수 있고, 중도상환 수수료도 없습니다.', check: ['선수율 10% 이상, 최소 할부금 10만원', '아이오닉 5 N·6 N은 현대·제네시스 재구매 필수', '출고 후 사은품 신청 문자 발송'], qa: [] },
+    evdown: { say: (p) => `보조금 받고 월 ${won1(p.loan.m)} 수준, 만기에는 반납하고 새 EV로 바꾸시면 됩니다.`, check: ['지자체 보조금 잔여 확인(ev.or.kr)', '유예율 60%면 EV·FCEV 재구매, 55% 이하면 현대·제네시스 전 차종 재구매', '현대 EV 재구매 고객 금리 −0.5%p(증빙: 상환 스케줄표·계약서)', '영업용·N 불가'], qa: [['보조금이 다 떨어졌다던데요', '렌트·리스로 출고하면 리스 추가 보조금으로 월 납입금을 맞출 수 있어요.'], ['충전이 걱정돼요', '집·직장 충전 여건부터 같이 확인해 드릴게요.']] },
+    evlease: { say: () => '지자체 보조금이 소진돼도 리스 추가 보조금으로 출고할 수 있어요. 월 납입금도 기존보다 낮아졌습니다.', check: ['출고 전 대상 입력 필수', '이용자명의리스는 개인만 지자체 보조금 지급', '보조금 받은 개인이 사업자 비용 처리 시 보조금 환수 안내', '현대캐피탈 이용 수수료 2.0%'], qa: [] },
+    nexo: { say: () => '넥쏘는 1.8% 초저금리로 자료 예시 기준 월 8만원대부터 가능합니다.', check: ['39개월, 유예율 45%', '수소충전소 접근성 확인', 'EV·FCEV 재구입 시 잔가 보장'], qa: [] },
+    porterev: { say: (p) => `${st.who.small ? '소상공인' : st.who.farm ? '농업인' : '사업자'}이시면 포터 EV를 월 ${won1(p.loan.m)} 수준으로 쓰실 수 있습니다.`, check: ['소상공인·농업인 추가 보조금 증빙', '유예금은 차량 반납으로 상환 불가 — 만기 후 2년 분납 가능(4.9%)', '지자체 보조금 잔여 확인'], qa: [['3년 뒤 유예금은요?', '일시 상환이 어려우면 2년 동안 나눠 내실 수 있어요.']] },
+    taxi: { say: (p, car) => `택시를 ${car.name}로 바꾸시면 ${st.months}개월 ${p.loan.rate}%로 이자만 약 ${won(p.saved)} 아끼실 수 있어요.`, check: ['개인택시·법인택시', '36·48·60개월 표준형 저금리', '지자체 보조금 액수에 따라 월 납입금 달라짐'], qa: [] },
+    staff: { say: () => '임직원·그룹사 전용 특화 할부로 유예율을 높여 월 납입금을 크게 낮출 수 있습니다.', check: ['재직 확인, 직원 차량 할인 규정(명의·할인·재구입 연한) 적용', '만기 시 차량 반납으로 유예금 상환 가능', '그랜저·팰리세이드는 가솔린 2.5/2.5터보·HEV'], qa: [] },
+    gfin: { say: () => (st.who.owner ? '수입차나 제네시스를 타셨다면 THE BETTER CHOICE로 4% 추가 혜택을 받고 갈아타실 수 있어요.' : '제네시스 파이낸스 리스·렌트로 시장 최저 수준 월 납입금을 제안해 드릴게요.'), check: ['계약·출고 시 판매유형·대상 입력', '보유 증빙: 자동차 등록원부(계약일 전월 마감일 기준)', 'DOUBLE-PICK 12·24개월 4% 추가', '출고 고객 GS칼텍스 고급휘발유 월 최대 2만원 할인'], qa: [] },
+    std: { say: () => '11월 전용 금융은 없지만 쿠폰과 트레이드인, 표준 할부로 부담을 낮춰 드릴게요.', check: ['K-세일페스타 쿠폰 대상 여부 확인', '트레이드인(보유 차 매각) 상담', '연내 출고 시 HEV·EV 세제 감면 확인'], qa: [] },
+  };
+  function guideBlock(res, p) {
+    const car = CARS.find((c) => c.id === st.car); const g = GUIDE[p.id] || GUIDE.std;
+    const ks = ksfOk({ car, who: st.who });
+    const lines = [g.say(p, car)];
+    if (ks[0]) lines.push('오늘 K-세일페스타에 응모하시면 최대 100만원 쿠폰이 나옵니다(11.15 마감, 11.30 출고까지).');
+    const memo = () => [
+      `[대전충남 11월 금융 상담 메모] ${new Date().toLocaleDateString('ko-KR')}`,
+      `지역: ${sidoOf(st.area)} ${st.area} / 차종: ${car.name} / 가격: ${st.price.toLocaleString('ko-KR')}만원`,
+      `고객 유형: ${WHO.filter(([k]) => st.who[k]).map(([, l]) => l).join(', ')}`,
+      `추천 금융: ${p.name} — ${p.terms}`,
+      p.loan ? `예상: 선수금 ${won(p.loan.dn)}, 월 약 ${won1(p.loan.m)} × ${p.loan.n}개월${p.loan.B ? `, 만기 유예금 ${won(p.loan.B)}` : ''}${p.saved > 0 ? `, 이자 절감 약 ${won(p.saved)}` : ''}` : p.lease ? `예상: 월 ${p.lease.gen}만원(60개월 리스)` : '',
+      `상담 한 마디: ${lines.join(' ')}`,
+      `체크: ${g.check.join(' / ')}`,
+      '※ 추정치 — 트림·옵션·보조금·심사에 따라 달라짐',
+    ].filter(Boolean).join('\n');
+    const btn = h('button', { type: 'button', class: 'copy-btn', text: '상담 메모 복사', onclick: async (e) => {
+      const b = e.currentTarget; try { await navigator.clipboard.writeText(memo()); b.textContent = '복사했어요'; } catch (err) { b.textContent = '복사가 막혀 있어요 — 아래 메모를 직접 선택하세요'; pre.hidden = false; }
+      setTimeout(() => { b.textContent = '상담 메모 복사'; }, 2000);
+    } });
+    const pre = h('pre', { class: 'memo', hidden: true, text: memo() });
+    $('#o-guide').replaceChildren(
+      h('h2', { text: '5. 상담 가이드' }),
+      h('div', { class: 'say-box' }, [h('span', { text: '상담 한 마디' }), ...lines.map((l) => h('p', { text: `“${l}”` }))]),
+      h('div', { class: 'guide-cols' }, [
+        h('div', {}, [h('h3', { text: '체크리스트' }), h('ul', { class: 'check' }, g.check.map((c) => h('li', { text: c })))]),
+        g.qa.length ? h('div', {}, [h('h3', { text: '예상 질문과 답변' }), h('dl', { class: 'qa' }, g.qa.flatMap(([q, a]) => [h('dt', { text: `Q. ${q}` }), h('dd', { text: `A. ${a}` })]))]) : null,
+      ]),
+      h('div', { class: 'copy-row' }, [btn]), pre,
+    );
+  }
+  function render() {
+    const car = CARS.find((c) => c.id === st.car);
+    $('#v-down').textContent = `${Math.round(st.down * 100)}%`;
+    const res = evaluate({ car, price: st.price, who: st.who, down: st.down, months: st.months });
+    const chosen = res.list.find((p) => p.id === st.pick && p.ok) || res.best;
+    targetBlock(car, res, chosen); productsBlock(res); priceBlock(res, chosen); guideBlock(res, chosen);
+  }
+  window.ADV = { evaluate, CARS, loan }; // 검산용
+  dday(); initForm(); render();
+})();

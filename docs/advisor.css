@@ -1,0 +1,111 @@
+/* 대전충남 11월 금융상품 추천기 */
+.adv-main { max-width: 1180px; }
+.adv-hero { background: linear-gradient(135deg, #002c5f 0%, #0b3a75 70%, #164b8f 100%); color: #fff; border-radius: 14px; padding: 28px 28px 18px; }
+.adv-hero .chap-no { color: #e2b66f; }
+.adv-hero h1 { color: #fff; margin: 0 0 8px; font-size: clamp(26px, 4vw, 36px); }
+.adv-hero .lede { color: rgba(255,255,255,.9); margin-bottom: 16px; }
+.adv-hero .dd { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.25); color: #fff; }
+.adv-hero .dd b { color: #fff; }
+.adv-hero .dd.hot { border-color: #e2b66f; background: rgba(226,182,111,.16); }
+.adv-hero .dd.hot b { color: #f3cf8f; }
+
+.adv-grid { display: grid; grid-template-columns: minmax(280px, 360px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.adv-form { position: sticky; top: 72px; display: flex; flex-direction: column; gap: 14px; }
+.adv-form h2, .adv-out h2 { margin: 0 0 6px; font-size: 20px; color: var(--navy); }
+.fld { display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+.fld > span { font-weight: 700; }
+.fld small { font-weight: 400; color: var(--muted); font-size: 13px; display: block; }
+.fld select, .fld input[type=number] { font: inherit; font-size: 16px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--fg); width: 100%; }
+.fld input[type=range] { width: 100%; accent-color: var(--navy); }
+#v-down { color: var(--navy); margin-left: 6px; }
+.chips-sel { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips-sel button { font: inherit; font-size: 14px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
+.chips-sel button:hover { border-color: var(--navy); }
+.chips-sel button[aria-pressed="true"] { background: var(--navy); color: #fff; border-color: var(--navy); font-weight: 700; }
+.small { font-size: 13px !important; }
+
+.adv-out { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+/* 말하는 상담원 */
+.adv-talk { display: flex; align-items: flex-end; gap: 6px; }
+.adv-talk .advisor-man { width: 140px; }
+.adv-bubble { margin-bottom: 40px; }
+.adv-bubble ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 5px; font-size: 15px; }
+.adv-bubble li span { display: inline-block; min-width: 5.6rem; color: #9a6a2a; font-weight: 700; }
+.advisor-man.talk { animation: pop-in .55s cubic-bezier(.2, 1.4, .4, 1) both, sway 2.4s ease-in-out .6s 2; }
+.advisor-man.talk .mouth { transform-box: fill-box; transform-origin: 50% 30%; animation: talk .22s ease-in-out .35s 14 alternate; }
+.advisor-man.talk .advisor-arm { animation: wave 1.2s ease-in-out .5s 2; }
+.advisor-man .spark { transform-box: fill-box; transform-origin: center; animation: twinkle 1.6s ease-in-out infinite; }
+.advisor-man .sp1 { animation-delay: .4s; } .advisor-man .sp2 { animation-delay: .8s; }
+.adv-talk .advisor-bubble { animation: bubble-talk .45s cubic-bezier(.2, 1.3, .4, 1) .25s both; }
+.adv-talk .advisor-say::after { content: ''; display: inline-block; width: 4px; height: 1em; margin-left: 4px; vertical-align: -2px; background: var(--navy); animation: caret 1s steps(1) 4 forwards; opacity: 0; }
+@keyframes talk { from { transform: scaleY(1); } to { transform: scaleY(.25); } }
+@keyframes sway { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-2deg); } }
+@keyframes twinkle { 0%,100% { transform: scale(.7); opacity: .5; } 50% { transform: scale(1.15); opacity: 1; } }
+@keyframes bubble-talk { from { opacity: 0; transform: translateX(-14px) scale(.92); } to { opacity: 1; transform: none; } }
+@keyframes caret { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(24px) scale(.8); } to { opacity: 1; transform: none; } }
+@keyframes wave { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-14deg); } }
+
+/* 금융상품 카드 */
+.prod-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 10px; }
+.prod { text-align: left; font: inherit; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; position: relative; }
+.prod b { font-size: 16px; line-height: 1.35; }
+.prod:hover:not(:disabled) { border-color: var(--navy); }
+.prod.no { opacity: .55; cursor: default; background: var(--bg); }
+.prod.best { border: 2px solid #c8893a; padding: 11px 13px; }
+.prod.on { box-shadow: 0 0 0 3px rgba(0, 44, 95, .25); border-color: var(--navy); }
+.prod.best.on { border-color: #c8893a; }
+.prod-badge { align-self: flex-start; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 1px 10px; background: var(--accent-soft); color: var(--navy); }
+.prod.best .prod-badge { background: #c8893a; color: #fff; }
+.prod.no .prod-badge { background: var(--line); color: var(--muted); }
+.prod-terms { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.prod-val { font-size: 15px; font-weight: 700; color: #1d7a4a; }
+.prod-why { font-size: 13px; color: var(--bad, #b5443a); }
+.prod-dl { font-size: 12px; color: #9a6a2a; font-weight: 700; }
+
+/* 가격표 */
+.price-t th { width: 52%; color: var(--fg) !important; font-weight: 400 !important; font-size: 15px !important; }
+.price-t td { text-align: right !important; font-variant-numeric: tabular-nums; font-size: 15px; }
+.price-t tr.strong th, .price-t tr.strong td { font-weight: 700 !important; border-top: 2px solid var(--fg); }
+.price-t tr.big th, .price-t tr.big td { font-weight: 700 !important; font-size: 20px !important; color: var(--navy) !important; background: rgba(0, 44, 95, .06); }
+.price-t tr.good td { color: #1d7a4a; font-weight: 700; }
+.price-t tr.warn td { color: #b3711f; font-weight: 700; }
+#o-price .note { margin-top: 10px; }
+
+/* 상담 가이드 */
+.say-box { border-left: 4px solid #c8893a; background: rgba(200, 137, 58, .08); border-radius: 0 10px 10px 0; padding: 12px 16px; margin-bottom: 14px; }
+.say-box span { font-size: 13px; font-weight: 700; color: #9a6a2a; }
+.say-box p { margin: 6px 0 0; font-size: 17px; line-height: 1.6; }
+.guide-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.guide-cols h3 { font-size: 16px; margin: 0 0 6px; color: var(--navy); }
+.check { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: 15px; }
+.check li { padding-left: 26px; position: relative; }
+.check li::before { content: '✓'; position: absolute; left: 4px; color: #1d7a4a; font-weight: 700; }
+.qa { margin: 0; font-size: 15px; }
+.qa dt { font-weight: 700; margin-top: 8px; }
+.qa dd { margin: 2px 0 0; color: var(--muted); }
+.copy-row { margin-top: 14px; }
+.copy-btn { font: inherit; font-size: 15px; font-weight: 700; padding: 9px 18px; border-radius: 8px; border: 0; background: var(--navy); color: #fff; cursor: pointer; }
+.copy-btn:hover { background: #0b3a75; }
+.memo { white-space: pre-wrap; word-break: keep-all; font-size: 13px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-top: 10px; user-select: all; }
+.adv-foot { margin-top: -8px; }
+
+@media (prefers-color-scheme: dark) {
+  .adv-form h2, .adv-out h2, .guide-cols h3, #v-down, .price-t tr.big td, .price-t tr.big th { color: var(--fg) !important; }
+  .chips-sel button[aria-pressed="true"], .copy-btn { background: var(--accent); border-color: var(--accent); }
+}
+@media (max-width: 900px) {
+  .adv-grid { grid-template-columns: 1fr; }
+  .adv-form { position: static; }
+}
+@media (max-width: 600px) {
+  .adv-hero { padding: 20px 16px 12px; }
+  .adv-talk { flex-direction: column; align-items: flex-start; }
+  .adv-talk .advisor-man { width: 96px; margin-left: 12px; }
+  .adv-bubble { margin-bottom: 0; width: 100%; box-sizing: border-box; }
+  .adv-bubble::before { left: 40px; top: -12px; bottom: auto; border: 10px solid transparent; border-bottom-color: var(--navy); border-top: 0; }
+  .adv-bubble li span { display: block; }
+  .price-t th { width: 48%; }
+}
+@media (prefers-reduced-motion: reduce) { .advisor-man.talk, .advisor-man.talk .mouth, .advisor-man .spark, .adv-talk .advisor-bubble, .adv-talk .advisor-say::after { animation: none !important; } }
