@@ -320,3 +320,10 @@ table.match small { color: var(--muted); }
 .advice { margin-top: 16px; border-left: 4px solid var(--navy); background: var(--accent-soft); border-radius: 0 10px 10px 0; padding: 12px 16px; }
 .advice p { margin: 4px 0 0; font-size: 14px; }
 @media (prefers-color-scheme: dark) { .fp, table.match td:last-child, .dd b { color: var(--fg); } }
+
+/* 동 판촉방안 모달 */
+.dong-modal { position: fixed; inset: 0; z-index: 20; background: rgba(0, 20, 45, .45); display: flex; align-items: center; justify-content: center; padding: 16px; animation: fade-in .2s ease-out; }
+.advisor.in-modal { position: relative; left: auto; right: auto; bottom: auto; max-width: 700px; width: 100%; }
+.advisor.in-modal .advisor-bubble { margin-bottom: 60px; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 820px) { .advisor.in-modal { position: relative; left: auto; right: auto; bottom: auto; flex-direction: column; align-items: flex-start; } .advisor.in-modal .advisor-bubble { margin-bottom: 0; } .advisor.in-modal .advisor-bubble::before { display: none; } }

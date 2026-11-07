@@ -152,7 +152,7 @@
     const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': P.label });
     rows.forEach((r, i) => {
       const y = i * rh, w = (P.val(r) / max) * (W - L - R);
-      const g = s('g', { class: 'click', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: r.sido, sgg: r.sgg, dong: r.dong })); } catch (e) { /* 저장소 없음 */ } location.href = 'ch2-region.html'; } }, [
+      const g = s('g', { class: 'click', onclick: () => showDongPlan(r, pinKey) }, [
         s('rect', { class: 'hit', x: 0, y, width: W, height: rh - 2, fill: 'transparent' }),
         s('text', { x: 0, y: y + 17, text: `${r.sgg} ${r.dong}` }),
         s('text', { x: 120, y: y + 17, class: 'muted', text: r.sido }),
@@ -307,12 +307,61 @@
           h('li', {}, [h('span', { text: '추천 현장' }), ins.place]),
           h('li', {}, [h('span', { text: '금융' }), ins.finance]),
         ]),
-        h('p', { class: 'links' }, [h('a', { href: 'ch6-plan.html', text: '지역별 판촉방안 →' }), ' ', h('a', { href: 'ch2-region.html', text: '동별 인구 보기 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: sd, sgg })); } catch (e) { /* 저장소 없음 */ } } })]),
+        h('p', { class: 'links' }, [h('a', { href: 'ch3-pinpoint.html', text: '동 단위 판촉방안 →' }), ' ', h('a', { href: 'ch2-region.html', text: '동별 인구 보기 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: sd, sgg })); } catch (e) { /* 저장소 없음 */ } } })]),
       ]),
     ]);
     box.append(pop);
     const onKey = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onKey); } };
     document.addEventListener('keydown', onKey);
+  }
+
+
+  /* ---------- 3장: 동을 누르면 그 동의 판촉방안 팝업 ---------- */
+  const DONG_PLAY = {
+    family: { car: '싼타페 HEV·스타리아 HEV', customer: '영유아 자녀를 둔 3040 가구', fin: '싼타페 HEV 60개월 무이자(이자 약 580만원 절감) · 서울에서 이주한 다자녀 가구 금리 1.9% · 스타리아 전용카드 50만원', how: ['아파트 단지 주말 순회 전시와 키즈존', '어린이집·초등학교 하원 시간대 생활권 홍보', '카시트·유모차 적재 시연, 쏘렌토·카니발 비교 시승'] },
+    young: { car: '아반떼·코나 HEV', customer: '첫 차를 고르는 2030 직장인·사회초년생', fin: '아반떼 퍼스트 무브 월 14만원~(12.31 출고분까지) · 코나 EV 부담 Down 월 16만원', how: ['퇴근 시간 팝업 시승(업무지구·대학가 인근)', 'SNS·지역 커뮤니티 타깃 광고와 QR 사전예약', '월 납입금 현장 계산으로 첫차 부담 낮추기'] },
+    seniorCity: { car: '그랜저 HEV·쏘나타', customer: '그랜저·쏘나타를 오래 탄 60대 재구매 고객', fin: '쏘나타 전용카드 50만원 · 택시는 EV 택시 동반자 2.7~2.9% · 소상공인은 포터 EV 월 10만원', how: ['장기 보유 고객 대차 DM·전화', '전통시장·경로당 생활권 상담 부스', '트레이드인 감정으로 기존 차 처분 부담 덜기'] },
+    seniorRural: { car: '포터 EV·캐스퍼', customer: '60대 이상 농업·자영업 생업 운전자', fin: '포터 EV 부담 Down 농업인 월 15만원·소상공인 월 10만원 · 노후차 교체 상담', how: ['5일장·농협 하나로마트 연계 순회 전시·시승', '읍·면사무소, 농협 금융과 연계한 할부 상담', '노후 1톤 트럭 교체·폐차 절차 안내'] },
+  };
+  function showDongPlan(r, key) {
+    const old = document.querySelector('.dong-modal'); if (old) old.remove();
+    const rural = /[읍면]$/.test(r.dong);
+    const playKey = key === 'senior' ? (rural ? 'seniorRural' : 'seniorCity') : key;
+    const ins = (D.insight || []).find((q) => q.sgg === r.sgg);
+    const P = Object.assign({}, DONG_PLAY[playKey]);
+    if (ins && ins.type === key) { P.car = ins.car; P.customer = ins.customer; P.fin = ins.finance; }
+    const sg = D.sgg.find((q) => q.sgg === r.sgg) || {};
+    const full = D.dong.find((q) => q.sgg === r.sgg && q.dong === r.dong) || r;
+    const ratio = (a, b) => (b ? `${(a / b).toFixed(1)}배` : '');
+    const facts = key === 'family'
+      ? `0–9세 ${pct(full.age0_9)} (${r.sgg} 평균의 ${ratio(full.age0_9, sg.age0_9)}) · 30–44세 ${pct(full.age30_44)} · 영패밀리 지수 ${pct(full.family_idx)}`
+      : key === 'young' ? `20–29세 ${pct(full.age20_29)} (${r.sgg} 평균의 ${ratio(full.age20_29, sg.age20_29)}) · 30–44세 ${pct(full.age30_44)}`
+        : `60세 이상 ${pct(full.age60p)} · 약 ${fmt(full.age60p * full.pop)}명 (${r.sgg} 평균 ${pct(sg.age60p)})`;
+    const label = { family: '영패밀리 동', young: '2030 동', senior: '60세 이상 밀집 동' }[key];
+    const close = () => { modal.remove(); document.removeEventListener('keydown', onKey); };
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+    const modal = h('div', { class: 'dong-modal', onclick: (e) => { if (e.target === modal) close(); } }, [
+      h('div', { class: 'advisor in-modal', role: 'dialog', 'aria-label': `${r.dong} 판촉방안` }, [
+        advisorSvg(),
+        h('div', { class: 'advisor-bubble' }, [
+          h('button', { type: 'button', class: 'advisor-x', 'aria-label': '닫기', text: '×', onclick: close }),
+          h('p', { class: 'chap-no', text: `${r.sido} ${r.sgg} ${r.dong} · ${label} · 인구 ${fmt(full.pop)}명` }),
+          h('p', { class: 'advisor-say' }, [h('b', { text: r.dong }), '에서는 ', h('b', { text: P.car }), `${josa(P.car)} `, h('b', { text: P.customer }), ' 대상으로 판촉해 보면 어떨까요?']),
+          h('ul', {}, [
+            h('li', {}, [h('span', { text: '근거' }), facts]),
+            h('li', {}, [h('span', { text: '금융' }), P.fin]),
+            h('li', {}, [h('span', { text: '현장 판촉' }), P.how.join(' · ')]),
+          ]),
+          h('p', { class: 'links' }, [
+            h('a', { href: 'ch2-region.html', text: '이 동 인구 구성 보기 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: r.sido, sgg: r.sgg, dong: r.dong })); } catch (e) { /* 저장소 없음 */ } } }), ' ',
+            h('a', { href: 'ch6-plan.html#finmatch', text: '금융 매칭표 →' }),
+          ]),
+        ]),
+      ]),
+    ]);
+    document.body.append(modal);
+    document.addEventListener('keydown', onKey);
+    const btn = modal.querySelector('.advisor-x'); if (btn) btn.focus();
   }
 
   /* ---------- 표지: 개략 지도 + 차종 Top 3 ---------- */
@@ -374,7 +423,7 @@
         finOf(f.focus) ? h('a', { class: 'fin-tag', href: 'ch6-plan.html#finance', text: finOf(f.focus) }) : null,
       ]))),
       h('p', { class: 'links' }, [
-        h('a', { href: 'ch6-plan.html', text: '지역별 판촉방안 →' }), ' ',
+        h('a', { href: 'ch3-pinpoint.html', text: '동 단위 판촉방안 →' }), ' ',
         h('a', { href: 'ch2-region.html', text: '이 지역 인구 구성 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: sd, sgg: mapSel })); } catch (e) { /* 저장소 없음 */ } } }),
       ]),
     ].filter(Boolean));
@@ -452,9 +501,9 @@
       { id: 'a1', col: 1, label: '동 단위 고객 구조', sub: '영패밀리·2030·60세+', href: 'ch3-pinpoint.html' },
       { id: 'a2', col: 1, label: '차급 경쟁력', sub: '현대 vs 경쟁 비중', href: 'ch4-market.html' },
       { id: 'a3', col: 1, label: '연말·대차 수요', sub: '언제, 누가 바꾸나', href: 'ch5-replacement.html' },
-      { id: 'd1', col: 2, label: '지역별 판촉방안', sub: '누구에게·무엇을·어디서', href: 'ch6-plan.html' },
+      { id: 'd1', col: 2, label: '동 단위 판촉방안', sub: '어느 동·누구에게·무엇을', href: 'ch3-pinpoint.html' },
       { id: 'd2', col: 2, label: '세종 기획안', sub: '패밀리 HEV 위크엔드', href: 'ch7-sejong.html' },
-      { id: 'd3', col: 2, label: '목표 시뮬레이터', sub: '계약·연내 출고', href: 'simulator.html' },
+      { id: 'd3', col: 2, label: '금융·실행 일정', sub: '11.30 / 12.31 출고 마감', href: 'ch6-plan.html' },
     ],
     edges: [['pop', 'a1'], ['reg', 'a1'], ['reg', 'a2'], ['evd', 'a2'], ['sal', 'a3'], ['old', 'a3'], ['tax', 'a3'], ['a1', 'd1'], ['a2', 'd1'], ['a3', 'd1'], ['d1', 'd2'], ['d2', 'd3']],
   };
