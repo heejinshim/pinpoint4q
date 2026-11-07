@@ -616,7 +616,6 @@
       `코리아세일페스타: ${ks[0] ? (p.coupon ? `${p.coupon}만원 쿠폰 반영(중복 여부 확인)` : '쿠폰 대상 — 응모 안내') : `제외(${ks[1]})`}`,
       `상담 한 마디: ${lines.join(' ')}`,
       `체크: ${allCheck.join(' / ')}`,
-      `서류: ${allDocs.join(' / ')}`,
       '※ 추정치 — 트림·옵션·보조금·심사에 따라 달라짐',
     ].filter(Boolean).join('\n');
     const pre = h('pre', { class: 'memo', hidden: true, text: memo() });
@@ -638,7 +637,6 @@
       ]))),
       h('div', { class: 'guide-cols' }, [
         h('div', {}, [ih('h3', 'check', '체크리스트'), h('ul', { class: 'check' }, allCheck.map((c) => h('li', { text: c, class: W.check.includes(c) ? 'who-item' : null })))]),
-        h('div', {}, [ih('h3', 'docs', '준비 서류'), h('ul', { class: 'check docs' }, allDocs.map((c) => h('li', { text: c, class: W.docs.includes(c) ? 'who-item' : null })))]),
       ]),
       ih('h3', 'qa', '예상 질문과 답변', 'g-h'),
       h('dl', { class: 'qa' }, [...W.qa, ...g.qa, ...COMMON_QA].flatMap(([q, a]) => [h('dt', { text: `Q. ${q}` }), h('dd', { text: `A. ${a}` })])),
