@@ -111,3 +111,11 @@ footer p { margin: 4px 0; }
 .zl { fill: var(--muted); font-size: 12px; }
 .kpi { margin: 8px 0 0; padding-left: 18px; font-size: 14px; }
 table.plain th[scope], .case table.plain tbody th { width: 7rem; color: var(--muted); }
+
+.rbar rect { fill: var(--accent); }
+.rbar text { fill: var(--fg); font-size: 13px; text-anchor: middle; }
+.rbar .rl { fill: var(--muted); font-size: 12px; }
+.rbar .rl2, .rl2 { text-anchor: start; font-size: 13px; fill: var(--fg); }
+.rbar .rs { text-anchor: start; }
+.rbar .rb { font-weight: 700; }
+.muted2 { fill: var(--muted) !important; font-size: 12px !important; }
