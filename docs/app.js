@@ -636,8 +636,9 @@
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const dd = (iso) => Math.round((new Date(iso + 'T00:00:00') - today) / 86400000);
     const tag = (n) => (n > 0 ? `D-${n}` : n === 0 ? 'D-DAY' : '마감');
-    const d1 = dd('2026-11-30'), d2 = dd('2026-12-31');
+    const d0 = dd('2026-11-15'), d1 = dd('2026-11-30'), d2 = dd('2026-12-31');
     $('#fin-dday').replaceChildren(
+      h('div', { class: 'dd hot' }, [h('b', { text: tag(d0) }), h('span', { text: '11.15 K-세일페스타 쿠폰 응모 마감 — 상담 고객 전원 응모 안내' })]),
       h('div', { class: 'dd hot' }, [h('b', { text: tag(d1) }), h('span', { text: '11.30 출고 마감 — 무이자·전용카드·EV 부담 Down·포터 EV·다자녀 등 11월 금융' })]),
       h('div', { class: 'dd' }, [h('b', { text: tag(d2) }), h('span', { text: '12.31 출고 마감 — 아반떼 퍼스트 무브, HEV·EV 세제 감면' })]),
       h('div', { class: 'dd muted-dd' }, [h('b', { text: '중복 불가' }), h('span', { text: '금융 프로모션끼리는 하나만 — 고객별 최대 혜택 하나를 고르세요' })]),
