@@ -225,6 +225,92 @@
     [[18, 30], [124, 22], [12, 92]].forEach(([x, y], i) => sv.append(s('path', { d: `M${x} ${y - 7} L${x + 2} ${y - 2} L${x + 7} ${y} L${x + 2} ${y + 2} L${x} ${y + 7} L${x - 2} ${y + 2} L${x - 7} ${y} L${x - 2} ${y - 2} Z`, fill: '#e2b66f', class: `spark sp${i}` })));
     return sv;
   }
+  /* ---------- 일러스트 아이콘 (자체 제작 SVG) ---------- */
+  const N = '#002c5f', G = '#c8893a', BG = '#e8eef7';
+  const ICONS = {
+    form: `<rect x="14" y="11" width="20" height="27" rx="3" fill="#fff" stroke="${N}" stroke-width="2.5"/><rect x="19" y="8" width="10" height="6" rx="2" fill="${N}"/><path d="M18 21h12M18 27h8" stroke="#9fb3cc" stroke-width="2" stroke-linecap="round"/><path d="M27 31l3 3 6-7" stroke="${G}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+    target: `<circle cx="24" cy="24" r="13" fill="#fff" stroke="${N}" stroke-width="2.5"/><circle cx="24" cy="24" r="8" fill="none" stroke="${N}" stroke-width="2.5"/><circle cx="24" cy="24" r="3.2" fill="${G}"/><path d="M24 24l12-12M32 11l4 1 1 4" stroke="${G}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+    money: `<rect x="7" y="14" width="25" height="17" rx="3" fill="${N}"/><rect x="7" y="18" width="25" height="3.5" fill="${G}"/><rect x="11" y="25" width="7" height="2.5" rx="1" fill="#9fb3cc"/><circle cx="33" cy="31" r="8.5" fill="${G}" stroke="#fff" stroke-width="2"/><text x="33" y="35.5" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">₩</text>`,
+    calc: `<rect x="14" y="8" width="20" height="32" rx="3.5" fill="${N}"/><rect x="17.5" y="11.5" width="13" height="7" rx="1.5" fill="#cfe8d6"/><g fill="#fff">${[0, 1, 2].map((r) => [0, 1, 2].map((c) => `<circle cx="${19.5 + c * 4.5}" cy="${24 + r * 5}" r="1.6"${r === 2 && c === 2 ? ` fill="${G}"` : ''}/>`).join('')).join('')}</g>`,
+    chat: `<path d="M8 12h22a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H17l-6 5v-5H8a3 3 0 0 1-3-3V15a3 3 0 0 1 3-3z" fill="${N}"/><path d="M12 19h14M12 23h9" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M40 22H28a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h7l5 4v-4a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3z" fill="${G}"/><circle cx="30" cy="28.5" r="1.4" fill="#fff"/><circle cx="34" cy="28.5" r="1.4" fill="#fff"/><circle cx="38" cy="28.5" r="1.4" fill="#fff"/>`,
+    hello: `<circle cx="22" cy="25" r="11" fill="#f2c9a5"/><path d="M11 23q1-11 11-11 10 0 11 10-5-5-11-5-6 0-11 6z" fill="#2a1d16"/><circle cx="18" cy="25" r="1.4" fill="#2a1d16"/><circle cx="26" cy="25" r="1.4" fill="#2a1d16"/><path d="M18 30q4 3 8 0" stroke="#8a4b33" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M36 12q4 4 0 8M39 9q7 7 0 14" stroke="${G}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    ask: `<path d="M10 10h28a3 3 0 0 1 3 3v17a3 3 0 0 1-3 3H22l-7 6v-6h-5a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3z" fill="${N}"/><text x="24" y="28.5" text-anchor="middle" font-size="18" font-weight="800" fill="${G}">?</text>`,
+    car: `<path d="M8 30v-5l5-1 5-7h13l6 7 4 1v5z" fill="${N}"/><path d="M19.5 18.5h5v5.5h-9zM26.5 18.5h4l4.5 5.5h-8.5z" fill="#cfe0f5"/><circle cx="15" cy="31" r="4.2" fill="#1b1b1b" stroke="#fff" stroke-width="2"/><circle cx="34" cy="31" r="4.2" fill="#1b1b1b" stroke="#fff" stroke-width="2"/><rect x="38" y="26" width="3" height="2" rx="1" fill="${G}"/>`,
+    won: `<circle cx="24" cy="25" r="13" fill="${G}"/><circle cx="24" cy="25" r="10" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/><text x="24" y="30.5" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">₩</text><path d="M37 11l2 4 4 1-4 2-2 4-1-4-4-2 4-1z" fill="${N}"/>`,
+    gift: `<rect x="11" y="20" width="26" height="18" rx="2" fill="${G}"/><rect x="9" y="15" width="30" height="7" rx="2" fill="#e2b66f"/><rect x="22" y="15" width="4" height="23" fill="${N}"/><path d="M24 15q-9-9-11-2-1 4 11 2zM24 15q9-9 11-2 1 4-11 2z" fill="${N}"/><text x="31" y="33" text-anchor="middle" font-size="7" font-weight="800" fill="#fff">K</text>`,
+    care: `<rect x="15" y="7" width="18" height="33" rx="3.5" fill="${N}"/><rect x="17.5" y="11" width="13" height="23" rx="1.5" fill="#fff"/><path d="M24 29s-5-3-5-6.5a2.6 2.6 0 0 1 5-1 2.6 2.6 0 0 1 5 1C29 26 24 29 24 29z" fill="${G}"/><circle cx="24" cy="37" r="1.3" fill="#fff"/>`,
+    cal: `<rect x="11" y="13" width="26" height="24" rx="3" fill="#fff" stroke="${N}" stroke-width="2.5"/><rect x="11" y="13" width="26" height="7" rx="3" fill="${N}"/><path d="M17 10v6M31 10v6" stroke="${N}" stroke-width="2.5" stroke-linecap="round"/><g fill="${G}"><circle cx="18" cy="26" r="1.8"/><circle cx="24" cy="26" r="1.8"/><circle cx="30" cy="26" r="1.8"/><circle cx="18" cy="32" r="1.8"/><circle cx="24" cy="32" r="1.8"/></g>`,
+    defer: `<rect x="9" y="13" width="22" height="22" rx="3" fill="#fff" stroke="${N}" stroke-width="2.5"/><rect x="9" y="13" width="22" height="6" rx="3" fill="${N}"/><path d="M14 27h10" stroke="#9fb3cc" stroke-width="2" stroke-linecap="round"/><path d="M30 33q8 0 8-8M34 22l4 3 3-4" stroke="${G}" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+    key: `<circle cx="17" cy="24" r="7.5" fill="none" stroke="${N}" stroke-width="3.2"/><circle cx="17" cy="24" r="2" fill="${G}"/><path d="M24.5 24H39M34 24v5M38.5 24v4" stroke="${N}" stroke-width="3.2" stroke-linecap="round"/>`,
+    card: `<rect x="8" y="13" width="32" height="22" rx="3.5" fill="${N}"/><rect x="8" y="18" width="32" height="4" fill="${G}"/><rect x="12" y="27" width="6" height="4" rx="1" fill="#e2b66f"/><path d="M27 29h9" stroke="#9fb3cc" stroke-width="2" stroke-linecap="round"/>`,
+    check: `<rect x="12" y="10" width="24" height="29" rx="3" fill="#fff" stroke="${N}" stroke-width="2.5"/><path d="M17 19l2 2 4-4M17 28l2 2 4-4" stroke="${G}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 19h5M26 28h5" stroke="#9fb3cc" stroke-width="2" stroke-linecap="round"/>`,
+    docs: `<path d="M15 9h13l7 7v22a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" fill="#fff" stroke="${N}" stroke-width="2.5"/><path d="M28 9v7h7" fill="none" stroke="${N}" stroke-width="2.5"/><path d="M18 23h12M18 28h12M18 33h7" stroke="#9fb3cc" stroke-width="2" stroke-linecap="round"/><circle cx="33" cy="35" r="5" fill="${G}"/><path d="M31 35l1.5 1.5 2.5-3" stroke="#fff" stroke-width="1.8" fill="none"/>`,
+    qa: `<circle cx="18" cy="21" r="10" fill="${N}"/><text x="18" y="25.5" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Q</text><circle cx="31" cy="30" r="10" fill="${G}"/><text x="31" y="34.5" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">A</text>`,
+    shield: `<path d="M24 8l13 5v10c0 9-6 14-13 17-7-3-13-8-13-17V13z" fill="${N}"/><path d="M18 24l4 4 8-8" stroke="${G}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+    warn: `<path d="M24 9l16 28H8z" fill="${G}" stroke="${G}" stroke-width="2" stroke-linejoin="round"/><path d="M24 19v8" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="32" r="1.8" fill="#fff"/>`,
+  };
+  function ico(name, cls = 'ico') {
+    const w = h('span', { class: cls, 'aria-hidden': 'true' });
+    w.innerHTML = `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="${BG}"/>${ICONS[name] || ''}</svg>`;
+    return w;
+  }
+  const ih = (tag, name, text, cls) => h(tag, { class: `ico-h ${cls || ''}` }, [ico(name), h('span', { text })]);
+  const KIND_ICON = { '할부': 'cal', '유예형 할부': 'defer', '렌트·리스': 'key', '전용카드': 'card' };
+
+  /* ---------- 고객 일러스트 (차종 고객군별) ---------- */
+  const CUST = {
+    family: { hair: '#3b2a20', top: '#e9897e', long: true, kid: true, reply: '아이들 태우기 딱 좋겠네요! 월 납입금 다시 보여 주세요.' },
+    young: { hair: '#1f1a17', top: '#4a90c2', reply: '월 그 정도면 저도 해 볼 만하겠는데요?' },
+    senior: { hair: '#b9b9b9', top: '#b89a6a', glasses: true, reply: '오래 탔으니 이번엔 바꿔 볼까 싶네요.' },
+    biz: { hair: '#2a1d16', top: '#e0893a', cap: '#3d5a2f', reply: '장사하는 데 기름값 줄면 좋지요.' },
+    eco: { hair: '#2a1d16', top: '#3f9a6b', reply: '충전소만 가까우면 바로 하고 싶어요.' },
+    premium: { hair: '#2a1d16', top: '#3b3b45', long: true, earring: true, reply: '갈아타는 조건, 한번 자세히 볼게요.' },
+  };
+  function customer(type) {
+    const c = CUST[type] || CUST.family;
+    const kids = c.kid ? [
+      s('rect', { x: 104, y: 160, width: 9, height: 32, rx: 3, fill: '#4a5d7a' }), s('rect', { x: 115, y: 160, width: 9, height: 32, rx: 3, fill: '#4a5d7a' }),
+      s('path', { d: 'M100 134 Q102 126 114 126 Q126 126 128 134 L128 164 L100 164 Z', fill: '#f2c14e' }),
+      s('circle', { cx: 114, cy: 112, r: 14, fill: '#f2c9a5' }),
+      s('path', { d: 'M100 110 Q101 96 114 96 Q127 96 128 110 Q120 103 114 104 Q106 104 100 110 Z', fill: c.hair }),
+      s('circle', { cx: 109, cy: 113, r: 1.8, fill: '#2a1d16' }), s('circle', { cx: 119, cy: 113, r: 1.8, fill: '#2a1d16' }),
+      s('path', { d: 'M109 119 Q114 123 119 119', stroke: '#8a4b33', 'stroke-width': 1.8, fill: 'none', 'stroke-linecap': 'round' }),
+    ] : [];
+    const sv = s('svg', { viewBox: c.kid ? '0 0 140 210' : '10 0 120 210', class: 'cust', 'aria-hidden': 'true' }, [
+      s('ellipse', { cx: 62, cy: 204, rx: c.kid ? 64 : 36, ry: 5, fill: 'rgba(0,0,0,.12)' }),
+      s('rect', { x: 45, y: 150, width: 15, height: 48, rx: 4, fill: '#33415c' }), s('rect', { x: 64, y: 150, width: 15, height: 48, rx: 4, fill: '#33415c' }),
+      s('path', { d: 'M42 198 h20 v6 h-22 z M64 198 h20 v6 h-22 z', fill: '#4a3a30' }),
+      s('path', { d: 'M34 100 Q36 88 50 86 L74 86 Q88 88 90 100 L92 156 L32 156 Z', fill: c.top }),
+      s('path', { d: 'M34 104 Q26 126 30 148 L38 148 L40 112 Z', fill: c.top }), s('circle', { cx: 34, cy: 150, r: 5.5, fill: '#f2c9a5' }),
+      s('path', { d: 'M90 104 Q98 126 94 148 L86 148 L84 112 Z', fill: c.top }), s('circle', { cx: 90, cy: 150, r: 5.5, fill: '#f2c9a5' }),
+      c.top === '#3b3b45' ? s('path', { d: 'M52 86 L62 104 L72 86 Z', fill: '#f4f1ea' }) : s('path', { d: 'M52 86 Q62 96 72 86', stroke: 'rgba(0,0,0,.18)', 'stroke-width': 3, fill: 'none' }),
+      s('rect', { x: 56, y: 74, width: 12, height: 14, rx: 4, fill: '#eab894' }),
+      c.long ? s('path', { d: 'M40 58 Q38 32 62 31 Q86 32 84 58 L86 84 Q78 88 76 70 L48 70 Q46 88 38 84 Z', fill: c.hair }) : null,
+      s('circle', { cx: 62, cy: 56, r: 21, fill: '#f2c9a5' }),
+      c.long ? s('path', { d: 'M41 54 Q42 34 62 34 Q82 34 83 54 Q74 42 60 44 Q48 46 41 54 Z', fill: c.hair })
+        : c.cap ? s('path', { d: 'M40 50 Q42 30 62 30 Q82 30 84 50 L96 52 Q94 56 84 55 L40 55 Z', fill: c.cap })
+          : s('path', { d: 'M41 54 Q40 33 62 33 Q84 33 83 52 Q76 42 64 43 Q50 44 41 54 Z', fill: c.hair }),
+      s('circle', { cx: 55, cy: 58, r: 2.3, fill: '#2a1d16' }), s('circle', { cx: 69, cy: 58, r: 2.3, fill: '#2a1d16' }),
+      c.glasses ? s('g', { stroke: '#555', 'stroke-width': 1.6, fill: 'none' }, [s('circle', { cx: 55, cy: 58, r: 5.5 }), s('circle', { cx: 69, cy: 58, r: 5.5 }), s('path', { d: 'M60.5 58 h3' })]) : null,
+      s('path', { d: 'M55 66 Q62 71 69 66', stroke: '#8a4b33', 'stroke-width': 2.2, fill: 'none', 'stroke-linecap': 'round' }),
+      s('circle', { cx: 50, cy: 64, r: 3, fill: '#f0a58a', opacity: 0.5 }), s('circle', { cx: 74, cy: 64, r: 3, fill: '#f0a58a', opacity: 0.5 }),
+      c.earring ? s('circle', { cx: 41.5, cy: 64, r: 2, fill: G }) : null,
+      ...kids,
+    ].filter(Boolean));
+    return sv;
+  }
+  function scene(car, lines) {
+    const c = CUST[car.type] || CUST.family;
+    const m = man(); m.classList.add('talk');
+    return h('div', { class: 'scene' }, [
+      h('div', { class: 'scene-fig' }, [m, h('span', { class: 'scene-name', text: '카마스터' })]),
+      h('div', { class: 'scene-mid' }, [
+        h('div', { class: 'say-box' }, [h('span', { text: '핵심 한 마디' }), ...lines.map((l) => h('p', { text: `“${l}”` }))]),
+        h('div', { class: 'reply' }, [h('span', { text: '고객님' }), h('p', { text: `“${c.reply}”` })]),
+      ]),
+      h('div', { class: 'scene-fig cust-fig' }, [customer(car.type), h('span', { class: 'scene-name', text: car.persona.split(' ').slice(-2).join(' ') })]),
+    ]);
+  }
   const josa = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '은' : '는'; return '는'; };
   const josaR = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '을' : '를'; return '를'; };
 
@@ -321,7 +407,7 @@
     items.push(['코리아세일페스타', ks[0] ? `쿠폰 대상 차종 — 오늘 응모 안내(당첨 시 50·100만원, 11.15 응모·11.30 출고)${st.coupon ? ` · ${st.coupon}만원 당첨 반영` : ''}` : `쿠폰 제외 — ${ks[1]}`]);
     const box = $('#o-target');
     box.replaceChildren(
-      h('h2', { text: '2. 타겟 고객 추천' }),
+      ih('h2', 'target', '2. 타겟 고객 추천'),
       h('div', { class: 'adv-talk' }, [man(), h('div', { class: 'advisor-bubble adv-bubble' }, [
         h('p', { class: 'chap-no', text: `${areaLabel()} · ${car.name}` }),
         h('p', { class: 'advisor-say' }, say.flat()),
@@ -334,10 +420,10 @@
     const box = $('#o-products');
     const items = res.list.slice().sort((a, b) => (b.ok - a.ok) || ((b.score || 0) - (a.score || 0)));
     box.replaceChildren(
-      h('h2', { text: '3. 지금 쓸 수 있는 11월 금융상품' }),
+      ih('h2', 'money', '3. 지금 쓸 수 있는 11월 금융상품'),
       h('p', { class: 'muted small', text: '금융 프로모션끼리는 중복 적용되지 않습니다. 고객에게 가장 큰 혜택 하나를 고르세요. 카드를 누르면 아래 가격 계산이 그 상품으로 바뀝니다.' }),
       h('div', { class: 'prod-list' }, items.map((p) => h('button', { type: 'button', class: `prod ${p.ok ? 'ok' : 'no'} ${p.best ? 'best' : ''} ${st.pick === p.id || (!st.pick && p.best) ? 'on' : ''}`, disabled: !p.ok, onclick: () => { st.pick = p.id; render(); } }, [
-        h('span', { class: 'prod-badge', text: !p.ok ? '대상 아님' : p.best ? '추천' : p.kind }),
+        h('span', { class: 'prod-top' }, [ico(p.id === 'zero' ? 'won' : p.id === 'card' ? 'card' : KIND_ICON[p.kind] || 'cal', 'ico sm'), h('span', { class: 'prod-badge', text: !p.ok ? '대상 아님' : p.best ? '추천' : p.kind })]),
         h('b', { text: p.name }),
         h('span', { class: 'prod-terms', text: p.terms }),
         p.ok ? h('span', { class: 'prod-val', text: p.lease ? `월 ${p.lease.gen}만원~ (렌트·리스)` : p.saved > 0 ? `이자 약 ${won(p.saved)} 절감${p.lost ? ` · ${p.lostNote}` : ''}` : p.cashback ? '할인 25만 + 캐시백 25만' : p.id === 'staff' ? `월 납입금 약 ${won1(p.monthlyCut)} 낮아짐(유예형)` : p.discount ? `할인 ${won(p.discount)}` : '' }) : h('span', { class: 'prod-why', text: p.why.join(' · ') }),
@@ -373,7 +459,7 @@
         p.ref ? h('p', { class: 'note', text: `자료 예시: ${car.name} 선수 1% 시 월 ${p.ref[0]}만원, 선수 5% 시 월 ${p.ref[1]}만원(트레이드인·생산월 200만 기준). 위 계산은 유예금 산정 기준 차이로 2~4만원 높게 나올 수 있습니다.` }) : null,
         p.downUsed > st.down ? h('p', { class: 'note', text: `이 상품은 선수율 최소 ${Math.round(p.downUsed * 100)}%가 필요해 그 기준으로 계산했습니다.` }) : null];
     }
-    box.replaceChildren(h('h2', { text: '4. 예상 최종 가격' }), h('p', { class: 'chap-no', text: `${p.name}${p.best ? ' · 추천' : ''}` }), ...body.filter(Boolean),
+    box.replaceChildren(ih('h2', 'calc', '4. 예상 최종 가격'), h('p', { class: 'chap-no', text: `${p.name}${p.best ? ' · 추천' : ''}` }), ...body.filter(Boolean),
       h('p', { class: 'muted small', text: '추정치입니다. 트림·옵션·선수금·할인·지자체 보조금(대전·세종·충남 실제 공고, ev.or.kr)과 현대캐피탈 심사에 따라 달라집니다.' }));
   }
   /* ---------- 상담 가이드 ---------- */
@@ -499,25 +585,25 @@
       setTimeout(() => { b.textContent = '상담 메모 복사'; }, 2000);
     } });
     $('#o-guide').replaceChildren(
-      h('h2', { text: '5. 상담 가이드' }),
+      ih('h2', 'chat', '5. 상담 가이드'),
       h('p', { class: 'muted small', text: `${areaLabel()} · ${car.name} · ${p.name} 기준으로 만든 상담 흐름입니다. 조건을 바꾸면 멘트와 숫자가 함께 바뀝니다.` }),
-      h('div', { class: 'say-box' }, [h('span', { text: '핵심 한 마디' }), ...lines.map((l) => h('p', { text: `“${l}”` }))]),
-      h('h3', { class: 'g-h', text: '상담 흐름 6단계' }),
-      h('ol', { class: 'steps' }, STEPS.map(([t, line, tip, qs]) => h('li', {}, [
-        h('b', { text: t }),
+      scene(car, lines),
+      ih('h3', 'care', '상담 흐름 6단계', 'g-h'),
+      h('ol', { class: 'steps' }, STEPS.map(([t, line, tip, qs], i) => h('li', {}, [
+        h('div', { class: 'step-head' }, [ico(['hello', 'ask', 'car', 'won', 'gift', 'care'][i], 'ico md'), h('b', { text: t })]),
         line ? h('p', { class: 'step-say', text: line }) : null,
         qs ? h('ul', { class: 'step-q' }, qs.map((q) => h('li', { text: q }))) : null,
         h('p', { class: 'step-tip', text: tip }),
       ]))),
       h('div', { class: 'guide-cols' }, [
-        h('div', {}, [h('h3', { text: '체크리스트' }), h('ul', { class: 'check' }, g.check.map((c) => h('li', { text: c })))]),
-        h('div', {}, [h('h3', { text: '준비 서류' }), h('ul', { class: 'check docs' }, g.docs.map((c) => h('li', { text: c })))]),
+        h('div', {}, [ih('h3', 'check', '체크리스트'), h('ul', { class: 'check' }, g.check.map((c) => h('li', { text: c })))]),
+        h('div', {}, [ih('h3', 'docs', '준비 서류'), h('ul', { class: 'check docs' }, g.docs.map((c) => h('li', { text: c })))]),
       ]),
-      h('h3', { class: 'g-h', text: '예상 질문과 답변' }),
+      ih('h3', 'qa', '예상 질문과 답변', 'g-h'),
       h('dl', { class: 'qa' }, [...g.qa, ...COMMON_QA].flatMap(([q, a]) => [h('dt', { text: `Q. ${q}` }), h('dd', { text: `A. ${a}` })])),
       h('div', { class: 'guide-cols' }, [
-        h('div', {}, [h('h3', { text: '거절할 때 이렇게' }), h('dl', { class: 'qa obj' }, OBJ.flatMap(([q, a]) => [h('dt', { text: q }), h('dd', { text: a })]))]),
-        h('div', {}, [h('h3', { text: '이건 조심하세요' }), h('ul', { class: 'check dont' }, DONT.map((c) => h('li', { text: c })))]),
+        h('div', {}, [ih('h3', 'shield', '거절할 때 이렇게'), h('dl', { class: 'qa obj' }, OBJ.flatMap(([q, a]) => [h('dt', { text: q }), h('dd', { text: a })]))]),
+        h('div', {}, [ih('h3', 'warn', '이건 조심하세요'), h('ul', { class: 'check dont' }, DONT.map((c) => h('li', { text: c })))]),
       ]),
       h('div', { class: 'copy-row' }, [btn]), pre,
     );
@@ -530,5 +616,6 @@
     targetBlock(car, res, chosen); productsBlock(res); priceBlock(res, chosen); guideBlock(res, chosen);
   }
   window.ADV = { evaluate, CARS, loan }; // 검산용
+  const fh = document.querySelector('#adv-form h2'); if (fh) fh.replaceWith(ih('h2', 'form', '1. 조건 고르기'));
   dday(); initForm(); render();
 })();
