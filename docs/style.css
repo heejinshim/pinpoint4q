@@ -2,7 +2,7 @@
   --bg: #fbfaf7; --panel: #ffffff; --fg: #1f1e1c; --muted: #6b6862; --line: #e4e1da;
   --accent: #2b6fd6; --accent-soft: rgba(43, 111, 214, .12); --grey: #b9b5ac;
   --bad: #c2453b; --good: #2f8a57;
-  --sans: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --sans: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #1b1a18; --panel: #242320; --fg: #ece9e3; --muted: #a29e96; --line: #3a3833;
