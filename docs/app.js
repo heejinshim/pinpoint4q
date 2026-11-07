@@ -475,6 +475,62 @@
   }
   if ($('#sim')) sim();
 
+  /* ---------- 5장: 우리 지역 대차 지표 ---------- */
+  function replocal() {
+    const R = D.repl, nat = R.find((r) => r.area === '전국'), loc = R.filter((r) => r.area !== '전국');
+    const by = (a) => R.find((r) => r.area === a);
+    const t = (label, big, sub, cls) => h('div', { class: 'tile' }, [h('span', { text: label }), h('b', { class: 'big ' + (cls || ''), text: big }), h('span', { text: sub })]);
+    const cn = by('충남'), my = D.myear, tot = my.reduce((x, r) => x + r.cars, 0);
+    const y16 = my.find((r) => r.model_year === 2016), next3 = my.filter((r) => r.model_year >= 2017 && r.model_year <= 2019).reduce((x, r) => x + r.cars, 0);
+    $('#rl-tiles').replaceChildren(
+      t('충남 승용 폐차율', `${cn.scrap_per1000_yr.toFixed(1)}대`, `등록 1,000대당 연간 · 전국 ${nat.scrap_per1000_yr.toFixed(1)}대보다 ${((cn.scrap_per1000_yr / nat.scrap_per1000_yr - 1) * 100).toFixed(0)}% 높음`),
+      t('50·60대 개인 차주', `${(loc.reduce((x, r) => x + r.n_50_60s, 0) / 10000).toFixed(1)}만 명`, loc.map((r) => `${r.area} ${(r.n_50_60s / 10000).toFixed(1)}만`).join(' · ')),
+      t('충남 경유 승용차', `${(cn.diesel / 10000).toFixed(1)}만 대`, `비중 ${pct(cn.diesel_share)} · 전국 ${pct(nat.diesel_share)}`),
+      t('올해 10년 차 2016년식', `${(y16.cars / 10000).toFixed(1)}만 대`, `전국 승용 · 다음 3년(2017–19년식) ${(next3 / 10000).toFixed(0)}만 대 대기`),
+    );
+    // 폐차율 막대
+    { const W = 380, rh = 44, L = 60, H = R.length * rh + 30, max = Math.max(...R.map((r) => r.scrap_per1000_yr)) * 1.15, x = (v) => L + (v / max) * (W - L - 70);
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '지역별 승용차 폐차율' });
+      R.forEach((r, i) => { const y = i * rh + 6, isN = r.area === '전국', hi = r.area === '충남';
+        const b = s('rect', { x: L, y, width: x(r.scrap_per1000_yr) - L, height: rh - 18, rx: 3, fill: isN ? 'var(--grey)' : 'var(--accent)', 'fill-opacity': hi ? 1 : isN ? 0.7 : 0.45 });
+        tip(b, () => [`${r.area} · 1~9월 승용 폐차 ${fmt(r.scrap_ytd)}대`, `등록 ${fmt(r.car_stock)}대 · 신규 ${fmt(r.new_ytd)}대`, `폐차 ÷ 신규 ${r.scrap_to_new.toFixed(2)}`]);
+        svg.append(s('text', { x: 0, y: y + 18, 'font-weight': hi ? 700 : 400, text: r.area }), b, s('text', { x: x(r.scrap_per1000_yr) + 6, y: y + 18, 'font-weight': hi ? 700 : 400, text: `${r.scrap_per1000_yr.toFixed(1)}대` })); });
+      const nx = x(nat.scrap_per1000_yr); svg.append(s('line', { x1: nx, x2: nx, y1: 0, y2: H - 22, stroke: 'var(--fg)', 'stroke-dasharray': '4 3' }), s('text', { x: nx, y: H - 6, 'text-anchor': 'middle', class: 'muted', text: '전국 수준' }));
+      $('#rl-scrap').replaceChildren(svg); }
+    // 차주 연령 100% 막대
+    { const keys = [['own_20s', '~20대'], ['own_30s', '30대'], ['own_40s', '40대'], ['own_50s', '50대'], ['own_60s', '60대'], ['own_70p', '70대+']];
+      const op = [0.15, 0.3, 0.6, 1, 0.8, 0.25], W = 380, rh = 44, L = 60, bw = W - L - 6, H = R.length * rh + 40;
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '지역별 개인 차주 연령 구성' });
+      R.forEach((r, i) => { const y = i * rh + 6; let acc = 0; svg.append(s('text', { x: 0, y: y + 18, text: r.area }));
+        keys.forEach(([k, n], j) => { const w = r[k] * bw; const b = s('rect', { x: L + acc, y, width: Math.max(0, w - 1), height: rh - 18, fill: 'var(--accent)', 'fill-opacity': op[j] });
+          tip(b, () => [`${r.area} 개인 차주`, `${n} ${pct(r[k])}`]); svg.append(b);
+          if (j === 3 || j === 4) svg.append(s('text', { x: L + acc + w / 2, y: y + 18, 'text-anchor': 'middle', fill: j === 3 ? '#fff' : null, 'font-size': 11, style: 'pointer-events:none', text: pct(r[k], 0) }));
+          acc += w; }); });
+      keys.forEach(([, n], j) => svg.append(s('rect', { x: j * 63, y: H - 16, width: 10, height: 10, fill: 'var(--accent)', 'fill-opacity': op[j] }), s('text', { x: 13 + j * 63, y: H - 7, 'font-size': 11, class: 'muted', text: n })));
+      $('#rl-owner').replaceChildren(svg); }
+    // 모델년도 막대
+    { const W = 760, H = 250, base = 200, ph = 160, n = my.length, gap = (W - 40) / n, bw = gap - 6, max = Math.max(...my.map((r) => r.cars)), y = (v) => base - (v / max) * ph;
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '전국 승용차 모델년도별 등록' });
+      my.forEach((r, i) => { const x0 = 30 + i * gap, old = r.model_year <= 2016, is16 = r.model_year === 2016, soon = r.model_year >= 2017 && r.model_year <= 2019;
+        const b = s('rect', { x: x0, y: y(r.cars), width: bw, height: base - y(r.cars), rx: 2, fill: old ? 'var(--accent)' : soon ? 'var(--accent)' : 'var(--grey)', 'fill-opacity': is16 ? 1 : old ? 0.6 : soon ? 0.25 : 0.5 });
+        tip(b, () => [`${r.model_year === 2006 ? '2006년 이전' : r.model_year + '년식'}`, `승용 ${fmt(r.cars)}대`]);
+        svg.append(b, s('text', { x: x0 + bw / 2, y: base + 14, 'text-anchor': 'middle', 'font-size': 10, class: 'muted', text: String(r.model_year).slice(2) }));
+        if (is16) svg.append(s('text', { x: x0 + bw / 2, y: y(r.cars) - 6, 'text-anchor': 'middle', 'font-weight': 700, text: `${(r.cars / 10000).toFixed(0)}만` })); });
+      const i16 = my.findIndex((r) => r.model_year === 2016), old = my.filter((r) => r.model_year <= 2016).reduce((x, r) => x + r.cars, 0);
+      svg.append(s('text', { x: 30, y: 18, 'font-weight': 700, fill: 'var(--accent)', text: `10년 이상(2016년식 이전) ${pct(old / tot)} · ${(old / 10000).toFixed(0)}만 대` }));
+      const a = 30 + (i16 + 1) * gap, b2 = 30 + (i16 + 4) * gap - 6;
+      svg.append(s('path', { d: `M${a},${base + 24} L${a},${base + 30} L${b2},${base + 30} L${b2},${base + 24}`, fill: 'none', stroke: 'var(--muted)' }), s('text', { x: (a + b2) / 2, y: base + 44, 'text-anchor': 'middle', class: 'muted', text: `1~3년 안에 10년 차 · ${(next3 / 10000).toFixed(0)}만 대` }));
+      svg.append(s('text', { x: W - 10, y: 18, 'text-anchor': 'end', class: 'muted', text: '연도 표기는 모델년도 끝 두 자리' }));
+      $('#rl-myear').replaceChildren(svg); }
+    // 표
+    const IMP = { 대전: '50·60대 차주 32만 명 → 그랜저 HEV·쏘나타 대차, 전용카드 50만원', 세종: '차주가 젊고 HEV가 이미 많음 → 싼타페 HEV·아이오닉 업그레이드, 60개월 무이자', 충남: '폐차율·경유 비중 최고, HEV 비중 최저 → 포터·투싼 HEV·싼타페 HEV 대차, 유예형 할부' };
+    $('#rl-table').replaceChildren(h('table', { class: 'plain' }, [
+      h('thead', {}, h('tr', {}, ['지역', '승용 등록', '경유', 'HEV', 'EV·수소', '1~9월 신규', '1~9월 폐차', '폐차÷신규', '판촉 시사점'].map((x) => h('th', { text: x })))),
+      h('tbody', {}, R.map((r) => h('tr', {}, [r.area, fmt(r.car_stock), pct(r.diesel_share), pct(r.hev_share), pct(r.ev_share), fmt(r.new_ytd), fmt(r.scrap_ytd), r.scrap_to_new.toFixed(2), IMP[r.area] || '—'].map((v) => h('td', { text: v }))))),
+    ]));
+  }
+  if ($('#replocal')) replocal();
+
   /* ---------- 금융 포스터 시안 전환 ---------- */
   document.querySelectorAll('#poster-tabs button').forEach((b) => b.addEventListener('click', () => {
     document.querySelectorAll('#poster-tabs button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));

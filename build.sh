@@ -5,4 +5,5 @@ cd "$(dirname "$0")"
 python3 scripts/build_population.py
 python3 scripts/build_registration.py
 python3 scripts/build_sales.py
+python3 scripts/build_molit.py
 python3 scripts/build_site.py

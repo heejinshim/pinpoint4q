@@ -49,6 +49,8 @@ def main() -> None:
         "ev": records(pd.read_csv(P / "ev_trend.csv")),
         "top10": records(pd.read_csv(P / "model_top10_2025.csv")),
         "focus": records(pd.read_csv(P / "promo_focus.csv")),
+        "repl": records(pd.read_csv(P / "replacement_region.csv")),
+        "myear": records(pd.read_csv(P / "model_year_national.csv")),
         "sales": records(pd.read_csv(P / "domestic_sales_monthly.csv")[["ym", "year", "month", "domestic", "idx"]]),
     }
     (ROOT / "docs/data.js").write_text("window.DATA = " + json.dumps(data, ensure_ascii=False) + ";\n", encoding="utf-8")

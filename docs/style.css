@@ -232,3 +232,6 @@ ol.refs li { margin: 4px 0; }
 .chip.hot { border: 2px solid #c8893a; background: rgba(200, 137, 58, .08); }
 .fin-tag { display: inline-block; margin-top: 4px; font-size: 11px; font-weight: 700; color: #fff; background: #c8893a; border-radius: 999px; padding: 1px 8px; text-decoration: none; width: fit-content; }
 img.kv { max-width: 420px; }
+
+#rl-table td:first-child, #rl-table th { white-space: nowrap; }
+#rl-table td:last-child { min-width: 16rem; }
