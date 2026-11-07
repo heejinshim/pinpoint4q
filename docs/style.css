@@ -412,3 +412,50 @@ svg text:not([font-size]) { font-size: 13px; }
     url(img/hero-cars.jpg) right bottom / contain no-repeat; }
 @media (max-width: 760px) { .hero { padding-bottom: 96px; } .hero::before { left: 0; right: 0; width: auto; height: 96px; background-position: center bottom; } }
 .ksf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 12px; margin-bottom: 8px; }
+
+/* ===== 모바일 보정 ===== */
+@media (max-width: 760px) {
+  .flow-cols { grid-template-columns: repeat(3, 1fr); }
+  table.plain { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.plain td, table.plain th { min-width: 6.5rem; }
+  .card { padding: 18px 16px; }
+  main { padding: 20px 12px 48px; }
+  .chap-head h1 { font-size: 27px; }
+  h2 { font-size: 20px; }
+  .hero h1 { font-size: 38px; }
+  .hero-sub { font-size: 18px; }
+  .mcards { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .mcard b { font-size: 13px; }
+  .pager { grid-template-columns: 1fr; }
+  .pager .next { text-align: left; }
+  dl.five { grid-template-columns: 1fr; gap: 2px 0; }
+  dl.five dd { margin-bottom: 10px; }
+  .plan dl { grid-template-columns: 1fr; gap: 0; }
+  .plan dd { margin-bottom: 8px; }
+}
+
+/* ===== 표지 배경: 아반떼 사진 (2026.11.7 교체) ===== */
+.hero::before { display: none !important; }
+.hero {
+  background:
+    linear-gradient(90deg, rgba(0, 22, 52, .97) 0%, rgba(0, 28, 66, .9) 34%, rgba(0, 32, 72, .55) 54%, rgba(0, 32, 72, .08) 72%, rgba(0, 32, 72, 0) 100%),
+    url(img/hero-avante.jpg) right 80% / cover no-repeat,
+    #001a3d;
+  padding: 44px 40px 52px;
+  min-height: 470px;
+}
+@media (max-width: 760px) {
+  .hero {
+    background:
+      linear-gradient(180deg, rgba(0, 22, 52, .95) 0%, rgba(0, 26, 62, .88) 55%, rgba(0, 32, 72, .35) 82%, rgba(0, 32, 72, .15) 100%),
+      url(img/hero-avante.jpg) 72% bottom / auto 62% no-repeat,
+      #0b1c33;
+    padding: 28px 20px 46%;
+    min-height: 0;
+  }
+}
+@media (min-width: 761px) and (max-width: 1180px) {
+  .hero { background:
+    linear-gradient(90deg, rgba(0, 22, 52, .97) 0%, rgba(0, 28, 66, .92) 46%, rgba(0, 32, 72, .6) 66%, rgba(0, 32, 72, .1) 86%, rgba(0, 32, 72, 0) 100%),
+    url(img/hero-avante.jpg) right 80% / cover no-repeat, #001a3d; }
+}
