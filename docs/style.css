@@ -57,7 +57,7 @@ a { color: var(--accent); }
 .detail p { margin: 2px 0; }
 .detail .target { color: var(--accent); font-weight: 600; }
 svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--sans); }
-svg text { font-size: 12px; }
+svg text:not([font-size]) { font-size: 12px; }
 svg text:not([fill]) { fill: var(--fg); }
 section { scroll-margin-top: 48px; }
 svg .muted { fill: var(--muted); }
@@ -75,3 +75,39 @@ table.plain th, table.plain td { text-align: left; padding: 7px 8px; border-bott
 table.plain th { color: var(--muted); font-weight: 600; font-size: 13px; }
 footer p { margin: 4px 0; }
 .tip { position: fixed; pointer-events: none; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.12); z-index: 10; white-space: nowrap; }
+
+/* 기획 배경 */
+.bg h3 { font-size: 15px; margin: 0 0 4px; }
+.bg p { margin: 0; font-size: 14px; }
+.bg-lead { font-size: 16px !important; margin: 4px 0 14px !important; }
+.bg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; margin-bottom: 16px; }
+.goals, .prog { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 10px; }
+.goals div, .prog div { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; padding: 10px 12px; }
+.goals b, .prog b { display: block; font-size: 14px; }
+.goals span, .prog span { font-size: 13px; color: var(--muted); }
+/* 판촉 사례 기획안 */
+.case h3 { margin: 22px 0 8px; }
+.case-grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 760px) { .case-grid { grid-template-columns: 1fr; } }
+.fig { margin: 0; }
+.fig figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.fig svg text { font-family: var(--sans); }
+.fig-bg { fill: var(--bg); stroke: var(--line); }
+.fig-t { fill: var(--fg); font-size: 14px; font-weight: 700; }
+.zone-outline { fill: none; stroke: var(--line); stroke-dasharray: 6 4; }
+.zone { stroke: var(--accent); stroke-opacity: .5; fill: var(--accent); }
+.z1, .z5 { fill-opacity: .22; } .z2 { fill-opacity: .12; } .z3 { fill-opacity: .08; } .z4 { fill-opacity: .16; } .z6 { fill-opacity: .1; }
+.car { fill: var(--panel); stroke: var(--fg); stroke-width: 1.2; }
+.zt { fill: var(--fg); font-size: 14px; font-weight: 700; text-anchor: middle; }
+.zs { fill: var(--muted); font-size: 12px; text-anchor: middle; }
+.zc { fill: var(--fg); font-size: 11px; text-anchor: middle; }
+.flow path { stroke: var(--fg); stroke-width: 2; fill: none; marker-end: none; }
+.funnel path { fill: var(--accent); }
+.f1 { fill-opacity: .18; } .f2 { fill-opacity: .32; } .f3 { fill-opacity: .5; } .f4 { fill-opacity: .75; } .f5 { fill-opacity: 1; }
+.ft text { fill: var(--fg); font-size: 13px; text-anchor: middle; }
+.ft .fb { font-size: 16px; font-weight: 700; }
+.ft .fw { fill: #fff; font-weight: 700; font-size: 14px; }
+.fr text { fill: var(--muted); font-size: 12px; text-anchor: middle; }
+.zl { fill: var(--muted); font-size: 12px; }
+.kpi { margin: 8px 0 0; padding-left: 18px; font-size: 14px; }
+table.plain th[scope], .case table.plain tbody th { width: 7rem; color: var(--muted); }
