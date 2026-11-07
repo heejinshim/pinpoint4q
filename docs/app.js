@@ -264,6 +264,57 @@
     ]);
   }
 
+
+  /* ---------- 표지: 지역 클릭 시 인사이트 팝업 (정장 차림 남성 일러스트) ---------- */
+  const josa = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '을' : '를'; return '를'; };
+  function advisorSvg() {
+    const sv = s('svg', { viewBox: '0 0 140 210', class: 'advisor-man', 'aria-hidden': 'true' }, [
+      s('ellipse', { cx: 70, cy: 204, rx: 38, ry: 5, fill: 'rgba(0,0,0,.12)' }),
+      s('rect', { x: 50, y: 150, width: 17, height: 48, rx: 4, fill: '#0b1f3f' }), s('rect', { x: 73, y: 150, width: 17, height: 48, rx: 4, fill: '#0b1f3f' }),
+      s('path', { d: 'M46 198 h24 v6 h-26 z M72 198 h24 v6 h-26 z', fill: '#1b1b1b' }),
+      s('path', { d: 'M40 100 Q42 88 56 86 L84 86 Q98 88 100 100 L102 156 L38 156 Z', fill: '#002c5f' }),
+      s('path', { d: 'M38 104 Q30 128 34 150 Q36 156 42 154 L46 112 Z', fill: '#002c5f' }),
+      s('circle', { cx: 39, cy: 154, r: 6, fill: '#f2c9a5' }),
+      s('path', { d: 'M98 98 Q112 84 118 64 L127 68 Q122 92 104 110 Z', fill: '#002c5f', class: 'advisor-arm' }),
+      s('circle', { cx: 123, cy: 60, r: 7, fill: '#f2c9a5', class: 'advisor-arm' }),
+      s('path', { d: 'M58 86 L70 112 L82 86 Z', fill: '#ffffff' }),
+      s('path', { d: 'M67 92 L73 92 L75 98 L72 120 L70 124 L68 120 L65 98 Z', fill: '#c8893a' }),
+      s('path', { d: 'M56 86 L66 112 L60 96 Z M84 86 L74 112 L80 96 Z', fill: '#001a3d' }),
+      s('rect', { x: 63, y: 74, width: 14, height: 14, rx: 4, fill: '#eab894' }),
+      s('circle', { cx: 70, cy: 58, r: 22, fill: '#f2c9a5' }),
+      s('path', { d: 'M48 56 Q47 34 70 33 Q92 33 92 54 Q86 44 74 44 Q60 45 52 50 Z', fill: '#2a1d16' }),
+      s('circle', { cx: 62, cy: 59, r: 2.4, fill: '#2a1d16' }), s('circle', { cx: 78, cy: 59, r: 2.4, fill: '#2a1d16' }),
+      s('path', { d: 'M62 67 Q70 74 78 67', fill: 'none', stroke: '#8a4b33', 'stroke-width': 2.4, 'stroke-linecap': 'round' }),
+      s('circle', { cx: 57, cy: 66, r: 3, fill: '#f0a58a', opacity: 0.5 }), s('circle', { cx: 83, cy: 66, r: 3, fill: '#f0a58a', opacity: 0.5 }),
+    ]);
+    [[18, 30], [124, 22], [12, 92]].forEach(([x, y], i) => sv.append(s('path', { d: `M${x} ${y - 7} L${x + 2} ${y - 2} L${x + 7} ${y} L${x + 2} ${y + 2} L${x} ${y + 7} L${x - 2} ${y + 2} L${x - 7} ${y} L${x - 2} ${y - 2} Z`, fill: '#e2b66f', class: `spark sp${i}` })));
+    return sv;
+  }
+  function showAdvisor(sgg) {
+    const box = $('#mapsum'); if (!box) return;
+    const ins = (D.insight || []).find((r) => r.sgg === sgg); if (!ins) return;
+    const sd = (D.sgg.find((r) => r.sgg === sgg) || {}).sido, pr = (D.focus.find((f) => f.sgg === sgg) || {}).priority || '지키기';
+    const old = box.querySelector('.advisor'); if (old) old.remove();
+    const close = () => { const el = box.querySelector('.advisor'); if (el) el.remove(); };
+    const pop = h('div', { class: 'advisor', role: 'dialog', 'aria-label': `${sgg} 판촉 인사이트` }, [
+      advisorSvg(),
+      h('div', { class: 'advisor-bubble' }, [
+        h('button', { type: 'button', class: 'advisor-x', 'aria-label': '닫기', text: '×', onclick: close }),
+        h('p', { class: 'chap-no', text: `${sd} ${sgg} · ${pr}` }),
+        h('p', { class: 'advisor-say' }, [h('b', { text: ins.car }), `${josa(ins.car)} `, h('b', { text: ins.customer }), ' 대상으로 판촉하는 데 집중해 보면 어떨까요?']),
+        h('ul', {}, [
+          h('li', {}, [h('span', { text: '근거' }), ins.fact]),
+          h('li', {}, [h('span', { text: '추천 현장' }), ins.place]),
+          h('li', {}, [h('span', { text: '금융' }), ins.finance]),
+        ]),
+        h('p', { class: 'links' }, [h('a', { href: 'ch6-plan.html', text: '지역별 판촉방안 →' }), ' ', h('a', { href: 'ch2-region.html', text: '동별 인구 보기 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: sd, sgg })); } catch (e) { /* 저장소 없음 */ } } })]),
+      ]),
+    ]);
+    box.append(pop);
+    const onKey = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onKey); } };
+    document.addEventListener('keydown', onKey);
+  }
+
   /* ---------- 표지: 개략 지도 + 차종 Top 3 ---------- */
   const TILE = [ // [시군구, 열, 행] — 실제 경계가 아닌 위치 개략
     ['태안군', 0, 0], ['서산시', 1, 0], ['당진시', 2, 0], ['아산시', 3, 0], ['천안시', 4, 0],
@@ -282,7 +333,7 @@
     const sidoOf = (sgg) => (D.sgg.find((r) => r.sgg === sgg) || {}).sido;
     TILE.forEach(([sgg, c, r]) => {
       const x = x0 + c * cw, y = y0 + r * ch, p = pri(sgg), on = sgg === mapSel, sd = sidoOf(sgg);
-      const g = s('g', { class: 'click tile-g', onclick: () => { mapSel = sgg; mapsum(); } }, [
+      const g = s('g', { class: 'click tile-g', onclick: () => { mapSel = sgg; mapsum(); showAdvisor(sgg); } }, [
         s('rect', { x: x + 2, y: y + 2, width: cw - 4, height: ch - 4, rx: 8, fill: PRI[p] ? 'var(--accent)' : 'var(--grey)', 'fill-opacity': PRI[p] ? PRI[p] : 0.25, stroke: on ? 'var(--fg)' : sd === '충남' ? 'transparent' : 'var(--accent)', 'stroke-width': on ? 3 : 1.5, 'stroke-dasharray': sd === '충남' || on ? null : '4 3' }),
         s('text', { x: x + cw / 2, y: y + ch / 2 + 1, 'text-anchor': 'middle', fill: PRI[p] >= 0.6 ? '#fff' : null, 'font-weight': on ? 700 : 400, style: 'pointer-events:none', text: sgg.replace(/(시|군)$/, (m) => (sgg.length > 2 ? '' : m)) }),
         s('text', { x: x + cw / 2, y: y + ch / 2 + 16, 'text-anchor': 'middle', 'font-size': 10, fill: PRI[p] >= 0.6 ? '#fff' : 'var(--muted)', style: 'pointer-events:none', text: p }),
