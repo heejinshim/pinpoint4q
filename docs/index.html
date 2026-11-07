@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="style.css?v=202611071529">
+<link rel="stylesheet" href="style.css?v=202611071530">
 </head>
 <body data-page="index">
 <header class="topbar">
@@ -30,6 +30,13 @@
   <section class="card mapsum" id="mapsum">
     <p class="chap-no">한눈에 보기 · 지역을 눌러 보세요</p>
     <h2>지역별 많이 팔린 차 Top 3, 그리고 우리가 밀어야 할 차</h2>
+    <details class="example" id="map-example" open>
+      <summary>예시 화면 — 지도에서 ‘대전 동구’를 누르면 이렇게 뜹니다</summary>
+      <figure>
+        <img src="img/example-map-popup.jpg" alt="표지 지도에서 대전 동구를 눌렀을 때: 오른쪽에 대전 많이 팔린 차 Top 3와 판촉 집중 차종, 아래에 정장 일러스트와 함께 그랜저 HEV·포터 EV를 원도심 60대 재구매 고객과 소상공인 대상으로 판촉하자는 인사이트 팝업" loading="lazy">
+        <figcaption>오른쪽에는 그 지역에서 많이 팔린 차 Top 3와 <b>우리가 밀어야 할 차</b>가, 아래에는 <b>인사이트 팝업</b>(누구에게 무엇을, 근거, 추천 현장, 금융)이 나옵니다. 팝업은 × 또는 Esc로 닫습니다.</figcaption>
+      </figure>
+    </details>
     <div class="mapsum-grid">
       <div id="map"></div>
       <div id="map-panel" class="map-panel"></div>
@@ -103,7 +110,7 @@
   <p>타겟·판촉방안·목표 수치는 공공 통계와 등록 데이터를 바탕으로 한 분석 제안이며 확정된 계획이 아닙니다. <a href="sources.html">출처와 데이터 기준</a></p>
 </footer>
 <div id="tip" class="tip" hidden></div>
-<script src="data.js?v=202611071529"></script>
-<script src="app.js?v=202611071529"></script>
+<script src="data.js?v=202611071530"></script>
+<script src="app.js?v=202611071530"></script>
 </body>
 </html>

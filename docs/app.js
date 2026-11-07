@@ -374,7 +374,7 @@
   ];
   const PRI = { '1순위': 1, '2순위': 0.6, '3순위': 0.35, '지키기': 0 };
   let mapSel = '세종시';
-  const finOf = (name) => (/싼타페|팰리세이드/.test(name) ? '60개월 무이자' : /아반떼/.test(name) ? '퍼스트 무브 월 10만원대' : /스타리아|쏘나타/.test(name) ? '전용카드 50만원' : /아이오닉|코나 EV|포터 EV/.test(name) ? '유예형 할부 30%' : null);
+  const finOf = (name) => (/싼타페|팰리세이드/.test(name) ? '60개월 무이자' : /아반떼/.test(name) ? '퍼스트 무브 월 14만~' : /스타리아|쏘나타/.test(name) ? '전용카드 50만원' : /포터 EV/.test(name) ? '월 10만원(소상공인)' : /코나 EV/.test(name) ? 'EV 부담 Down 월 16만' : /아이오닉/.test(name) ? 'EV 부담 Down 월 20만' : /그랜저/.test(name) ? '트레이드인·대차 상담' : /포터/.test(name) ? '포터 EV 전환 상담' : null);
   function mapsum() {
     const W = 520, cw = 70, ch = 64, x0 = 14, y0 = 30, H = y0 + 5 * ch + 50;
     const pri = (sgg) => (D.focus.find((f) => f.sgg === sgg) || {}).priority || '지키기';

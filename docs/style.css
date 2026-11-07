@@ -459,3 +459,11 @@ svg text:not([font-size]) { font-size: 13px; }
     linear-gradient(90deg, rgba(0, 22, 52, .97) 0%, rgba(0, 28, 66, .92) 46%, rgba(0, 32, 72, .6) 66%, rgba(0, 32, 72, .1) 86%, rgba(0, 32, 72, 0) 100%),
     url(img/hero-avante.jpg) right 80% / cover no-repeat, #001a3d; }
 }
+
+/* 표지 지도 예시 화면 */
+.example { border: 1px dashed var(--accent); border-radius: 12px; padding: 8px 16px; margin: 6px 0 14px; background: var(--accent-soft); }
+.example summary { cursor: pointer; font-weight: 700; color: var(--navy); font-size: 16px; padding: 4px 0; }
+.example figure { margin: 10px 0 6px; }
+.example img { width: 100%; max-width: 860px; height: auto; display: block; border-radius: 8px; border: 1px solid var(--line); background: #fff; }
+.example figcaption { font-size: 15px; margin-top: 8px; }
+@media (prefers-color-scheme: dark) { .example summary { color: var(--fg); } }
