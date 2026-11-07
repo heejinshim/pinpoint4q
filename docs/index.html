@@ -3,378 +3,102 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>대전충남지역본부 2026년도 하반기(4Q) Pin Point 판촉방안</title>
+<title>표지 — 대전충남지역본부 4Q Pin Point 판촉방안</title>
+<meta name="description" content="대전충남지역본부 2026년도 하반기(4Q) Pin Point 판촉방안 — 동 단위 타겟, 맞는 차종, 연내 출고 전환">
+<meta name="theme-color" content="#0f2c5c">
+<meta property="og:title" content="표지 — 대전충남지역본부 4Q Pin Point 판촉방안">
+<meta property="og:description" content="대전충남지역본부 2026년도 하반기(4Q) Pin Point 판촉방안 — 동 단위 타겟, 맞는 차종, 연내 출고 전환">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="index">
+<header class="topbar">
+  <a class="brand" href="index.html"><b>대전충남지역본부</b> 2026 4Q Pin Point 판촉방안</a>
+  <nav class="chapnav"><a href="ch1-background.html" data-key="ch1-background">01 기획 배경</a><a href="ch2-region.html" data-key="ch2-region">02 지역 현황</a><a href="ch3-pinpoint.html" data-key="ch3-pinpoint">03 동 단위 Pin Point</a><a href="ch4-market.html" data-key="ch4-market">04 차급·전기차</a><a href="ch5-replacement.html" data-key="ch5-replacement">05 대차 수요</a><a href="ch6-plan.html" data-key="ch6-plan">06 지역별 판촉방안</a><a href="ch7-sejong.html" data-key="ch7-sejong">07 판촉 사례</a><a href="simulator.html" data-key="simulator">직접 해 보기</a><a href="sources.html" data-key="sources">출처와 데이터</a></nav>
+</header>
 <main>
-  <header>
-    <p class="eyebrow">현대자동차 대전충남지역본부 · 대전·세종·충남 차량 등록 · 인구 분석</p>
-    <h1>대전충남지역본부<br>2026년도 하반기(4Q) Pin Point 판촉방안</h1>
-    <p class="lede">남은 4Q(11~12월) 판촉 자원은 <b>세종시와 대전 유성구</b>에 먼저 집중하고, 대전 서구·천안·아산을 2순위로 둡니다. 두 곳은 3040 영유아 가구와 전기·수입차 수요가 가장 두텁지만, 전기 SUV와 패밀리 차급에서 현대 비중이 가장 낮습니다. 12월은 하이브리드·전기차 세제 혜택(현행 기준 12월 31일 출고분까지)을 앞세운 ‘연내 출고’ 마감 캠페인이 핵심입니다.</p>
-    <p class="meta" id="meta"></p>
-  </header>
+  <section class="hero">
+    <p class="eyebrow">현대자동차 대전충남지역본부 · 2026년도 하반기(4Q)</p>
+    <h1>Pin Point 판촉방안</h1>
+    <p class="hero-sub">고객이 모여 사는 동을 찾아, 그 고객에게 맞는 차를 들고 가서, 12월 연내 출고 계약으로 마무리합니다.</p>
+    <p class="hero-meta">인구 2026.9.30 기준 · 신규 등록 2025년 · 작성 2026.11.7 · 내부 기획 검토용</p>
+  </section>
 
-  <section id="background" class="card bg">
-    <h2>기획 배경</h2>
-    <p class="bg-lead">연말 성수기에 <b>계약을 ‘연내 출고’로 전환</b>해 판매를 끌어올리고, 열세 차급의 점유율을 되찾기 위해 판촉 자원을 <b>읍면동 단위로 정밀하게(Pin Point)</b> 배분합니다.</p>
-    <div class="bg-grid">
+  <section class="card mapsum" id="mapsum">
+    <p class="chap-no">한눈에 보기 · 지역을 눌러 보세요</p>
+    <h2>지역별 많이 팔린 차 Top 3, 그리고 우리가 밀어야 할 차</h2>
+    <div class="mapsum-grid">
+      <div id="map"></div>
+      <div id="map-panel" class="map-panel"></div>
+    </div>
+    <p class="muted">지도는 시군구 위치를 단순화한 개략도이며 실제 경계가 아닙니다. 칸 색은 판촉 우선순위입니다. 차종 순위는 2025년 신규 등록 비중을 시도 단위로 집계했습니다(충남은 계룡·공주·금산 3개 시군 기준). 차 그림은 차체 유형을 나타내는 아이콘입니다.</p>
+  </section>
+
+
+  <section class="card fin-strip">
+    <div class="fin-strip-grid">
+      <figure class="fig"><img src="img/ad-santafe-palisade.gif" alt="싼타페·팰리세이드 최대 60개월 무이자 움직이는 광고" loading="lazy"></figure>
       <div>
-        <h3>1. 연말은 계약 전환의 승부처</h3>
-        <p>11~12월은 연간 판매를 마감하는 시기입니다. 하이브리드 개별소비세 감면과 전기차 세제 혜택이 현행 기준 12월 31일 <b>출고분</b>까지라, 상담 고객을 연내 계약·출고로 이끌 명분이 분명합니다. 반대로 결정을 미루는 고객은 내년으로 넘어가며 경쟁사로 이탈할 위험이 큽니다.</p>
+        <p class="chap-no">11월 금융 프로모션 · 적극 활용</p>
+        <h2>금융 혜택으로 ‘지금 계약할 이유’를 만든다</h2>
+        <div class="chips">
+          <a href="ch6-plan.html#finance" class="chip hot"><b>60개월 무이자</b><span>싼타페·팰리세이드 · 선착순 각 2,000대</span></a>
+          <a href="ch6-plan.html#finance" class="chip"><b>월 10만원대</b><span>아반떼 퍼스트 무브 · 12.31 출고분까지</span></a>
+          <a href="ch6-plan.html#finance" class="chip"><b>총 50만원</b><span>쏘나타·스타리아 전용카드</span></a>
+          <a href="ch6-plan.html#finance" class="chip"><b>유예율 30%</b><span>차량반납 유예형 할부</span></a>
+        </div>
+        <p>지역별 집중 차종마다 금융 상품을 붙여 상담 현장에서 바로 제시합니다. 세종 기획안의 주력 싼타페 HEV는 60개월 무이자를 앞세웁니다. 무이자·전용카드는 11.30 이전 출고 조건이라 즉시 출고 재고와 매칭합니다.</p>
+        <p class="links"><a href="ch6-plan.html#finance">금융 프로모션 전체 보기 →</a></p>
       </div>
-      <div>
-        <h3>2. 커지는 시장, 줄어드는 점유율</h3>
-        <p>대전충남 소속 전기차 등록은 2024년 12,078대에서 2026년 누적 21,760대로 늘었지만, 현대 점유율은 33.3%에서 21.1%로 떨어졌습니다. 가장 큰 차급인 중형SUV(쏘렌토), 소형SUV(셀토스), 패밀리 MPV(카니발), 전기 SUV(모델Y)에서 경쟁 모델에 밀리고 있습니다.</p>
-      </div>
-      <div>
-        <h3>3. 광역 판촉의 한계</h3>
-        <p>여기에 10년 이상 노후차가 1,022만 대(38.4%)로 역대 최대라 대차 수요도 쌓여 있습니다. 같은 세종시 안에서도 집현동은 0–9세가 18.8%인 반면, 면 지역은 60세 이상이 절반을 넘습니다. 시도·시군구 단위의 일괄 판촉으로는 고객과 차종이 어긋납니다. 인구·등록 데이터로 <b>고객이 실제로 모여 사는 동</b>을 골라 그곳에 맞는 차종을 들고 가야 합니다.</p>
-      </div>
-    </div>
-    <div class="goals">
-      <div><b>연말 계약 전환 확대</b><span>상담·시승 고객을 12월 출고 마감 내 계약으로 전환</span></div>
-      <div><b>판매 확대</b><span>1·2순위 지역에 판촉 자원을 집중해 4Q 판매 목표 달성</span></div>
-      <div><b>열세 차급 점유율 회복</b><span>중형·소형SUV, MPV, 전기 SUV의 정복(경쟁차 대차) 판매</span></div>
-      <div><b>판촉 효율 제고</b><span>동 단위 타겟팅과 리드 코드 측정으로 다음 분기 재배분</span></div>
     </div>
   </section>
 
-  <section class="tiles" id="kpis"></section>
-
-  <nav class="toc">
-    <a href="#background">기획 배경</a><a href="#drill">지역 드릴다운</a><a href="#pin">동 단위 Pin Point</a><a href="#h2h">차급 맞대결</a><a href="#ev">전기차 추이</a><a href="#plan">지역별 판촉방안</a><a href="#replace">대차 수요 근거</a><a href="#case">세종 판촉 기획안</a><a href="#schedule">4Q 일정</a><a href="#data">추가 데이터</a>
-  </nav>
-
-  <section id="drill" class="card">
-    <h2>지역 드릴다운 — 시도 › 시군구 › 읍면동</h2>
-    <p class="muted">시도 카드를 누르면 시군구로, 시군구 줄을 누르면 읍면동까지 내려갑니다. 파란 숫자는 전국 벤치마크보다 높은 값입니다.</p>
-    <div class="crumbs" id="crumbs"></div>
-    <div class="sido-cards" id="sido-cards"></div>
-    <div class="legend" id="age-legend"></div>
-    <div id="drill-detail"></div>
-    <div class="table" id="drill-list"></div>
+  <section class="card verdict">
+    <p class="chap-no">중간 결론 · 2026.11.7 기준</p>
+    <h2>세종시·대전 유성구에 먼저 집중하고, 12월은 ‘연내 출고’로 마감한다</h2>
+    <p>2순위는 대전 서구와 천안·아산입니다. 대전 원도심과 충남 남부 군 지역은 그랜저·포터 대차 중심으로 지킵니다. 1순위 세종에서는 11월 마지막 두 주말에 ‘패밀리 HEV 위크엔드’를 열고, <b>싼타페 60개월 무이자</b> 등 금융 혜택을 앞세워 상담 고객을 연내 계약으로 전환합니다.</p>
+    <p class="links"><a href="ch6-plan.html">지역별 판촉방안 보기 →</a> <a href="ch7-sejong.html">세종 기획안 보기 →</a></p>
   </section>
 
-  <section id="pin" class="card">
-    <h2>동 단위 Pin Point 후보 — 판촉을 열 읍면동</h2>
-    <p class="muted">인구 5,000명 이상 읍면동 기준입니다. 이름을 누르면 위 드릴다운에서 해당 동으로 이동합니다.</p>
-    <div class="tabs" id="pin-tabs"></div>
-    <p class="note" id="pin-note"></p>
-    <div id="pin-chart"></div>
+  <section class="card">
+    <h2>다섯 줄 요약</h2>
+    <dl class="five">
+      <dt>문제</dt><dd>대전충남 전기차 시장은 2024년 12,078대에서 2026년 누적 21,760대로 커졌지만, 현대 점유율은 33.3%에서 21.1%로 떨어졌습니다.</dd>
+      <dt>기회</dt><dd>10년 이상 노후차가 1,022만 대(38.4%)로 역대 최대이고, 11~12월 판매는 평소보다 약 8% 많습니다. HEV·EV 세제 감면도 12월 출고분까지입니다.</dd>
+      <dt>해결</dt><dd>인구·등록 데이터로 읍면동 단위 타겟을 골라(Pin Point), 그 동에 맞는 차종과 판촉을 배치합니다.</dd>
+      <dt>실행</dt><dd>세종·유성 집중, 서구·천안·아산 확대, 원도심·농촌 대차. 집중 차종마다 금융 상품(60개월 무이자, 퍼스트 무브, 전용카드, 유예형 할부)을 붙여 11월 시승으로 수요를 만들고 12월 연내 출고로 계약을 닫습니다.</dd>
+      <dt>기대효과</dt><dd>연말 계약 전환 확대, 열세 차급(중형·소형SUV, MPV, 전기 SUV) 정복 판매, 동별 성과 측정으로 1월 판촉 재배분.</dd>
+    </dl>
   </section>
 
-  <section id="h2h" class="card">
-    <h2>차급별 맞대결 — 전기 SUV·MPV·소형SUV에서 현대 비중이 가장 낮음</h2>
-    <p class="muted">2025년 신규 등록, HEV·EV 파생 포함 모델 계열 기준. ▼는 전국 벤치마크의 현대 비중입니다. 차급 줄을 누르면 모델별 대수가 나옵니다.</p>
-    <div class="tabs" id="h2h-tabs"></div>
-    <div id="h2h-chart"></div>
-    <div id="h2h-detail"></div>
+  <section class="card">
+    <h2>데이터가 결정으로 이어지는 흐름</h2>
+    <p class="muted">상자에 마우스를 올리면 연결이 보이고, 누르면 해당 장으로 이동합니다.</p>
+    <div class="tabs" id="flow-tabs"></div>
+    <div id="flow"></div>
   </section>
 
-  <section id="ev" class="card">
-    <h2>전기차 시장은 커지는데 현대 점유율은 매년 하락</h2>
-    <p class="muted">전기차 신규 등록, 제조사별. 2026은 연중 누적. 막대를 누르면 제조사별 대수가 나옵니다.</p>
-    <div class="tabs" id="ev-tabs"></div>
-    <div id="ev-chart"></div>
-    <div id="ev-detail"></div>
-  </section>
-
-  <section id="plan">
-    <h2>지역별 Pin Point 판촉방안</h2>
-    <p class="muted">근거 수치는 위 차트와 같은 데이터입니다. 천안·아산·충남 군 지역은 차종 상세가 없어 인구 구조로 추정했습니다.</p>
-    <div class="plans">
-      <article class="card plan">
-        <span class="pill p1">1순위</span>
-        <h3>세종시</h3>
-        <p class="why">0–9세 9.4%, HEV 25.7%로 분석 대상 중 최고. 전기 SUV에서 모델Y 503대 vs 아이오닉5 74대, MPV 현대 비중 16%.</p>
-        <dl>
-          <dt>타겟 고객</dt><dd>정부세종청사·국책연구기관 3040 맞벌이, 영유아 자녀 가구</dd>
-          <dt>맞는 차량</dt><dd>싼타페 HEV, 스타리아 라운지 HEV, 아이오닉9·아이오닉5</dd>
-          <dt>판촉 장소</dt><dd>집현동·해밀동·반곡동·어진동·소담동·다정동(영패밀리 지수 상위), 청사 점심시간 시승존</dd>
-          <dt>판촉방안</dt><dd>공무원 단체 특판, 아파트 단지 주말 순회 전시(키즈 동반), 모델Y 관심 고객 비교 시승·트레이드인</dd>
-        </dl>
-      </article>
-      <article class="card plan">
-        <span class="pill p1">1순위</span>
-        <h3>대전 유성구</h3>
-        <p class="why">수입차 21.6%로 최고, 전기·수소차 14.8%로 대전 최고. 30–44세 23.6%.</p>
-        <dl>
-          <dt>타겟 고객</dt><dd>대덕연구단지·대학·벤처 고소득 3040, 수입차·테슬라 고려층</dd>
-          <dt>맞는 차량</dt><dd>아이오닉5·6·9, 제네시스 GV70·G80, 넥쏘(대전 특화지수 1.55배)</dd>
-          <dt>판촉 장소</dt><dd>원신흥동(영패밀리), 도안·관평 생활권, 연구단지 출연연</dd>
-          <dt>판촉방안</dt><dd>출연연·대학 임직원 제휴 특판·법인 리스, 수입차 대차 보상 + 비교 시승, 단지 내 충전 제휴</dd>
-        </dl>
-      </article>
-      <article class="card plan">
-        <span class="pill">2순위</span>
-        <h3>대전 서구</h3>
-        <p class="why">2025년 등록 19,194대로 최대(천명당 41.3대), 20–29세 13.4%. 대전 소형SUV 셀토스 2,066대 vs 코나 1,059대.</p>
-        <dl>
-          <dt>타겟 고객</dt><dd>둔산 업무지구 2030 첫차 직장인, 신혼부부</dd>
-          <dt>맞는 차량</dt><dd>코나 HEV, 아반떼 HEV, 투싼 HEV, 캐스퍼</dd>
-          <dt>판촉 장소</dt><dd>둔산 업무지구, 도안동(영패밀리), 월평1동·괴정동·갈마2동(2030 비중 상위)</dd>
-          <dt>판촉방안</dt><dd>점심·퇴근 팝업 시승, 첫차 저금리 할부·구독, 연말 성과급 시즌 오퍼</dd>
-        </dl>
-      </article>
-      <article class="card plan">
-        <span class="pill">2순위</span>
-        <h3>천안·아산 (충남 북부 산단)</h3>
-        <p class="why">천안 인구 66.7만 명으로 최대. 아산 0–9세 7.7%, 30–44세 23.3%로 세종에 가까운 영패밀리 구조.</p>
-        <dl>
-          <dt>타겟 고객</dt><dd>산업단지 3040 가족, 2030 교대근무자</dd>
-          <dt>맞는 차량</dt><dd>싼타페 HEV, 투싼 HEV, 스타리아, 코나 HEV, 아이오닉5</dd>
-          <dt>판촉 장소</dt><dd>아산 탕정면·배방읍, 천안 부성2동·불당2동, 당진1동·서산 성연면</dd>
-          <dt>판촉방안</dt><dd>산단 협력사 단체 특판·사내 전시, 교대근무 맞춤 야간·주말 출장 시승, 신규 아파트 입주박람회</dd>
-        </dl>
-      </article>
-      <article class="card plan">
-        <span class="pill">3순위</span>
-        <h3>계룡시</h3>
-        <p class="why">전기·수소차 19.3%로 최고, HEV 24.4%. 규모(2025년 1,490대)는 작지만 전환이 빠름.</p>
-        <dl>
-          <dt>타겟 고객</dt><dd>군 간부 3040 가구</dd>
-          <dt>맞는 차량</dt><dd>아이오닉5, 코나 EV·HEV(충남 코나EV 특화지수 3.86배), 투싼 HEV</dd>
-          <dt>판촉 장소</dt><dd>신도안면(영패밀리 지수 상위), 관사 단지</dd>
-          <dt>판촉방안</dt><dd>군 복지 제휴 특판, 관사 단지 전시·시승, 인사이동 시즌 출고 일정 제안</dd>
-        </dl>
-      </article>
-      <article class="card plan">
-        <span class="pill">지키기</span>
-        <h3>대전 원도심 (중구·동구·대덕구)</h3>
-        <p class="why">60세 이상 33% 안팎, 소형상용 10–12.5%. 대전 준대형 세단 그랜저 비중 73%.</p>
-        <dl>
-          <dt>타겟 고객</dt><dd>그랜저·쏘나타 보유 60대+ 재구매층, 전통시장·대덕산단 소상공인</dd>
-          <dt>맞는 차량</dt><dd>그랜저 HEV, 쏘나타, 포터·포터 EV, 캐스퍼</dd>
-          <dt>판촉 장소</dt><dd>중구 산성동·석교동, 대덕구 중리동·법2동(60세+ 밀집)</dd>
-          <dt>판촉방안</dt><dd>장기 보유 고객 대차 DM·전화, 소상공인 할부, 포터 EV 보조금 안내</dd>
-        </dl>
-      </article>
-      <article class="card plan">
-        <span class="pill">지키기</span>
-        <h3>충남 남부 군 지역</h3>
-        <p class="why">60세 이상 서천 55.2%, 부여 54.6%, 청양 54.2%. 충남에서 포터(1.31배)·아반떼(1.26배)가 평균보다 강세.</p>
-        <dl>
-          <dt>타겟 고객</dt><dd>60대+ 농업·자영업 가구</dd>
-          <dt>맞는 차량</dt><dd>포터·포터 EV, 캐스퍼, 아반떼, 그랜저</dd>
-          <dt>판촉 장소</dt><dd>예산읍·홍성읍·태안읍·금산읍·부여읍(군청 소재지, 60세+ 밀집), 천안 성환읍·목천읍</dd>
-          <dt>판촉방안</dt><dd>5일장·농협 연계 순회 전시·시승, 농협 금융 할부, 노후차 교체 상담</dd>
-        </dl>
-      </article>
+  <section>
+    <h2 class="sec-title">일곱 개의 질문</h2>
+    <div class="qcards" id="qcards">
+      <a class="qcard" href="ch1-background.html"><span>01 기획 배경</span><b>왜 지금, 왜 Pin Point인가?</b><em>연말 승부처, 줄어드는 점유율, 광역 판촉의 한계</em></a>
+      <a class="qcard" href="ch2-region.html"><span>02 지역 현황</span><b>우리 고객은 어디에, 누가 사는가?</b><em>시도 › 시군구 › 읍면동 드릴다운</em></a>
+      <a class="qcard" href="ch3-pinpoint.html"><span>03 동 단위 Pin Point</span><b>어느 동에서 판촉을 열어야 하나?</b><em>집현동·해밀동·탕정면·부성2동 …</em></a>
+      <a class="qcard" href="ch4-market.html"><span>04 차급·전기차</span><b>어느 차급에서 지고 있나?</b><em>전기 SUV·MPV·소형SUV·중형SUV</em></a>
+      <a class="qcard" href="ch5-replacement.html"><span>05 대차 수요</span><b>바꿀 때가 된 차는 얼마나 되나?</b><em>노후차 38.4%, 50대 대차 수요 54.3%</em></a>
+      <a class="qcard" href="ch6-plan.html"><span>06 지역별 판촉방안</span><b>누구에게, 무엇을, 어떻게 팔까?</b><em>7개 지역 타겟·차종·장소·일정</em></a>
+      <a class="qcard" href="ch7-sejong.html"><span>07 판촉 사례</span><b>실제로는 어떻게 실행하나?</b><em>세종 패밀리 HEV 위크엔드 기획안</em></a>
+      <a class="qcard tool" href="simulator.html"><span>직접 해 보기</span><b>판촉 목표 시뮬레이터</b><em>행사 규모·전환율 → 예상 계약·연내 출고</em></a>
     </div>
   </section>
 
-  <section id="replace" class="card">
-    <h2>대차 수요 근거 — 10년 이상 노후차 1,022만 대, 역대 최대</h2>
-    <p class="bg-lead">신차 수요가 줄어든 사이 노후차가 쌓였습니다. 바꿀 때가 된 차가 역대 가장 많은 지금이 <b>대차(바꿔타기) 고객을 연내 계약으로 끌어올 시점</b>입니다.</p>
-    <div class="tiles">
-      <div class="tile"><span>10년 이상 차량 비중 (2026.3)</span><b class="big">38.4%</b><span>2,661만 대 중 1,022만 대, 통계 작성 이후 최고</span></div>
-      <div class="tile"><span>승용차 중 10년 이상</span><b class="big">37.2%</b><span>15년 이상도 14.6% (2020년 11.8%)</span></div>
-      <div class="tile"><span>1톤 트럭 중 10년 이상 (2026.4)</span><b class="big">49.6%</b><span>2022년 말 36.5%에서 3년여 만에 +13.1%p</span></div>
-      <div class="tile"><span>신차 구매 목적 1위</span><b class="big">45.5%</b><span>‘노후차 교체’ (신차 구매 예정자 450명 조사)</span></div>
-    </div>
-    <div class="case-grid" style="margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))">
-      <figure class="fig">
-        <svg viewBox="0 0 420 260" role="img" aria-label="10년 이상 노후차 비중 추이">
-          <text x="0" y="18" class="fig-t">10년 이상 차량 비중 (전체 등록 차량)</text>
-          <line x1="0" x2="420" y1="220" y2="220" stroke="var(--line)"/>
-          <g class="rbar">
-            <rect x="20" y="78" width="70" height="142" fill-opacity=".35"/><text x="55" y="70">31.6%</text><text x="55" y="240" class="rl">2020</text>
-            <rect x="120" y="72" width="70" height="148" fill-opacity=".45"/><text x="155" y="64">33.0%</text><text x="155" y="240" class="rl">2022</text>
-            <rect x="220" y="62" width="70" height="158" fill-opacity=".6"/><text x="255" y="54">35.1%</text><text x="255" y="240" class="rl">2024</text>
-            <rect x="320" y="47" width="70" height="173"/><text x="355" y="39" class="rb">38.4%</text><text x="355" y="240" class="rl">2026.3</text>
-          </g>
-        </svg>
-        <figcaption>출처: 한국자동차모빌리티산업협회(KAMA), 서울경제·월요신문 보도. 막대 높이는 0%부터 비례.</figcaption>
-      </figure>
-      <figure class="fig">
-        <svg viewBox="0 0 420 260" role="img" aria-label="연령대별 대차 수요 비중">
-          <text x="0" y="18" class="fig-t">신차 구매 예정자 중 ‘대차 수요’ 비중 (연령대별)</text>
-          <g class="rbar">
-            <text x="0" y="66" class="rl2">50대</text><rect x="60" y="50" width="282" height="26"/><text x="350" y="68" class="rs rb">54.3%</text>
-            <text x="0" y="116" class="rl2">60대</text><rect x="60" y="100" width="251" height="26" fill-opacity=".6"/><text x="319" y="118" class="rs">48.4%</text>
-            <text x="0" y="166" class="rl2">40대</text><rect x="60" y="150" width="235" height="26" fill-opacity=".6"/><text x="303" y="168" class="rs">45.2%</text>
-          </g>
-          <text x="0" y="214" class="rl2 muted2">50대가 신차 시장의 ‘큰손’ — 2026년 1월 신규 등록도</text>
-          <text x="0" y="234" class="rl2 muted2">50대가 22,692대로 가장 많음(카이즈유)</text>
-        </svg>
-        <figcaption>출처: 카봇모빌리티 신차 구매 예정자 450명 조사, 경향신문(2026.2.8) 보도.</figcaption>
-      </figure>
-    </div>
-    <h3 style="margin-top:18px">판촉 적용 — 지역별 대차 타겟</h3>
-    <table class="plain">
-      <thead><tr><th>지역</th><th>대차 타겟</th><th>근거</th><th>제안 차종·오퍼</th></tr></thead>
-      <tbody>
-        <tr><td>대전 원도심(중·동·대덕구)</td><td>그랜저·쏘나타 장기 보유 50~60대</td><td>60세 이상 33% 안팎, 50·60대 대차 수요 54.3%·48.4%</td><td>그랜저 HEV 대차 보상, 연내 출고 HEV 세제 혜택</td></tr>
-        <tr><td>충남 남부 군·대덕산단</td><td>노후 1톤 트럭 생계형 운전자</td><td>1톤 트럭 절반(49.6%)이 10년 이상, 충남 포터 특화지수 1.31배</td><td>포터 LPG·포터 EV, 노후차 교체 상담·농협 금융 할부</td></tr>
-        <tr><td>대전 서구·천안</td><td>첫차·소형차를 오래 탄 40~50대</td><td>등록 최대 지역(서구 19,194대), 40대 대차 수요 45.2%</td><td>투싼 HEV·싼타페 HEV 업사이징, 트레이드인 감정</td></tr>
-        <tr><td>세종·유성·아산</td><td>패밀리카 교체기 30~40대(자녀 성장)</td><td>0–9세·30–44세 비중 최고, 중형SUV·MPV 열세</td><td>싼타페 HEV·스타리아 HEV·아이오닉9, 경쟁차 보유 고객 정복 판매</td></tr>
-      </tbody>
-    </table>
-    <p class="muted">지역별 차령 분포는 아직 없습니다. 대전·세종·충남의 차령별·차종별 보유 현황(10년 이상 차량 수)을 받으면 대차 대상 동을 실측으로 고를 수 있습니다. 출처: <a href="https://v.daum.net/v/20260517174306648">서울경제, 새 차 안 산다…10대 중 4대가 노후차(2026.5.17)</a> · <a href="https://www.wolyo.co.kr/news/articleView.html?idxno=318367">월요신문, 10년 넘은 車 1022만대(2026.9.28)</a> · <a href="https://www.etnews.com/20261023000149">전자신문, 1톤 트럭 절반이 10년 이상 노후차(2026.10.25)</a> · <a href="https://www.khan.co.kr/article/202602081950005">경향신문, ‘큰손’은 50대(2026.2.8)</a></p>
-  </section>
-
-  <section id="case" class="card case">
-    <p class="eyebrow">판촉 사례 기획안 · 1순위 지역</p>
-    <h2>세종 ‘패밀리 HEV 위크엔드’ — 영유아 가구 밀집 동 정밀 공략</h2>
-    <p class="bg-lead">세종 신도심 영패밀리 동에서 <b>싼타페 HEV·스타리아 라운지 HEV·아이오닉9</b> 주말 체험 행사를 열고, 정부세종청사 평일 점심 시승존과 묶어 상담 고객을 <b>12월 연내 출고 계약</b>으로 전환합니다.</p>
-
-    <div class="case-grid">
-      <figure class="fig">
-        <svg viewBox="0 0 420 560" role="img" aria-label="캠페인 포스터 시안">
-          <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f2c5c"/><stop offset=".62" stop-color="#2b6fd6"/><stop offset="1" stop-color="#9cc3f5"/></linearGradient>
-            <linearGradient id="road" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9eef6"/><stop offset="1" stop-color="#cfd9e8"/></linearGradient>
-          </defs>
-          <rect width="420" height="560" rx="14" fill="url(#sky)"/>
-          <circle cx="345" cy="268" r="38" fill="#ffd27a" opacity=".9"/>
-          <g fill="#ffffff" opacity=".16"><ellipse cx="300" cy="300" rx="70" ry="12"/><ellipse cx="120" cy="262" rx="50" ry="10"/></g>
-          <g fill="#1d4ea8" opacity=".55"><rect x="20" y="300" width="34" height="90"/><rect x="58" y="270" width="40" height="120"/><rect x="102" y="310" width="28" height="80"/><rect x="300" y="280" width="36" height="110"/><rect x="340" y="250" width="50" height="140"/></g>
-          <rect y="388" width="420" height="172" fill="url(#road)"/>
-          <g transform="translate(70,330)">
-            <path d="M10 70 L22 38 Q30 22 52 20 L176 18 Q200 18 214 34 L240 58 Q268 62 276 72 L278 92 L10 92 Z" fill="#f4f6fa" stroke="#0f2c5c" stroke-width="2.5"/>
-            <path d="M46 38 L60 28 L120 27 L120 52 L40 54 Z M128 27 L174 27 Q190 28 202 40 L214 52 L128 52 Z" fill="#9cc3f5" stroke="#0f2c5c" stroke-width="2"/>
-            <circle cx="66" cy="94" r="22" fill="#1f1e1c"/><circle cx="66" cy="94" r="10" fill="#c9ced6"/>
-            <circle cx="224" cy="94" r="22" fill="#1f1e1c"/><circle cx="224" cy="94" r="10" fill="#c9ced6"/>
-            <rect x="248" y="68" width="22" height="7" rx="3" fill="#ffd27a"/>
-          </g>
-          <g transform="translate(36,452)" fill="#0f2c5c"><circle cx="12" cy="8" r="8"/><rect x="5" y="17" width="14" height="24" rx="6"/><circle cx="40" cy="4" r="9"/><rect x="32" y="14" width="16" height="30" rx="7"/><circle cx="64" cy="16" r="6"/><rect x="59" y="23" width="11" height="17" rx="5"/></g>
-          <text x="28" y="54" fill="#ffd27a" font-size="15" font-weight="700" letter-spacing="1">SEJONG FAMILY HEV WEEKEND</text>
-          <text x="28" y="98" fill="#ffffff" font-size="34" font-weight="700">우리 가족 첫 하이브리드,</text>
-          <text x="28" y="140" fill="#ffffff" font-size="34" font-weight="700">주말에 타보고 정하세요</text>
-          <text x="28" y="176" fill="#e6efff" font-size="16">싼타페 HEV · 스타리아 라운지 HEV · 아이오닉9</text>
-          <rect x="28" y="196" width="226" height="36" rx="18" fill="#ffd27a"/>
-          <text x="141" y="220" text-anchor="middle" fill="#0f2c5c" font-size="15" font-weight="700">연내 출고 시 세제 혜택 안내</text>
-          <text x="128" y="476" fill="#0f2c5c" font-size="15" font-weight="700">11.21(토)–22(일) · 11.28(토)–29(일)</text>
-          <text x="128" y="500" fill="#33496e" font-size="13">세종 집현·해밀·반곡 생활권 행사장</text>
-          <text x="128" y="522" fill="#33496e" font-size="13">키즈존 운영 · 경쟁차 비교 시승 · 현장 상담</text>
-          <text x="392" y="546" text-anchor="end" fill="#33496e" font-size="11">대전충남지역본부</text>
-        </svg>
-        <figcaption>키비주얼(포스터) 시안 — 아파트 단지 게시판, 지역 맘카페·SNS, 청사 내 안내용</figcaption>
-      </figure>
-
-      <figure class="fig">
-        <svg viewBox="0 0 520 560" role="img" aria-label="행사장 배치도">
-          <rect width="520" height="560" rx="14" class="fig-bg"/>
-          <text x="24" y="34" class="fig-t">행사장 배치도 (주말, 약 1,500㎡)</text>
-          <rect x="24" y="56" width="472" height="440" rx="10" class="zone-outline"/>
-          <g>
-            <rect x="40" y="72" width="150" height="80" rx="8" class="zone z1"/><text x="115" y="106" class="zt">① 접수·리드 등록</text><text x="115" y="126" class="zs">QR 사전예약 확인</text>
-            <rect x="206" y="72" width="274" height="160" rx="8" class="zone z2"/><text x="343" y="96" class="zt">② 전시존</text>
-            <rect x="222" y="108" width="74" height="40" rx="6" class="car"/><text x="259" y="133" class="zc">싼타페 HEV</text>
-            <rect x="306" y="108" width="74" height="40" rx="6" class="car"/><text x="343" y="133" class="zc">스타리아 HEV</text>
-            <rect x="390" y="108" width="74" height="40" rx="6" class="car"/><text x="427" y="133" class="zc">아이오닉9</text>
-            <text x="343" y="180" class="zs">2·3열 시트, 카시트·유모차 적재 시연</text>
-            <text x="343" y="200" class="zs">V2L 캠핑 데모(아이오닉9)</text>
-            <rect x="40" y="168" width="150" height="120" rx="8" class="zone z3"/><text x="115" y="214" class="zt">③ 키즈존</text><text x="115" y="234" class="zs">상담 중 아이 돌봄</text><text x="115" y="254" class="zs">페이스페인팅·풍선</text>
-            <rect x="206" y="248" width="274" height="80" rx="8" class="zone z4"/><text x="343" y="280" class="zt">④ 경쟁차 비교존</text><text x="343" y="302" class="zs">쏘렌토·카니발·모델Y 대비 패널</text>
-            <rect x="40" y="304" width="150" height="176" rx="8" class="zone z5"/><text x="115" y="370" class="zt">⑤ 계약 상담</text><text x="115" y="390" class="zt">라운지</text><text x="115" y="414" class="zs">연내 출고 견적</text><text x="115" y="434" class="zs">트레이드인 감정</text>
-            <rect x="206" y="344" width="274" height="136" rx="8" class="zone z6"/><text x="343" y="378" class="zt">⑥ 시승 출발·도착</text><text x="343" y="400" class="zs">신도심 순환 20분 코스</text><text x="343" y="420" class="zs">차종별 3대 × 30분 슬롯</text>
-          </g>
-          <g class="flow">
-            <path d="M190 112 L206 112"/><path d="M343 232 L343 248"/><path d="M343 328 L343 344"/><path d="M206 420 L190 420"/>
-          </g>
-          <text x="24" y="526" class="zl">고객 동선 ① 접수 → ② 전시 → ④ 비교 → ⑥ 시승 → ⑤ 계약 상담 (③ 키즈존은 상시)</text>
-        </svg>
-        <figcaption>행사장 배치도 — 생활권 내 대형 상가·공원 주차장 등 임차 장소는 협의 필요</figcaption>
-      </figure>
-    </div>
-
-    <h3>행사 개요</h3>
-    <table class="plain">
-      <tbody>
-        <tr><th>행사명</th><td>세종 패밀리 HEV 위크엔드 + 청사 런치 시승존</td></tr>
-        <tr><th>기간</th><td>주말 행사 11.21(토)–22(일), 11.28(토)–29(일) · 청사 점심 시승존 11.24(화)–26(목) · 연내 출고 마감 캠페인 12.1(화)–12.20(일)</td></tr>
-        <tr><th>장소</th><td>영패밀리 지수 상위 동 생활권: 집현동(60.4%), 해밀동(48.3%), 반곡동(43.7%), 어진동·소담동 인근 · 정부세종청사 인근</td></tr>
-        <tr><th>타겟</th><td>0–9세 자녀를 둔 3040 맞벌이·공무원 가구, 쏘렌토·카니발·모델Y 구매 검토 고객</td></tr>
-        <tr><th>주력 차종</th><td>싼타페 HEV(쏘렌토 HEV 대항), 스타리아 라운지 HEV(카니발 대항), 아이오닉9·아이오닉5(모델Y 대항)</td></tr>
-        <tr><th>근거</th><td>세종 0–9세 9.4%·HEV 25.7%로 분석 대상 최고 · 중형SUV 싼타페 27% vs 쏘렌토 48% · MPV 스타리아 16% · 전기 SUV 아이오닉5 74대 vs 모델Y 503대(2025)</td></tr>
-        <tr><th>추진 체계</th><td>지역본부 마케팅(기획·홍보·예산) · 세종 지점/대리점(현장 운영·상담) · 카마스터(리드 사후관리)</td></tr>
-      </tbody>
-    </table>
-
-    <h3>프로그램과 고객 혜택(안)</h3>
-    <div class="prog">
-      <div><b>체험</b><span>가족 동반 시승, 카시트·유모차 적재 시연, 아이오닉9 V2L 캠핑 데모</span></div>
-      <div><b>비교</b><span>쏘렌토·카니발·모델Y와 공간·연비·유지비 비교 패널, 비교 시승 예약</span></div>
-      <div><b>전환</b><span>현장 계약 시 연내 출고 우선 배정, 트레이드인 감정, 시승 고객 한정 사은품</span></div>
-      <div><b>사후관리</b><span>리드 코드로 카마스터 배정, 3일 내 재접촉, 12월 마감 캠페인 재초청</span></div>
-    </div>
-
-    <h3>목표(안)와 측정</h3>
-    <figure class="fig wide">
-      <svg viewBox="0 0 760 210" role="img" aria-label="계약 전환 퍼널 목표(안)">
-        <g class="funnel">
-          <path d="M20 40 L150 40 L150 170 L20 170 Z" class="f1"/><path d="M160 52 L290 52 L290 158 L160 158 Z" class="f2"/><path d="M300 66 L430 66 L430 144 L300 144 Z" class="f3"/><path d="M440 80 L570 80 L570 130 L440 130 Z" class="f4"/><path d="M580 88 L740 88 L740 122 L580 122 Z" class="f5"/>
-        </g>
-        <g class="ft"><text x="85" y="102">방문·리드 등록</text><text x="85" y="124" class="fb">1,200명</text>
-          <text x="225" y="102">시승</text><text x="225" y="124" class="fb">300건</text>
-          <text x="365" y="100">견적 상담</text><text x="365" y="120" class="fb">150건</text>
-          <text x="505" y="111" class="fw">계약 60대</text>
-          <text x="660" y="110" class="fw">연내 출고 45대</text></g>
-        <g class="fr"><text x="155" y="196">25%</text><text x="295" y="196">50%</text><text x="435" y="196">40%</text><text x="575" y="196">75%</text></g>
-        <text x="20" y="24" class="fig-t">계약 전환 퍼널 목표(안) — 단계별 전환율은 계획 가정치</text>
-      </svg>
-    </figure>
-    <ul class="kpi">
-      <li><b>측정:</b> QR 리드 코드로 방문 → 시승 → 견적 → 계약 → 출고를 고객 단위로 연결하고, 12월 말 연내 출고율로 최종 평가합니다.</li>
-      <li><b>정복 판매 비중:</b> 계약 고객 중 쏘렌토·카니발·모델Y 검토 또는 보유 고객의 비중을 따로 집계합니다.</li>
-      <li><b>재배분:</b> 동별 리드 대비 계약률을 비교해 1월 판촉 장소를 조정합니다(유성구·아산 확대 여부 판단).</li>
-    </ul>
-
-    <h3>준비 일정</h3>
-    <table class="plain">
-      <thead><tr><th>시기</th><th>할 일</th></tr></thead>
-      <tbody>
-        <tr><td>11.9–11.13</td><td>행사장 임차 협의, 전시·시승차 9대 확보, 연내 출고 가능 물량 확인, 포스터·SNS 소재 확정</td></tr>
-        <tr><td>11.14–11.20</td><td>단지 게시판·지역 커뮤니티 홍보, QR 사전예약 오픈, 청사 시승존 승인</td></tr>
-        <tr><td>11.21–11.29</td><td>주말 행사 2회, 청사 점심 시승존 3일 운영, 일일 리드 점검</td></tr>
-        <tr><td>12.1–12.20</td><td>상담 고객 재접촉, 연내 출고 마감 캠페인, 계약·출고 일정 관리</td></tr>
-        <tr><td>12.21–12.31</td><td>출고 완료, 결과 집계(퍼널·정복 판매), 1월 재배분안 작성</td></tr>
-      </tbody>
-    </table>
-    <p class="muted">목표 수치와 전환율은 기획을 위한 가정입니다. 세제 혜택 연장 여부와 차종별 출고 대기 기간을 확인한 뒤 확정하세요.</p>
-  </section>
-
-  <section id="schedule" class="card">
-    <h2>4Q 실행 일정</h2>
-    <table class="plain">
-      <thead><tr><th>시기</th><th>할 일</th><th>주력 지역</th></tr></thead>
-      <tbody>
-        <tr><td>11월 2주</td><td>제휴 대상 기관·산단·아파트 단지 리스트업, 특판 조건 확정, 출고 가능 물량 확인</td><td>전 지역</td></tr>
-        <tr><td>11월 3~4주</td><td>청사·연구단지 시승존, 모델Y 비교 시승, 주말 단지 전시</td><td>세종, 유성</td></tr>
-        <tr><td>11월 4주~12월 1주</td><td>업무지구 팝업 시승, 산단 출장 시승, 첫차 할부 오퍼</td><td>서구, 천안·아산</td></tr>
-        <tr><td>12월 1~3주</td><td>‘연내 출고’ 마감 캠페인(HEV·EV 세제 혜택), 상담 고객 재접촉</td><td>세종, 유성, 서구, 천안·아산</td></tr>
-        <tr><td>12월 전체</td><td>장기 보유 고객 대차 DM, 농촌 순회 전시</td><td>대전 원도심, 충남 남부</td></tr>
-      </tbody>
-    </table>
-    <p class="muted">세제 혜택은 계약일이 아니라 출고일 기준입니다. 전기차 보조금 잔여는 지자체별로 다르니 <a href="https://ev.or.kr">무공해차 통합누리집</a>에서 확인하세요.</p>
-  </section>
-
-  <section id="data" class="card">
-    <h2>더 정확한 판촉을 위해 추가할 데이터</h2>
-    <table class="plain">
-      <thead><tr><th>우선</th><th>데이터</th><th>상태</th><th>바뀌는 것</th></tr></thead>
-      <tbody>
-        <tr><td>1</td><td>대전·세종·충남 시군구별 차종·연료별 신규 등록</td><td>충남은 계룡·공주·금산만 있음</td><td>천안·아산·당진·서산을 추정이 아닌 실측으로 판단</td></tr>
-        <tr><td>1</td><td>KOSIS 자동차등록대수(DT_MLTM_5498) 대전·세종·충남 시군구</td><td>받은 파일에 해당 시도 없음</td><td>시군구별 보유 대수·영업용 비중으로 시장 규모 보정</td></tr>
-        <tr><td>1</td><td>읍면동별 신규 등록</td><td>인구는 읍면동 단위 반영 완료</td><td>동 단위 판촉 장소를 인구가 아닌 구매 실적으로 지정</td></tr>
-        <tr><td>1</td><td>2026년 1~10월 신규 등록</td><td>현재 2025년 기준</td><td>최신 흐름, 신차 반영</td></tr>
-        <tr><td>2</td><td>구매자 연령·성별, 개인/법인/렌터카·택시 구분</td><td>없음</td><td>타겟 연령대를 실제 구매로 확인</td></tr>
-        <tr><td>2</td><td>대전·세종·충남 차령별 보유 현황(10년 이상 노후차)</td><td>전국 수치만 반영</td><td>대차 수요가 많은 지역 선별</td></tr>
-        <tr><td>2</td><td>자사 지점별 계약·출고, 출고 대기 기간</td><td>없음</td><td>지점별 목표 배분, 연내 출고 가능 차종 선별</td></tr>
-        <tr><td>3</td><td>시승→계약 전환율, 경쟁사 월별 판촉 조건, 충전소 위치</td><td>없음</td><td>효과 있는 판촉 방식·오퍼 수준 결정</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <footer class="muted" id="notes">
-    <p><b>데이터 기준</b> · 인구: 행정안전부 주민등록 인구(읍면동, 1세 단위) · 신규 등록: 2025년(대전·세종 전체, 충남은 계룡·공주·금산) · 벤치마크: 자료가 온전한 전국 시군구(제주 렌터카 제외) · 전기차: ‘대전충남 소속’ 행(세종 포함 추정) · 특화지수 = 지역 점유율 ÷ 벤치마크 점유율 · 타겟·판촉방안은 지표를 바탕으로 한 분석 제안입니다.</p>
-    <p><b>세제</b> · 승용차 개소세 인하는 2026년 6월 30일 종료, HEV·EV 감면은 연말 출고분까지(<a href="https://web.getcha.kr/articles/trend-car-excise-tax-end-2026">겟차, 2026.6.30</a>). 연장 여부 확인 필요.</p>
-  </footer>
 </main>
+<footer class="site-foot">
+  <p>현대자동차 대전충남지역본부 · 2026년도 하반기(4Q) Pin Point 판촉방안 · 내부 기획 검토용</p>
+  <p>타겟·판촉방안·목표 수치는 공공 통계와 등록 데이터를 바탕으로 한 분석 제안이며 확정된 계획이 아닙니다. <a href="sources.html">출처와 데이터 기준</a></p>
+</footer>
 <div id="tip" class="tip" hidden></div>
 <script src="data.js"></script>
 <script src="app.js"></script>

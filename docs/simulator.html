@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>판촉 목표 시뮬레이터 — 대전충남지역본부 4Q Pin Point 판촉방안</title>
+<meta name="description" content="지역과 행사 규모, 단계별 전환율을 넣으면 예상 계약·연내 출고 대수와 그 지역 월 신규 등록 대비 효과를 계산합니다.">
+<meta name="theme-color" content="#0f2c5c">
+<meta property="og:title" content="판촉 목표 시뮬레이터 — 대전충남지역본부 4Q Pin Point 판촉방안">
+<meta property="og:description" content="지역과 행사 규모, 단계별 전환율을 넣으면 예상 계약·연내 출고 대수와 그 지역 월 신규 등록 대비 효과를 계산합니다.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="simulator">
+<header class="topbar">
+  <a class="brand" href="index.html"><b>대전충남지역본부</b> 2026 4Q Pin Point 판촉방안</a>
+  <nav class="chapnav"><a href="ch1-background.html" data-key="ch1-background">01 기획 배경</a><a href="ch2-region.html" data-key="ch2-region">02 지역 현황</a><a href="ch3-pinpoint.html" data-key="ch3-pinpoint">03 동 단위 Pin Point</a><a href="ch4-market.html" data-key="ch4-market">04 차급·전기차</a><a href="ch5-replacement.html" data-key="ch5-replacement">05 대차 수요</a><a href="ch6-plan.html" data-key="ch6-plan">06 지역별 판촉방안</a><a href="ch7-sejong.html" data-key="ch7-sejong">07 판촉 사례</a><a href="simulator.html" data-key="simulator">직접 해 보기</a><a href="sources.html" data-key="sources">출처와 데이터</a></nav>
+</header>
+<main>
+  <div class="chap-head">
+    <p class="chap-no">도구 · 직접 해 보기</p>
+    <h1>판촉 목표 시뮬레이터</h1>
+    <p class="lede">지역과 행사 규모, 단계별 전환율을 넣으면 예상 계약·연내 출고 대수와 그 지역 월 신규 등록 대비 효과를 계산합니다.</p>
+  </div>
+  <section id="sim" class="card">
+    <h2>행사 규모와 전환율을 넣어 보세요</h2>
+    <p class="muted">기본값은 7장 세종 기획안의 목표(안)입니다. 숫자를 바꾸면 결과가 바로 다시 계산됩니다. 결과는 계획용 추정이며 실적이 아닙니다.</p>
+    <div class="sim">
+      <form class="sim-in" id="sim-form" autocomplete="off">
+        <label>지역 <select id="sim-area"></select></label>
+        <label>행사 방문·리드 등록 (명) <input type="number" id="sim-leads" min="0" step="50" value="1200"></label>
+        <label>시승 전환율 <span class="val" id="v-drive"></span><input type="range" id="sim-drive" min="5" max="60" value="25"></label>
+        <label>견적 상담 전환율 <span class="val" id="v-quote"></span><input type="range" id="sim-quote" min="10" max="90" value="50"></label>
+        <label>계약 전환율 <span class="val" id="v-close"></span><input type="range" id="sim-close" min="5" max="80" value="40"></label>
+        <label>연내 출고율 <span class="val" id="v-deliv"></span><input type="range" id="sim-deliv" min="20" max="100" value="75"></label>
+        <button type="button" id="sim-reset">세종 기획안 기본값으로</button>
+      </form>
+      <div class="sim-out">
+        <div class="tiles" id="sim-tiles"></div>
+        <div id="sim-funnel"></div>
+        <p class="note" id="sim-note"></p>
+      </div>
+    </div>
+  </section>
+  <nav class="pager"><a href="ch7-sejong.html"><small>이전</small>실제로는 어떻게 실행하나? — 세종 사례</a><a href="sources.html" class="next"><small>다음</small>출처와 데이터 기준</a></nav>
+</main>
+<footer class="site-foot">
+  <p>현대자동차 대전충남지역본부 · 2026년도 하반기(4Q) Pin Point 판촉방안 · 내부 기획 검토용</p>
+  <p>타겟·판촉방안·목표 수치는 공공 통계와 등록 데이터를 바탕으로 한 분석 제안이며 확정된 계획이 아닙니다. <a href="sources.html">출처와 데이터 기준</a></p>
+</footer>
+<div id="tip" class="tip" hidden></div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

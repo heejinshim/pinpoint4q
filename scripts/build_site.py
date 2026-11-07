@@ -47,6 +47,9 @@ def main() -> None:
         "area": records(pd.read_csv(P / "area_profile_2025.csv")),
         "h2h": records(pd.read_csv(P / "head_to_head_2025.csv")),
         "ev": records(pd.read_csv(P / "ev_trend.csv")),
+        "top10": records(pd.read_csv(P / "model_top10_2025.csv")),
+        "focus": records(pd.read_csv(P / "promo_focus.csv")),
+        "sales": records(pd.read_csv(P / "domestic_sales_monthly.csv")[["ym", "year", "month", "domestic", "idx"]]),
     }
     (ROOT / "docs/data.js").write_text("window.DATA = " + json.dumps(data, ensure_ascii=False) + ";\n", encoding="utf-8")
     print(f"docs/data.js: 시군구 {len(data['sgg'])}, 읍면동 {len(data['dong'])}")
