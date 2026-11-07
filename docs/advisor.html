@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#002c5f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="style.css?v=202611071544">
-<link rel="stylesheet" href="advisor.css?v=202611071544">
+<link rel="stylesheet" href="style.css?v=202611071550">
+<link rel="stylesheet" href="advisor.css?v=202611071550">
 </head>
 <body data-page="advisor" class="adv">
 <header class="topbar">
@@ -18,10 +18,32 @@
 </header>
 <main class="adv-main">
   <section class="adv-hero">
-    <p class="chap-no">상담 도구 · 2026년 11월 금융 조건</p>
-    <h1>대전충남 금융상품 추천기</h1>
-    <p class="lede">지역, 차종, 가격대, 고객 유형을 고르면 <b>타겟 고객</b>, 지금 쓸 수 있는 <b>11월 금융상품 조합</b>, <b>예상 최종 가격</b>, <b>상담 가이드</b>를 한 번에 보여드립니다.</p>
-    <div class="dday" id="adv-dday"></div>
+    <div class="adv-hero-text">
+      <p class="chap-no">상담 도구 · 2026년 11월 금융 조건 · 코리아세일페스타</p>
+      <h1>대전충남 금융상품 추천기</h1>
+      <p class="lede">지역, 차종, 가격대, 고객 유형을 고르면 <b>타겟 고객</b>, 지금 쓸 수 있는 <b>11월 금융상품 조합</b>, <b>코리아세일페스타 쿠폰</b>까지 반영한 <b>예상 최종 가격</b>, 그리고 단계별 <b>상담 가이드</b>를 한 번에 보여드립니다.</p>
+      <div class="dday" id="adv-dday"></div>
+    </div>
+    <div class="adv-hero-imgs">
+      <figure><img src="img/ad-santafe-palisade.gif" alt="싼타페·팰리세이드 최대 60개월 무이자 움직이는 광고"><figcaption>싼타페·팰리세이드 60개월 무이자</figcaption></figure>
+      <figure><img src="img/ad-avante-firstmove.gif" alt="디 올 뉴 아반떼 퍼스트 무브 플랜 움직이는 광고"><figcaption>아반떼 퍼스트 무브 월 10만원대</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="card adv-ksf" id="ksf">
+    <div class="ksf-head">
+      <div class="ksf-badge"><b>K</b><span>SALE<br>FESTA</span></div>
+      <div>
+        <p class="chap-no">현대자동차 × 2026 코리아세일페스타 · 11.1 – 11.30</p>
+        <h2>상담 고객 전원에게 쿠폰 응모부터 권하세요 — 당첨되면 최대 100만원</h2>
+        <p>온라인 응모로 <b>신차 구매혜택 쿠폰</b>을, 전시장 QR 참여로 <b>경품</b>을 받는 전국 이벤트입니다. 쿠폰은 <b>11월 30일 출고분까지</b>만 쓸 수 있어 11월 금융 프로모션과 마감이 같습니다. “쿠폰이 있으니 이번 달에 출고하자”는 계약 동기로 씁니다.</p>
+      </div>
+    </div>
+    <div class="ksf-cards">
+      <div class="ksf-c hot"><span>이벤트 1 · 온라인 응모 · 11.1–11.15</span><b>신차 구매혜택 쿠폰 100만원 · 50만원</b><p>1등 100만원 매일 10명, 2등 50만원 매일 30명. 매일 여러 번 응모할 수 있고 쿠폰은 1개만 사용합니다. 응모 다음 날 당첨 문자가 옵니다.</p><em>상담 중 그 자리에서 고객 휴대폰으로 응모 → 당첨 시 11.30 출고 계약으로 연결</em></div>
+      <div class="ksf-c"><span>이벤트 2 · 전시장 QR · 11.1–11.30</span><b>전시장 방문 경품 — 무릎담요 전원</b><p>QR 참여 고객 전원 무릎담요(선착순 1.1만 명, 지점별 조기 소진 가능). 스타일러 2명, 유리막코팅 20명, 세차용품 200명 추첨(1·2등은 11월 출고 고객 중).</p><em>동 단위 현장 판촉에서 만난 고객을 가까운 전시장 방문으로 연결</em></div>
+      <div class="ksf-c warn"><span>쿠폰을 쓸 수 없는 경우</span><b>제외 차종·대상 꼭 확인</b><p>캐스퍼·캐스퍼 일렉트릭·디 올 뉴 투싼·GV80 하이브리드, 택시·중대형 트럭·버스, 법인 차량, 현대자동차·유관사 직원은 쿠폰 대상이 아닙니다. 금융 프로모션·다른 쿠폰과의 중복은 계약 전 확인합니다.</p><em>아래 계산기에서 ‘쿠폰 당첨’을 고르면 예상 가격에 바로 반영됩니다</em></div>
+    </div>
   </section>
 
   <div class="adv-grid">
@@ -33,6 +55,7 @@
       <label class="fld"><span>차량 가격 (만원) <small id="f-ref"></small></span><input type="number" id="f-price" min="1000" max="20000" step="10"></label>
       <div class="fld"><span>고객 유형 <small>해당하는 것을 모두 고르세요</small></span><div class="chips-sel multi" id="f-who"></div></div>
       <label class="fld"><span>선수율 <b id="v-down"></b></span><input type="range" id="f-down" min="0" max="50" step="1" value="10"></label>
+      <div class="fld"><span>코리아세일페스타 쿠폰 <small>당첨됐다면 금액을 고르세요</small></span><div class="chips-sel" id="f-coupon"></div></div>
       <label class="fld"><span>할부 기간</span><select id="f-months"><option value="36">36개월</option><option value="48">48개월</option><option value="60" selected>60개월</option></select></label>
       <p class="muted small">금액은 11월 금융 프로모션 자료의 금리·유예율·보조금 예시로 계산한 <b>추정치</b>입니다. 실제 견적은 트림·옵션·할인·지자체 보조금에 따라 달라집니다.</p>
     </form>
@@ -47,6 +70,7 @@
 
   <section class="card" id="o-scripts">
     <h2>고객군별 상담 한 마디 (대전충남 7개 고객군)</h2>
+    <p class="muted">모든 고객군에 공통으로 “오늘 코리아세일페스타 응모하시면 최대 100만원 쿠폰”을 덧붙이세요(쿠폰 제외 차종·대상 제외).</p>
     <div class="table">
       <table class="plain match">
         <thead><tr><th>고객군</th><th>1순위 금융</th><th>상담 한 마디</th></tr></thead>
@@ -62,10 +86,10 @@
       </table>
     </div>
   </section>
-  <p class="muted small adv-foot">근거: 대전충남지역본부 11월 금융 프로모션 자료(2026.11), 현대자동차 K-세일페스타 이벤트(2026.11), 주민등록 인구(2026.9.30), 2025년 신규 등록. 금융 프로모션끼리는 중복 적용되지 않으며, 적용 여부와 세부 조건은 영업점 공문과 현대캐피탈 확인을 따릅니다. 내부 상담 참고용입니다.</p>
+  <p class="muted small adv-foot">근거: 대전충남지역본부 11월 금융 프로모션 자료(2026.11), 현대자동차 코리아세일페스타(K-세일페스타) 이벤트 페이지(2026.11), 주민등록 인구(2026.9.30), 2025년 신규 등록. 금융 프로모션끼리는 중복 적용되지 않으며, 적용 여부와 세부 조건은 영업점 공문과 현대캐피탈 확인을 따릅니다. 내부 상담 참고용입니다.</p>
 </main>
 <div id="tip" class="tip" hidden></div>
-<script src="data.js?v=202611071544"></script>
-<script src="advisor.js?v=202611071544"></script>
+<script src="data.js?v=202611071550"></script>
+<script src="advisor.js?v=202611071550"></script>
 </body>
 </html>
