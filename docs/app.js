@@ -582,6 +582,40 @@
   }
   if ($('#replocal')) replocal();
 
+  /* ---------- 6장: 11월 금융 × 데이터 매칭 ---------- */
+  function finmatch() {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const dd = (iso) => Math.round((new Date(iso + 'T00:00:00') - today) / 86400000);
+    const tag = (n) => (n > 0 ? `D-${n}` : n === 0 ? 'D-DAY' : '마감');
+    const d1 = dd('2026-11-30'), d2 = dd('2026-12-31');
+    $('#fin-dday').replaceChildren(
+      h('div', { class: 'dd hot' }, [h('b', { text: tag(d1) }), h('span', { text: '11.30 출고 마감 — 무이자·전용카드·EV 부담 Down·포터 EV·다자녀 등 11월 금융' })]),
+      h('div', { class: 'dd' }, [h('b', { text: tag(d2) }), h('span', { text: '12.31 출고 마감 — 아반떼 퍼스트 무브, HEV·EV 세제 감면' })]),
+      h('div', { class: 'dd muted-dd' }, [h('b', { text: '중복 불가' }), h('span', { text: '금융 프로모션끼리는 하나만 — 고객별 최대 혜택 하나를 고르세요' })]),
+    );
+    // 월 납입금 막대
+    { const R = D.finMonthly.slice().sort((a, b) => a.monthly - b.monthly), W = 380, rh = 30, L = 118, H = R.length * rh + 26, max = 22, x = (v) => (v / max) * (W - L - 50);
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '차종별 월 납입금 예시' });
+      R.forEach((r, i) => { const y = i * rh + 4, low = r.monthly <= 10;
+        const b = s('rect', { x: L, y, width: x(r.monthly), height: rh - 10, rx: 3, fill: low ? '#c8893a' : 'var(--accent)', 'fill-opacity': low ? 1 : 0.35 + 0.05 * (8 - i) });
+        tip(b, () => [`${r.car} · ${r.plan}`, `월 약 ${r.monthly}만원`, r.basis]);
+        svg.append(s('text', { x: 0, y: y + 15, text: r.car }), b, s('text', { x: L + x(r.monthly) + 6, y: y + 15, 'font-weight': 700, text: `월 ${r.monthly}만` })); });
+      const x10 = L + x(10); svg.append(s('line', { x1: x10, x2: x10, y1: 0, y2: H - 20, stroke: 'var(--fg)', 'stroke-dasharray': '3 3' }), s('text', { x: x10, y: H - 6, 'text-anchor': 'middle', class: 'muted', 'font-size': 11, text: '월 10만원' }));
+      $('#fin-monthly').replaceChildren(svg); }
+    // 이자 절감 묶음 막대
+    { const cars = [...new Set(D.finSaving.map((r) => r.car))], months = [36, 48, 60], W = 380, gh = 70, L = 150, H = cars.length * gh + 30, max = 900, x = (v) => (v / max) * (W - L - 50);
+      const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '할부 개월별 이자 절감액' });
+      cars.forEach((c, i) => { const y0 = i * gh + 6; const plan = D.finSaving.find((r) => r.car === c).plan;
+        svg.append(s('text', { x: 0, y: y0 + 26, 'font-weight': 700, text: c }), s('text', { x: 0, y: y0 + 42, class: 'muted', 'font-size': 11, text: plan.replace(' 플랜', '') }));
+        months.forEach((m, k) => { const r = D.finSaving.find((q) => q.car === c && q.months === m), y = y0 + k * 20;
+          const b = s('rect', { x: L, y, width: x(r.saving), height: 15, rx: 2, fill: c.includes('택시') ? 'var(--grey)' : 'var(--accent)', 'fill-opacity': 0.4 + k * 0.3 });
+          tip(b, () => [`${c} ${m}개월`, `이자 약 ${r.saving}만원 절감`]);
+          svg.append(b, s('text', { x: L + x(r.saving) + 5, y: y + 12, 'font-size': 11, 'font-weight': m === 60 ? 700 : 400, text: `${m}개월 ${r.saving}만` })); }); });
+      svg.append(s('text', { x: 0, y: H - 6, class: 'muted', 'font-size': 11, text: '무이자: 선수율 20%·캘리그래피 HEV 기준 · 택시: 선수율 1% 기준' }));
+      $('#fin-saving').replaceChildren(svg); }
+  }
+  if ($('#finmatch')) finmatch();
+
   /* ---------- 금융 포스터 시안 전환 ---------- */
   document.querySelectorAll('#poster-tabs button').forEach((b) => b.addEventListener('click', () => {
     document.querySelectorAll('#poster-tabs button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));

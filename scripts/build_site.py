@@ -52,6 +52,8 @@ def main() -> None:
         "insight": records(pd.read_csv(P / "promo_insight.csv")),
         "repl": records(pd.read_csv(P / "replacement_region.csv")),
         "myear": records(pd.read_csv(P / "model_year_national.csv")),
+        "finMonthly": records(pd.read_csv(P / "finance_monthly_2611.csv")),
+        "finSaving": records(pd.read_csv(P / "finance_saving_2611.csv")),
         "sales": records(pd.read_csv(P / "domestic_sales_monthly.csv")[["ym", "year", "month", "domestic", "idx"]]),
     }
     (ROOT / "docs/data.js").write_text("window.DATA = " + json.dumps(data, ensure_ascii=False) + ";\n", encoding="utf-8")

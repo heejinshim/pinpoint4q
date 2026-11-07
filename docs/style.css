@@ -302,3 +302,21 @@ body { word-break: keep-all; overflow-wrap: break-word; }
 @media (prefers-color-scheme: dark) { .advisor-bubble { border-color: var(--accent); } .advisor-say b { color: var(--fg); } }
 @media (max-width: 820px) { .advisor { position: fixed; left: 8px; right: 8px; bottom: 8px; } .advisor-man { width: 92px; } .advisor-bubble { margin-bottom: 40px; } }
 @media (prefers-reduced-motion: reduce) { .advisor-man, .advisor-arm, .spark, .advisor-bubble { animation: none; } }
+
+/* 금융 × 데이터 매칭 */
+.dday { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 8px; margin-bottom: 14px; }
+.dd { display: flex; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 13px; }
+.dd b { font-size: 20px; color: var(--navy); white-space: nowrap; }
+.dd.hot { border: 2px solid #c8893a; background: rgba(200, 137, 58, .08); }
+.dd.hot b { color: #b3711f; }
+.dd.muted-dd b { font-size: 14px; color: var(--bad); }
+table.match td { font-size: 13px; line-height: 1.5; }
+table.match td:first-child { min-width: 9rem; }
+table.match td:nth-child(2) { min-width: 11rem; }
+table.match td:last-child { min-width: 14rem; color: var(--navy); font-weight: 600; }
+table.match small { color: var(--muted); }
+.fp { display: inline-block; font-weight: 700; color: var(--navy); border-bottom: 2px solid rgba(200, 137, 58, .5); margin: 1px 0; }
+.fp.hot { color: #9a5a12; border-bottom-color: #c8893a; }
+.advice { margin-top: 16px; border-left: 4px solid var(--navy); background: var(--accent-soft); border-radius: 0 10px 10px 0; padding: 12px 16px; }
+.advice p { margin: 4px 0 0; font-size: 14px; }
+@media (prefers-color-scheme: dark) { .fp, table.match td:last-child, .dd b { color: var(--fg); } }
