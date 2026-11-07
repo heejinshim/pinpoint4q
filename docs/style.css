@@ -336,7 +336,7 @@ table.match small { color: var(--muted); }
     #001a3d;
   padding: 40px 36px 220px;
 }
-.hero::after { display: none; }
+.hero::after { display: none !important; }
 .hero h1, .hero-sub, .hero-brand { text-shadow: 0 2px 12px rgba(0, 10, 30, .55); }
 @media (max-width: 760px) { .hero { padding: 28px 20px 120px; background-size: auto, 160% auto, auto; } }
 
@@ -399,6 +399,6 @@ svg text:not([font-size]) { font-size: 13px; }
 /* 표지 차량 배경: 남색과 자연스럽게 이어지도록 */
 .hero { position: relative; overflow: hidden; background: linear-gradient(180deg, #001a3d 0%, #001e48 100%); padding: 40px 36px 15%; }
 .hero > * { position: relative; z-index: 1; }
-.hero::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 1837 / 345; z-index: 0;
+.hero::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 0; padding-top: 18.78%; z-index: 0;
   background: linear-gradient(180deg, #001e48 0%, rgba(0, 30, 72, .6) 28%, rgba(0, 30, 72, 0) 58%), url(img/hero-cars.jpg) center / 100% 100% no-repeat; }
 @media (max-width: 760px) { .hero { padding: 28px 20px 22%; } .hero::before { left: -20%; right: -20%; } }
