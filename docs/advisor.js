@@ -52,7 +52,7 @@
   ];
   const WHO = [
     ['indiv', '개인'], ['biz', '개인사업자'], ['corp', '법인'], ['small', '소상공인'], ['farm', '농업인'],
-    ['multi', '다자녀 이주 가구'], ['staff', '임직원·그룹사'], ['taxi', '택시'], ['owner', '수입차·제네시스·현대EV 보유'], ['evre', '현대 EV 재구매'],
+    ['multi', '다자녀 이주 가구'], ['staff', '현대차 임직원'], ['aff', '계열사·그룹사 임직원'], ['taxi', '택시'], ['owner', '수입차·제네시스·현대EV 보유'], ['evre', '현대 EV 재구매'],
   ];
   const STD = { 36: 5.4, 48: 5.5, 60: 5.6 }; // 모빌리티 표준 할부 금리 (11월 자료 무이자 비교 금리)
   const LEASE = { // 60개월·연 2만km 월 납입금 (만원) [자료 As-is, To-be 일반리스, To-be 이용자명의리스]
@@ -73,7 +73,7 @@
   /* ---------- 11월 금융상품 규칙 ---------- */
   function evaluate(ctx) {
     const { car, price, who, down, months } = ctx;
-    const personal = who.indiv || who.biz || who.small || who.farm;
+    const personal = who.indiv || who.biz || who.small || who.farm || who.aff;
     const out = [];
     const add = (o) => out.push(Object.assign({ ok: true, why: [], extra: [], lost: 0, discount: 0, subsidy: 0 }, o));
     const id = car.id;
@@ -95,7 +95,7 @@
     }
     // 2. 다자녀 이주 가구 싼타페 1.9%
     if (/^santafe/.test(id)) {
-      const ok = who.multi && (who.indiv || who.biz) && !who.corp;
+      const ok = who.multi && (who.indiv || who.biz || who.aff) && !who.corp;
       const L = loan({ price, net: net0 - 100, down, balloon: 0, rate: 1.9, n: months }), S = loan({ price, net: net0 - 100, down, balloon: 0, rate: STD[months], n: months });
       add({ id: 'multi', name: '지방 이주 다자녀 가구 싼타페 1.9%', kind: '할부', deadline: '11.30 출고', ok, why: ok ? [] : ['2025년 이후 서울→지방 이주 + 미성년 자녀 2명 이상 가구(개인)만'],
         loan: L, std: S, saved: S.interest - L.interest, value: S.interest - L.interest, discount: 100, downUsed: down,
@@ -166,8 +166,8 @@
     if (/^(grandeur|palisade)/.test(id) || id === 'ioniq9' || /^(g80|gv80|gv70)$/.test(id)) {
       const isG = /^grandeur/.test(id); const rate = isG ? 5.8 : id === 'ioniq9' || /^g/.test(id) ? 5.8 : 6.3; const bal = id === 'ioniq9' ? 0.7 : 0.65;
       const L = loan({ price, net: net0, down: Math.max(down, 0.01), balloon: bal, rate, n: 36 }), S = loan({ price, net: net0, down: Math.max(down, 0.01), balloon: 0, rate, n: 36 });
-      add({ id: 'staff', name: '임직원·그룹사 특화 할부', kind: '유예형 할부', deadline: '11.30 출고', ok: !!who.staff, why: who.staff ? [] : ['당사·계열사·관계사 재직자, 지정 블루핸즈 대표·임직원만'],
-        loan: L, std: S, saved: 0, value: who.staff ? 300 : 0, subsidy, downUsed: Math.max(down, 0.01), monthlyCut: S.m - L.m,
+      add({ id: 'staff', name: '임직원·그룹사 특화 할부', kind: '유예형 할부', deadline: '11.30 출고', ok: !!(who.staff || who.aff), why: who.staff || who.aff ? [] : ['당사·계열사·관계사 재직자, 지정 블루핸즈 대표·임직원만'],
+        loan: L, std: S, saved: 0, value: who.staff || who.aff ? 300 : 0, subsidy, downUsed: Math.max(down, 0.01), monthlyCut: S.m - L.m,
         terms: `36개월 ${rate}% · 유예율 ${Math.round(bal * 100)}%로 상향 · 직원 할인 적용 시 월 납입금이 더 낮아짐(자료 예시: 할인 20% 기준 그랜저 HEV 월 35만·팰리세이드 HEV 월 39만·아이오닉 9 월 23만)` });
     }
     // 12. 제네시스 파이낸스
@@ -198,6 +198,7 @@
     if (who.taxi) return [false, '택시는 쿠폰 제외'];
     if (who.corp && !(who.indiv || who.biz)) return [false, '개인·개인사업자만 사용 가능'];
     if (who.staff) return [false, '현대자동차·유관사 직원은 사용 불가'];
+    if (who.aff) return [false, '현대자동차·유관사 직원은 사용 불가 — 소속 계열사가 유관사에 해당하는지 계약 전 확인'];
     return [true, ''];
   }
 
@@ -522,11 +523,11 @@
       check: ['개인택시·법인택시', '36·48·60개월 표준형 저금리', '지자체 보조금 액수에 따라 월 납입금 달라짐', '코리아세일페스타 쿠폰은 택시 제외'],
       docs: ['택시 운송사업 면허 증빙', '신분증·운전면허증', '보조금 신청 서류'],
       qa: [['충전 시간 때문에 영업 손해 아닌가요?', '근무 동선의 급속충전소를 같이 찾아 드리고, 연료비 절감액과 비교해 드릴게요.']] },
-    staff: { say: () => '임직원·그룹사 전용 특화 할부로 유예율을 높여 월 납입금을 크게 낮출 수 있습니다.',
-      pitch: (p) => `유예형으로 월 납입금이 약 ${won1(p.monthlyCut)} 낮아집니다. 직원 할인까지 적용하면 더 내려갑니다.`,
-      check: ['재직 확인, 직원 차량 할인 규정(명의·할인·재구입 연한) 적용', '만기 시 차량 반납으로 유예금 상환 가능', '그랜저·팰리세이드는 가솔린 2.5/2.5터보·HEV', '코리아세일페스타 쿠폰은 직원 사용 불가'],
-      docs: ['재직증명서', '신분증·운전면허증'],
-      qa: [['직원 할인이랑 같이 돼요?', '네, 직원 할인 적용 후 금액으로 특화 할부를 계산합니다.']] },
+    staff: { say: () => (st.who.aff && !st.who.staff ? '계열사·그룹사 임직원이시면 전용 특화 할부로 유예율을 높여 월 납입금을 크게 낮추실 수 있어요. 재직증명서 한 장이면 됩니다.' : '현대차 임직원 전용 특화 할부로 유예율을 높여 월 납입금을 크게 낮출 수 있습니다.'),
+      pitch: (p) => `유예형으로 월 납입금이 약 ${won1(p.monthlyCut)} 낮아집니다.${st.who.staff ? ' 직원 할인까지 적용하면 더 내려갑니다.' : ' 소속사 임직원 할인이 있다면 함께 적용해 계산해 드릴게요.'}`,
+      check: ['재직 확인 — 당사·계열사·관계사 재직자, 지정 블루핸즈 대표·임직원', st.who.staff ? '직원 차량 할인 규정(명의·할인·재구입 연한) 적용' : '계열사 임직원 할인 여부·조건은 소속사 기준으로 확인', '만기 시 차량 반납으로 유예금 상환 가능', '그랜저·팰리세이드는 가솔린 2.5/2.5터보·HEV', '코리아세일페스타 쿠폰은 현대자동차·유관사 직원 사용 불가 — 소속사 해당 여부 확인', '퍼스트 무브·EV 부담 Down 등은 “당사 임직원”만 제외 — 계열사 임직원은 대상 여부 확인 후 비교'],
+      docs: ['재직증명서(계열사·관계사는 소속 회사 발급)', '신분증·운전면허증', '소득 증빙'],
+      qa: [['계열사 직원도 되나요?', '네, 당사·계열사·관계사 재직자가 대상이라 재직증명서로 확인해 드려요.'], ['직원 할인이랑 같이 돼요?', '할인 적용 후 금액으로 특화 할부를 계산합니다. 계열사는 소속사 할인 규정을 확인해 드릴게요.'], ['쿠폰도 받을 수 있나요?', '현대자동차·유관사 직원은 쿠폰 대상에서 빠져요. 소속사가 해당하는지 계약 전에 확인해 드릴게요.']] },
     gfin: { say: () => (st.who.owner ? '수입차나 제네시스를 타셨다면 THE BETTER CHOICE로 4% 추가 혜택을 받고 갈아타실 수 있어요.' : '제네시스 파이낸스 리스·렌트로 시장 최저 수준 월 납입금을 제안해 드릴게요.'),
       pitch: (p) => (p.lease ? `60개월·2만km 리스 월 ${p.lease.gen}만원${st.who.owner ? `(기본 ${p.lease.asis}만원)` : ''}, 생산월 조건이면 월 ${p.lease.own}만원입니다.` : '시장 최저 수준 월 납입금으로 견적을 내 드립니다.'),
       check: ['계약·출고 시 판매유형·대상 입력', '보유 증빙: 자동차 등록원부(계약일 전월 마감일 기준)', 'DOUBLE-PICK 12·24개월 4% 추가', '출고 고객 GS칼텍스 고급휘발유 월 최대 2만원 할인'],
