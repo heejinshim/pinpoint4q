@@ -1,0 +1,32 @@
+/* 판촉 전단 만들기 */
+.fly-grid { display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.fly-form h2 { margin-top: 6px; }
+.step-no { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 16px; font-weight: 800; flex: none; }
+.step-no.done { background: #1d7a4a; }
+.fly-form .chips-sel button { font-size: 15px; padding: 7px 13px; }
+.fly-more summary { font-weight: 700; font-size: 17px; color: var(--navy); cursor: pointer; margin: 6px 0 10px; }
+.fly-more .fld { margin-bottom: 10px; }
+.fly-more input[type=text] { font: inherit; font-size: 16px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--fg); width: 100%; box-sizing: border-box; }
+.fly-out { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.fly-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.fly-head h2 { margin: 0; }
+.fly-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.copy-btn.ghost { background: transparent; color: var(--navy); border: 2px solid var(--navy); }
+.fly-paper { display: flex; justify-content: center; background: repeating-linear-gradient(45deg, rgba(0,44,95,.04) 0 10px, transparent 10px 20px); border-radius: 12px; padding: 16px; }
+.fly-paper svg { width: 100%; max-width: 520px; height: auto; box-shadow: 0 14px 34px rgba(0, 20, 50, .28); border-radius: 6px; }
+.sms { display: grid; gap: 12px; }
+.sms-item .sms-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sms-item .memo { margin-top: 6px; font-size: 14px; line-height: 1.6; }
+@media (max-width: 900px) { .fly-grid { grid-template-columns: 1fr; } .fly-paper { padding: 8px; } }
+@media (prefers-color-scheme: dark) { .fly-more summary { color: var(--fg); } .copy-btn.ghost { color: var(--fg); border-color: var(--fg); } }
+@media print {
+  body * { visibility: hidden !important; }
+  #y-flyer, #y-flyer * { visibility: visible !important; }
+  #y-flyer { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: none; }
+  #y-flyer svg { max-width: none; width: 100%; box-shadow: none; }
+  @page { size: A4; margin: 0; }
+}
+.fly-paper { overflow: hidden; }
+.fly-paper svg { overflow: hidden; }
+.fly-contact { margin: 12px 0 0; padding: 12px 16px; border-radius: 10px; border: 2px solid #c8893a; background: rgba(200, 137, 58, .08); font-size: 16px; line-height: 1.6; }
+.fly-contact b:first-child { display: block; color: #9a6a2a; }

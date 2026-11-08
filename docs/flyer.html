@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>판촉 전단 만들기 — 대전충남지역본부</title>
+<meta name="description" content="지역·판촉 대상·중점 차종·판촉 구분을 고르면 전단지, 문자 문구, 운영 체크리스트를 자동으로 만들어 주는 대전충남지역본부 지점용 도구">
+<meta name="theme-color" content="#002c5f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap">
+<link rel="stylesheet" href="style.css?v=202611081433">
+<link rel="stylesheet" href="advisor.css?v=202611081433">
+<link rel="stylesheet" href="flyer.css?v=202611081433">
+</head>
+<body data-page="flyer" class="adv">
+<header class="topbar">
+  <a class="brand" href="flyer.html"><img src="img/hyundai-logo-white.png" alt="HYUNDAI" class="logo"><span class="bar"></span><b>대전충남지역본부</b><span class="brand-sub">판촉 전단 만들기</span></a>
+  <nav class="chapnav"><a href="index.html">판촉방안 보고서</a><a href="advisor.html">금융상품 추천기</a></nav>
+</header>
+<main class="adv-main">
+  <section class="adv-hero fly-hero">
+    <div class="adv-hero-text">
+      <p class="chap-no">지점용 도구 · 직접 해 보기</p>
+      <h1>판촉 전단 만들기</h1>
+      <p class="lede">지역, 판촉 대상, 중점 차종, 판촉 방식만 고르시면 <b>전단지</b>와 <b>문자 문구</b>, <b>운영 체크리스트</b>를 바로 만들어 드려요.</p>
+      <p class="adv-cheer">마음에 들 때까지 ‘문구 다시 뽑기’를 눌러 보세요! AI 판촉 전단이 필요하시면 판촉팀 심희진 매니저에게 문의해 주세요.</p>
+    </div>
+  </section>
+
+  <div class="fly-grid">
+    <form class="card adv-form fly-form" id="fly-form" autocomplete="off" onsubmit="return false">
+      <h2 class="ico-h"><span class="step-no">1</span><span>지역 고르기</span></h2>
+      <label class="fld"><span>시군구</span><select id="y-sgg"></select></label>
+      <label class="fld"><span>읍면동 <small>판촉 대상에 맞는 동을 위에 보여 드려요</small></span><select id="y-dong"></select></label>
+
+      <h2 class="ico-h"><span class="step-no">2</span><span>판촉 대상</span></h2>
+      <div class="chips-sel" id="y-target"></div>
+
+      <h2 class="ico-h"><span class="step-no">3</span><span>중점 차종</span></h2>
+      <div class="chips-sel" id="y-car"></div>
+
+      <h2 class="ico-h"><span class="step-no">4</span><span>판촉 구분</span></h2>
+      <div class="chips-sel" id="y-type"></div>
+
+      <details class="fly-more" open>
+        <summary>5. 전단에 넣을 정보 (선택)</summary>
+        <label class="fld"><span>지점명</span><input type="text" id="y-branch" placeholder="예: 현대자동차 세종지점"></label>
+        <label class="fld"><span>문의 전화</span><input type="text" id="y-phone" placeholder="예: 044-000-0000"></label>
+        <label class="fld"><span>일시</span><input type="text" id="y-when" placeholder="자동으로 채워집니다"></label>
+        <label class="fld"><span>장소</span><input type="text" id="y-place" placeholder="자동으로 채워집니다"></label>
+        <label class="fld" id="y-org-wrap"><span>기관·회사명 <small>단체 특판일 때</small></span><input type="text" id="y-org" placeholder="예: 정부세종청사"></label>
+        <div class="fld"><span>색상</span><div class="chips-sel" id="y-theme"></div></div>
+      </details>
+    </form>
+
+    <div class="fly-out">
+      <section class="card fly-card">
+        <div class="fly-head">
+          <h2 class="ico-h"><span class="step-no done">✓</span><span>완성된 전단</span></h2>
+          <div class="fly-actions">
+            <button type="button" class="alt-btn" id="y-reroll">문구 다시 뽑기</button>
+            <button type="button" class="copy-btn" id="y-png">이미지로 저장</button>
+            <button type="button" class="copy-btn ghost" id="y-print">인쇄·PDF</button>
+          </div>
+        </div>
+        <div class="fly-paper" id="y-flyer"></div>
+        <p class="muted small" id="y-note"></p>
+        <p class="fly-contact"><b>AI 판촉 전단이 필요하신가요?</b> 사진·디자인을 더 다듬은 AI 판촉 전단이 필요하시면 <b>판촉팀 심희진 매니저</b>에게 문의해 주세요.</p>
+      </section>
+
+      <section class="card">
+        <h2>문자·카톡 문구</h2>
+        <div class="sms" id="y-sms"></div>
+      </section>
+
+      <section class="card">
+        <h2>운영 체크리스트</h2>
+        <div id="y-check"></div>
+      </section>
+    </div>
+  </div>
+  <p class="muted small adv-foot">전단 문구는 이 보고서의 지역 데이터, 11월 금융 프로모션, 코리아세일페스타, 입주·행사 일정을 조합해 자동으로 만듭니다. 배포 전 금융 조건·일정·연락처를 꼭 확인하세요. 내부 판촉용입니다.</p>
+</main>
+<script src="data.js?v=202611081433"></script>
+<script src="flyer.js?v=202611081433"></script>
+</body>
+</html>
