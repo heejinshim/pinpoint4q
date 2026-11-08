@@ -293,11 +293,12 @@
   /* ---------- 지역 이슈 (입주·기업·기관) ---------- */
   const wkey = (w) => (String(w).match(/20\d\d(\.\d\d)?/) || ['9999'])[0].padEnd(7, '.00');
   const normDong = (x) => String(x || '').replace(/\d+(?=[가-힣]*동$)/, '').replace(/제(?=\d)/, '');
-  const issuesOf = (sgg, dong) => (D.issues || []).filter((q) => q.sgg === sgg && q.size !== '0세대' && (!dong || String(q.dong).split('·').some((d) => d && normDong(dong) === d))).sort((a, b) => wkey(a.when).localeCompare(wkey(b.when)));
-  const issueTxt = (q) => `${q.when} ${q.title}(${q.size})`;
-  function issueLi(list) {
+  const issuesOf = (sgg, dong, ev) => (D.issues || []).filter((q) => q.sgg === sgg && q.size !== '0세대' && (ev ? q.kind === '행사' : q.kind !== '행사') && (!dong || String(q.dong).split('·').some((d) => d && normDong(dong) === d))).sort((a, b) => wkey(a.when).localeCompare(wkey(b.when)));
+  const shortWhen = (w) => String(w).replace(/^2026\./, '');
+  const issueTxt = (q) => (q.kind === '행사' ? `${shortWhen(q.when)} ${q.title}` : `${q.when} ${q.title}(${q.size})`);
+  function issueLi(list, label = '지역 이슈') {
     if (!list.length) return null;
-    const kids = [h('span', { text: '지역 이슈' })];
+    const kids = [h('span', { text: label })];
     list.slice(0, 2).forEach((q, i) => { if (i) kids.push(h('br')); kids.push(h('a', { href: q.url, target: '_blank', rel: 'noopener', text: issueTxt(q) }), ` → ${q.action}`); });
     return h('li', { class: 'issue-li' }, kids);
   }
@@ -305,11 +306,11 @@
     const box = $('#issues-list'); if (!box) return;
     const all = (D.issues || []).filter((q) => q.size !== '0세대');
     const draw = (sd) => {
-      tabs($('#issues-tabs'), [['전체', '전체'], ['대전', '대전'], ['세종', '세종'], ['충남', '충남']], sd, draw);
-      const kinds = { 입주: '새 아파트 입주', 분양: '분양', 기업: '기업 투자·이전', 기관: '기관 이전' };
-      const rs = all.filter((q) => sd === '전체' || q.sido === sd).sort((a, b) => wkey(a.when).localeCompare(wkey(b.when)));
+      tabs($('#issues-tabs'), [['전체', '전체'], ['행사', '11~12월 행사'], ['대전', '대전'], ['세종', '세종'], ['충남', '충남']], sd, draw);
+      const kinds = { 입주: '새 아파트 입주', 분양: '분양', 기업: '기업 투자·이전', 기관: '기관 이전', 행사: '지역 행사' };
+      const rs = all.filter((q) => sd === '전체' || q.sido === sd || (sd === '행사' && q.kind === '행사')).sort((a, b) => wkey(a.when).localeCompare(wkey(b.when)));
       box.replaceChildren(...rs.map((q) => h('div', { class: `issue k-${q.kind}` }, [
-        h('div', { class: 'issue-when' }, [h('b', { text: q.when }), h('span', { text: kinds[q.kind] || q.kind })]),
+        h('div', { class: 'issue-when' }, [h('b', { text: q.kind === '행사' ? shortWhen(q.when) : q.when }), h('span', { text: kinds[q.kind] || q.kind })]),
         h('div', { class: 'issue-body' }, [
           h('p', { class: 'issue-t' }, [h('b', { text: q.title }), ` · ${q.size}`]),
           h('p', { class: 'issue-w', text: `${q.sido} ${q.sgg}${q.dong ? ' ' + q.dong : ''}` }),
@@ -337,6 +338,7 @@
           h('li', {}, [h('span', { text: '추천 현장' }), ins.place]),
           h('li', {}, [h('span', { text: '금융' }), ins.finance]),
           issueLi(issuesOf(sgg)),
+          issueLi(issuesOf(sgg, null, true), '연말 행사'),
         ]),
         h('p', { class: 'links' }, [h('a', { href: 'ch3-pinpoint.html', text: '동 단위 판촉방안 →' }), ' ', h('a', { href: 'ch2-region.html', text: '동별 인구 보기 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: sd, sgg })); } catch (e) { /* 저장소 없음 */ } } })]),
       ]),
@@ -383,6 +385,7 @@
             h('li', {}, [h('span', { text: '금융' }), P.fin]),
             h('li', {}, [h('span', { text: '현장 판촉' }), P.how.join(' · ')]),
             issueLi(issuesOf(r.sgg, r.dong)),
+            issueLi(issuesOf(r.sgg, null, true), '연말 행사'),
           ]),
           h('p', { class: 'links' }, [
             h('a', { href: 'ch2-region.html', text: '이 동 인구 구성 보기 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: r.sido, sgg: r.sgg, dong: r.dong })); } catch (e) { /* 저장소 없음 */ } } }), ' ',
