@@ -80,7 +80,7 @@
   const WIN = { sedan: 'M44 22 L60 15 Q66 13 78 14 L90 16 Q96 18 100 24 Z', suv: 'M30 18 L42 12 Q47 10 56 10 L94 10 Q100 10 103 17 L106 22 L30 22 Z', suv_s: 'M32 20 L44 14 Q49 12 58 12 L88 12 Q94 12 97 19 L100 23 L32 23 Z', mpv: 'M22 14 L32 8 Q38 6 46 6 L104 6 Q110 6 112 14 L113 20 L22 20 Z', truck: 'M10 14 Q10 12 14 12 L34 12 Q38 12 38 16 L38 22 L10 22 Z', mini: 'M26 14 Q28 10 36 10 L76 10 Q86 10 90 18 L93 22 L26 22 Z' };
 
   /* ---------- 상태 ---------- */
-  const st = { sgg: '세종시', dong: null, target: 'family', car: 'santafe_hev', type: 'drive', theme: 'black', seed: 0, manual: { when: false, place: false } };
+  const st = { sgg: '세종시', dong: null, target: 'family', car: 'santafe_hev', type: 'drive', theme: 'black', seed: 0, dseed: 0, manual: { when: false, place: false } };
 
   function issuesOf(sgg, kind) { return (D.issues || []).filter((q) => q.sgg === sgg && q.kind === kind && q.size !== '0세대'); }
   function rankDongs() {
@@ -186,11 +186,14 @@
     for (let i = 1; i < w.length; i++) { const d = Math.abs(w.slice(0, i).join(' ').length - w.slice(i).join(' ').length); if (d < diff) { diff = d; best = i; } }
     return [w.slice(0, best).join(' '), w.slice(best).join(' ')];
   }
+  const DESIGN = { layout: ['classic', 'photoTop', 'center'], hs: [1, 0.86, 1.1], ss: [1, 1.18, 0.9], label: ['spaced', 'pill', 'line'], num: ['grad', 'outline', 'boxed'], deco: ['none', 'stripe', 'ring'] };
+  const design = (n) => ({ layout: DESIGN.layout[n % 3], hs: DESIGN.hs[Math.floor(n / 3) % 3], ss: DESIGN.ss[Math.floor(n / 2) % 3], label: DESIGN.label[Math.floor(n / 4) % 3], num: DESIGN.num[Math.floor(n / 5) % 3], deco: DESIGN.deco[Math.floor(n / 3) % 3] });
   async function drawFlyer(cv, cp) {
     const W = 1200, H = 1697;
     cv.width = W; cv.height = H;
     const x = cv.getContext('2d');
     const th = PT[st.theme] || PT.black, C = CARS[st.car], P = POSTER[st.car];
+    const dz = design(st.dseed), center = dz.layout === 'center', top = dz.layout === 'photoTop';
     try { await Promise.all([document.fonts.load(`900 80px ${FONT}`), document.fonts.load(`400 40px ${FONT}`), document.fonts.load(`700 40px ${FONT}`)]); } catch (e) { /* 기본 글꼴 */ }
     const [photo, logo] = await Promise.all([P.photo ? img(`img/cars/${P.photo}.jpg`) : null, img('img/hyundai-logo-white.png')]);
     const T = (txt, px, py, size, opt = {}) => {
@@ -202,24 +205,27 @@
     // 배경
     let g = x.createLinearGradient(0, 0, 0, 900); g.addColorStop(0, th.bg); g.addColorStop(1, th.bg2);
     x.fillStyle = g; x.fillRect(0, 0, W, H);
+    if (dz.deco === 'stripe') { x.save(); x.globalAlpha = 0.16; x.fillStyle = th.acc; x.beginPath(); x.moveTo(760, 0); x.lineTo(1200, 0); x.lineTo(1200, 300); x.lineTo(560, 470); x.closePath(); x.fill(); x.globalAlpha = 0.5; x.fillRect(0, 462, W, 8); x.restore(); }
+    if (dz.deco === 'ring') { x.save(); x.strokeStyle = th.acc; x.globalAlpha = 0.25; x.lineWidth = 3; [220, 300, 380].forEach((r) => { x.beginPath(); x.arc(1080, 120, r, 0, 7); x.stroke(); }); x.restore(); }
     // 사진 영역
-    const PY = 470, PH = 330;
+    const PY = top ? 0 : 470, PH = top ? 790 : 330;
     if (photo) {
       const r = Math.max(W / photo.width, PH / photo.height) * 1.0;
       const dw = photo.width * r, dh = photo.height * r;
       x.save(); x.beginPath(); x.rect(0, PY, W, PH); x.clip();
-      x.drawImage(photo, (W - dw) / 2, PY + (PH - dh) * 0.62, dw, dh); x.restore();
-      let f = x.createLinearGradient(0, PY, 0, PY + 150); f.addColorStop(0, th.bg2); f.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = f; x.fillRect(0, PY, W, 150);
+      x.drawImage(photo, (W - dw) / 2, PY + (PH - dh) * (top ? 0.5 : 0.62), dw, dh); x.restore();
+      let f = x.createLinearGradient(0, PY, 0, PY + (top ? 220 : 150)); f.addColorStop(0, top ? 'rgba(0,0,0,.75)' : th.bg2); f.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = f; x.fillRect(0, PY, W, top ? 220 : 150);
+      if (top) { f = x.createLinearGradient(0, 430, 0, PH); f.addColorStop(0, 'rgba(0,0,0,0)'); f.addColorStop(0.55, th.bg + 'cc'); f.addColorStop(1, th.bg); x.fillStyle = f; x.fillRect(0, 430, W, PH - 430); }
       f = x.createLinearGradient(0, PY + PH - 90, 0, PY + PH); f.addColorStop(0, 'rgba(0,0,0,0)'); f.addColorStop(1, 'rgba(0,0,0,.35)'); x.fillStyle = f; x.fillRect(0, PY + PH - 90, W, 90);
     } else {
-      x.save(); x.globalAlpha = 0.08; x.font = `900 ${fit(C.name.replace(/ .*/, ''), 300, 1150, 900)}px ${FONT}`; x.fillStyle = th.fg; x.textAlign = 'center'; x.fillText(C.name.replace(/ .*/, ''), W / 2, PY + 270); x.restore();
+      x.save(); x.globalAlpha = 0.08; x.font = `900 ${fit(C.name.replace(/ .*/, ''), 300, 1150, 900)}px ${FONT}`; x.fillStyle = th.fg; x.textAlign = 'center'; x.fillText(C.name.replace(/ .*/, ''), W / 2, (top ? 150 : PY) + 270); x.restore();
       const body = { sedan: 'M8 40 L16 30 Q22 22 40 21 L58 14 Q66 11 80 12 L92 14 Q100 16 106 24 L114 30 Q118 32 118 38 L118 44 L8 44 Z', suv: 'M8 42 L10 26 Q12 18 24 17 L40 10 Q46 8 56 8 L96 8 Q104 8 108 16 L114 28 Q118 30 118 36 L118 44 L8 44 Z', suv_s: 'M10 42 L12 28 Q14 20 26 19 L42 12 Q48 10 58 10 L90 10 Q98 10 102 18 L110 28 Q114 30 114 36 L114 44 L10 44 Z', mpv: 'M8 42 L8 22 Q8 12 20 10 L30 6 Q36 4 46 4 L104 4 Q114 4 116 14 L118 36 L118 44 L8 44 Z', truck: 'M6 42 L6 18 Q6 10 14 10 L36 10 Q42 10 42 18 L42 26 L118 26 L118 44 L6 44 Z', mini: 'M16 42 L18 22 Q20 10 34 8 L78 8 Q92 8 96 20 L102 32 Q106 34 106 38 L106 44 L16 44 Z' }[C.body];
-      x.save(); x.translate(W / 2 - 126 * 3.0 / 2, PY + 80); x.scale(3.0, 3.0);
+      x.save(); x.translate(W / 2 - 126 * 3.0 / 2, (top ? 150 : PY) + 80); x.scale(3.0, 3.0);
       const cg = x.createLinearGradient(0, 0, 0, 46); cg.addColorStop(0, th.acc); cg.addColorStop(1, th.acc2);
       x.fillStyle = cg; x.fill(new Path2D(body));
       (C.body === 'mini' ? [34, 88] : C.body === 'truck' ? [24, 98] : [30, 96]).forEach((wx) => { x.beginPath(); x.arc(wx, 45, 8, 0, 7); x.fillStyle = '#111'; x.fill(); x.beginPath(); x.arc(wx, 45, 3.4, 0, 7); x.fillStyle = '#bbb'; x.fill(); });
       x.restore();
-      x.save(); x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.ellipse(W / 2, PY + 228, 240, 14, 0, 0, 7); x.fill(); x.restore();
+      x.save(); x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.ellipse(W / 2, (top ? 150 : PY) + 228, 240, 14, 0, 0, 7); x.fill(); x.restore();
     }
     // 상단 브랜드
     if (logo) x.drawImage(logo, 64, 58, 210, 210 * logo.height / logo.width);
@@ -228,31 +234,53 @@
     T(br, 318, 87, fit(br, 34, 470, 800), { w: 800 });
     T('NOVEMBER 2026', W - 64, 84, 20, { a: 'right', c: th.sub, ls: 5, w: 600 });
     // 라벨 + 헤드라인
-    T(`${st.sgg}${st.dong ? ' ' + st.dong : ''}  ·  ${cp.badge}`.split('').join(''), 64, 172, 26, { c: th.acc, ls: 6, w: 700 });
+    const hx = center ? W / 2 : 64, al = center ? 'center' : 'left';
     const [l1, l2] = split2(cp.head);
-    T(l1, 64, 270, fit(l1, 92, 1072, 400), { w: 400 });
-    if (l2) T(l2, 64, 378, fit(l2, 100, 1072, 900), { w: 900, c: th.acc });
-    T(cp.sub, 64, l2 ? 440 : 340, fit(cp.sub, 30, 1072, 500), { w: 500, c: th.sub });
+    const po = dz.label === 'pill' ? 14 : 0;
+    const yL = top ? 470 : 172, y1 = (top ? 560 : 270) + po, y2h = (top ? 668 : 378) + po;
+    const lab = `${st.sgg}${st.dong ? ' ' + st.dong : ''}  ·  ${cp.badge}`, ls = Math.round(26 * dz.ss);
+    if (dz.label === 'pill') {
+      x.save(); x.font = `800 ${ls}px ${FONT}`; x.letterSpacing = '2px'; const lw = x.measureText(lab).width + 44; x.restore();
+      const lx = center ? W / 2 - lw / 2 : 64;
+      x.fillStyle = th.acc; x.beginPath(); x.roundRect(lx, yL - ls - 20, lw, ls + 22, (ls + 22) / 2); x.fill();
+      T(lab, lx + 22, yL - 9, ls, { c: '#1a1206', ls: 2, w: 800 });
+    } else {
+      if (dz.label === 'line') { x.fillStyle = th.acc; if (center) { x.fillRect(W / 2 - 30, yL - ls - 22, 60, 4); } else x.fillRect(64, yL - ls - 22, 60, 4); }
+      T(lab, hx, yL, ls, { c: th.acc, ls: 6, w: 700, a: al });
+    }
+    T(l1, hx, y1, fit(l1, Math.round(92 * dz.hs), 1072, 400), { w: 400, a: al });
+    if (l2) T(l2, hx, y2h, fit(l2, Math.round(100 * dz.hs), 1072, 900), { w: 900, c: th.acc, a: al });
+    T(cp.sub, hx, (l2 ? y2h : y1) + 62, fit(cp.sub, Math.round(30 * dz.ss), 1072, 500), { w: 500, c: th.sub, a: al });
     // 혜택 카드
     const CY = 800;
     x.fillStyle = th.card; x.fillRect(0, CY, W, 545);
-    T(`01   ${TYPES[st.type].label}`, 64, CY + 66, 24, { c: th.acc2, ls: 4, w: 700 });
+    T(`01   ${TYPES[st.type].label}`, center ? W / 2 : 64, CY + 66, Math.round(24 * dz.ss), { c: th.acc2, ls: 4, w: 700, a: center ? 'center' : 'left' });
     x.fillStyle = th.acc2; x.fillRect(64 + 34 + x.measureText('').width, CY + 0, 0, 0);
     const nm = C.name; const nmS = fit(nm, 54, 700, 900);
-    const nmW = T(nm, 64, CY + 140, nmS, { w: 900, c: th.ink });
-    if (P.side) { T(P.side[0], W - 64, CY + 74, 24, { a: 'right', c: th.muted, ls: 3, w: 500 }); T(P.side[1], W - 64, CY + 130, fit(P.side[1], 44, 380, 800), { a: 'right', c: th.ink, w: 800 }); }
+    if (center) {
+      T(nm, W / 2, CY + 140, nmS, { w: 900, c: th.ink, a: 'center' });
+    } else {
+      T(nm, 64, CY + 140, nmS, { w: 900, c: th.ink });
+      if (P.side) { T(P.side[0], W - 64, CY + 74, Math.round(24 * dz.ss), { a: 'right', c: th.muted, ls: 3, w: 500 }); T(P.side[1], W - 64, CY + 130, fit(P.side[1], 44, 380, 800), { a: 'right', c: th.ink, w: 800 }); }
+    }
     // 큰 숫자
     if (P.num) {
       const ns = P.num.length > 3 ? 190 : 250;
       x.save(); x.font = `900 ${ns}px ${FONT}`; const nw = x.measureText(P.num).width;
+      x.font = `900 72px ${FONT}`; const uw = Math.max(x.measureText(P.u1).width, x.measureText(P.u2).width); x.font = `500 34px ${FONT}`; const tw = Math.min(x.measureText(P.top).width, 420);
+      const gx = center ? Math.max(40, (W - (nw + 26 + Math.max(uw, tw))) / 2) : 56;
+      x.font = `900 ${ns}px ${FONT}`;
       const ng = x.createLinearGradient(0, CY + 170, 0, CY + 400); ng.addColorStop(0, th.acc); ng.addColorStop(1, th.acc2);
-      x.fillStyle = ng; x.fillText(P.num, 56, CY + 380); x.restore();
-      const ux = 56 + nw + 26;
-      T(P.top, ux, CY + 232, fit(P.top, 34, W - ux - 64, 500), { c: th.muted, w: 500 });
+      if (dz.num === 'outline') { x.lineWidth = 7; x.strokeStyle = th.acc2; x.strokeText(P.num, gx, CY + 380); }
+      else if (dz.num === 'boxed') { x.fillStyle = th.ink; x.beginPath(); x.roundRect(gx - 14, CY + 186, nw + 28, ns * 0.86, 22); x.fill(); x.fillStyle = th.acc; x.fillText(P.num, gx, CY + 380 - ns * 0.02); }
+      else { x.fillStyle = ng; x.fillText(P.num, gx, CY + 380); }
+      x.restore();
+      const ux = gx + nw + 26;
+      T(P.top, ux, CY + 232, fit(P.top, Math.round(34 * dz.ss), W - ux - 40, 500), { c: th.muted, w: 500 });
       T(P.u1, ux, CY + 308, 72, { w: 900, c: th.ink });
       T(P.u2, ux, CY + 384, 72, { w: 900, c: th.acc2 });
     } else {
-      T(P.text, 64, CY + 330, fit(P.text, 110, 1072, 900), { w: 900, c: th.acc2 });
+      T(P.text, center ? W / 2 : 64, CY + 330, fit(P.text, 110, 1072, 900), { w: 900, c: th.acc2, a: center ? 'center' : 'left' });
     }
     // 3단 조건
     x.fillStyle = th.ink; x.fillRect(64, CY + 420, W - 128, 3);
@@ -260,7 +288,7 @@
     P.cols.forEach(([lab, val], i) => {
       const cx = 64 + i * cw + (i ? 28 : 0);
       if (i) { x.fillStyle = 'rgba(0,0,0,.15)'; x.fillRect(64 + i * cw, CY + 446, 2, 84); }
-      T(lab, cx, CY + 470, 22, { c: th.muted, w: 500 });
+      T(lab, cx, CY + 470, Math.round(22 * dz.ss), { c: th.muted, w: 500 });
       T(val, cx, CY + 518, fit(val, 34, cw - 40, 800), { w: 800, c: th.ink });
     });
     // 일시·장소·문의
@@ -351,6 +379,7 @@
     $('#y-place').addEventListener('input', () => { st.manual.place = true; render(); });
     ['#y-branch', '#y-phone', '#y-org'].forEach((q) => $(q).addEventListener('input', () => render()));
     $('#y-reroll').addEventListener('click', () => { st.seed += 1; render(); });
+    $('#y-redesign').addEventListener('click', () => { st.dseed += 1; render(); });
     $('#y-png').addEventListener('click', savePng);
     $('#y-print').addEventListener('click', () => window.print());
     drawInputs(); render();

@@ -32,3 +32,5 @@
 .fly-contact b:first-child { display: block; color: #9a6a2a; }
 .fly-paper canvas { width: 100%; max-width: 540px; height: auto; display: block; box-shadow: 0 14px 34px rgba(0, 20, 50, .3); border-radius: 4px; }
 @media print { #y-flyer canvas { max-width: none; width: 100%; box-shadow: none; } }
+.alt-btn.design { background: #8a5a1c; }
+.alt-btn.design:hover { background: #6e4714; }
