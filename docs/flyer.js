@@ -64,6 +64,7 @@
     group: { label: '단체 특판', badge: '임직원 특별 상담회', cta: '임직원 전용 조건, 상담회에서 확인하세요' },
   };
   const THEMES = {
+    black: { label: '블랙' },
     navy: { label: '남색', bg: '#002c5f', bg2: '#0b3a75', fg: '#ffffff', sub: '#cfe0f5', acc: '#e2b66f', accFg: '#1d1406', card: 'rgba(255,255,255,.1)', car: '#ffffff' },
     autumn: { label: '가을', bg: '#fbf3e6', bg2: '#f3dfc0', fg: '#2b1d10', sub: '#6b4e2e', acc: '#c8602f', accFg: '#ffffff', card: 'rgba(200,96,47,.1)', car: '#002c5f' },
     black: { label: '블랙', bg: '#121212', bg2: '#262626', fg: '#ffffff', sub: '#c9c9c9', acc: '#e2b66f', accFg: '#1d1406', card: 'rgba(255,255,255,.08)', car: '#e2b66f' },
@@ -79,7 +80,7 @@
   const WIN = { sedan: 'M44 22 L60 15 Q66 13 78 14 L90 16 Q96 18 100 24 Z', suv: 'M30 18 L42 12 Q47 10 56 10 L94 10 Q100 10 103 17 L106 22 L30 22 Z', suv_s: 'M32 20 L44 14 Q49 12 58 12 L88 12 Q94 12 97 19 L100 23 L32 23 Z', mpv: 'M22 14 L32 8 Q38 6 46 6 L104 6 Q110 6 112 14 L113 20 L22 20 Z', truck: 'M10 14 Q10 12 14 12 L34 12 Q38 12 38 16 L38 22 L10 22 Z', mini: 'M26 14 Q28 10 36 10 L76 10 Q86 10 90 18 L93 22 L26 22 Z' };
 
   /* ---------- 상태 ---------- */
-  const st = { sgg: '세종시', dong: null, target: 'family', car: 'santafe_hev', type: 'drive', theme: 'navy', seed: 0, manual: { when: false, place: false } };
+  const st = { sgg: '세종시', dong: null, target: 'family', car: 'santafe_hev', type: 'drive', theme: 'black', seed: 0, manual: { when: false, place: false } };
 
   function issuesOf(sgg, kind) { return (D.issues || []).filter((q) => q.sgg === sgg && q.kind === kind && q.size !== '0세대'); }
   function rankDongs() {
@@ -152,68 +153,137 @@
     return out;
   }
 
-  /* ---------- 전단 SVG (600 × 848, A4 비율) ---------- */
-  const FONT = "'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif";
-  function flyerSvg(cp) {
-    const th = THEMES[st.theme], C = CARS[st.car];
-    const W = 600, H = 848;
-    const t = (x, y, txt, size, opt = {}) => s('text', Object.assign({ x, y, 'font-size': size, 'font-family': FONT, fill: th.fg, 'font-weight': 700, text: txt }, opt));
-    const kids = [
-      s('defs', {}, [s('linearGradient', { id: 'yg', x1: 0, y1: 0, x2: 0, y2: 1 }, [s('stop', { offset: 0, 'stop-color': th.bg }), s('stop', { offset: 1, 'stop-color': th.bg2 })])]),
-      s('rect', { width: W, height: H, fill: 'url(#yg)' }),
-      s('circle', { cx: 540, cy: 70, r: 150, fill: th.acc, 'fill-opacity': 0.12 }),
-      s('circle', { cx: 40, cy: 520, r: 110, fill: th.acc, 'fill-opacity': 0.08 }),
-      // 상단: 브랜드
-      t(36, 52, 'HYUNDAI', 20, { 'font-weight': 900, 'letter-spacing': 3 }),
-      s('rect', { x: 146, y: 36, width: 2, height: 20, fill: th.fg, 'fill-opacity': 0.5 }),
-      t(160, 52, ($('#y-branch').value || '현대자동차 대전충남지역본부'), 15, { 'font-weight': 600, fill: th.sub }),
-      // 배지
-      s('rect', { x: 36, y: 82, width: Math.max(130, cp.badge.length * 17 + 30), height: 34, rx: 17, fill: th.acc }),
-      t(51, 105, cp.badge, 16, { fill: th.accFg, 'font-weight': 800 }),
-    ];
-    // 헤드라인
-    const hl = wrap(cp.head, 13).slice(0, 2);
-    hl.forEach((ln, i) => kids.push(t(36, 166 + i * 50, ln, 42, { 'font-weight': 900 })));
-    const last = 166 + (hl.length - 1) * 50;
-    kids.push(t(36, last + 38, cp.sub, 18, { 'font-weight': 600, fill: th.sub }));
-    // 차 그림
-    const sc = 2.4, cy = last + 62;
-    kids.push(s('ellipse', { cx: 300, cy: cy + 110, rx: 190, ry: 11, fill: '#000', 'fill-opacity': 0.18 }));
-    kids.push(s('g', { transform: `translate(${300 - (126 * sc) / 2},${cy}) scale(${sc})` }, [
-      s('path', { d: CAR_PATH[C.body], fill: th.car }),
-      s('path', { d: WIN[C.body], fill: th.bg, 'fill-opacity': 0.55 }),
-      ...(C.body === 'mini' ? [34, 88] : C.body === 'truck' ? [24, 98] : [30, 96]).flatMap((x) => [s('circle', { cx: x, cy: 45, r: 8, fill: '#1b1b1b' }), s('circle', { cx: x, cy: 45, r: 3.5, fill: '#cfcfcf' })]),
-    ]));
-    kids.push(t(300, cy + 160, C.name, 28, { 'text-anchor': 'middle', 'font-weight': 900 }));
-    // 혜택 박스
-    const by = cy + 176;
-    kids.push(s('rect', { x: 36, y: by, width: W - 72, height: 68, rx: 14, fill: th.acc }));
-    kids.push(t(300, by + 46, cp.big, 36, { 'text-anchor': 'middle', fill: th.accFg, 'font-weight': 900 }));
-    // 혜택 목록
-    let ly = by + 100;
-    cp.bullets.forEach((bl) => {
-      kids.push(s('circle', { cx: 50, cy: ly - 6, r: 10, fill: th.acc }));
-      kids.push(s('path', { d: `M45 ${ly - 6} l4 4 l7 -8`, stroke: th.accFg, 'stroke-width': 2.6, fill: 'none', 'stroke-linecap': 'round' }));
-      kids.push(t(70, ly, bl, 18, { 'font-weight': 600 }));
-      ly += 30;
+  /* ---------- 전단 (캔버스 1200 × 1697, A4 비율) ---------- */
+  const POSTER = {
+    santafe_hev: { photo: 'santafe', num: '60', top: '최대', u1: '개월', u2: '무이자', side: ['차종별 선착순', '각 2,000대 한정'], cols: [['이자 절감(60개월)', '약 580만원'], ['최소 선수율', '20% 이상'], ['HEV 세제 감면', '12.31 출고까지']] },
+    palisade_hev: { photo: 'palisade', num: '60', top: '최대', u1: '개월', u2: '무이자', side: ['차종별 선착순', '각 2,000대 한정'], cols: [['이자 절감(60개월)', '약 740만원'], ['최소 선수율', '20% 이상'], ['그룹사 임직원', '특화 할부']] },
+    grandeur_hev: { photo: 'grandeur', num: '12.31', top: '하이브리드 세제 감면', u1: '출고분', u2: '까지', side: ['타던 차', '대차 보상 상담'], cols: [['세제 감면', '출고일 기준'], ['쿠폰(당첨 시)', '최대 100만원'], ['승차감', '조용하고 편안하게']] },
+    avante: { photo: 'avante', num: '10', top: '월 납입금', u1: '만원대', u2: '부터', side: ['퍼스트 무브 플랜', '12.31 출고까지'], cols: [['36개월 금리', '2.8%'], ['만기 때', '반납하면 끝'], ['하이브리드', '포함']] },
+    avante_hev: { photo: 'avante', num: '10', top: '월 납입금', u1: '만원대', u2: '부터', side: ['퍼스트 무브 플랜', '12.31 출고까지'], cols: [['36개월 금리', '2.8%'], ['만기 때', '반납하면 끝'], ['HEV 세제 감면', '12.31 출고까지']] },
+    tucson_hev: { num: '12.31', top: '하이브리드 세제 감면', u1: '출고분', u2: '까지', side: ['전기차 보조금 마감', '하이브리드가 답'], cols: [['충전', '걱정 없이'], ['유예형 할부', '월 부담 낮게'], ['타던 차', '대차 상담']] },
+    kona_hev: { num: '12.31', top: '하이브리드 세제 감면', u1: '출고분', u2: '까지', side: ['도심 출퇴근', '딱 맞는 크기'], cols: [['충전', '걱정 없이'], ['쿠폰(당첨 시)', '최대 100만원'], ['타던 차', '대차 상담']] },
+    sonata: { num: '50', top: '전용카드 총 혜택', u1: '만원', u2: '혜택', side: ['하이브리드', '포함'], cols: [['차량가 할인', '25만원'], ['캐시백', '25만원'], ['현대캐피탈 할부', '함께 가능']] },
+    staria: { num: '50', top: '전용카드 총 혜택', u1: '만원', u2: '혜택', side: ['넉넉한 공간', '다인승'], cols: [['차량가 할인', '25만원'], ['캐시백', '25만원'], ['현대캐피탈 할부', '함께 가능']] },
+    porter: { num: '100', top: '쿠폰 최대(당첨 시)', u1: '만원', u2: '쿠폰', side: ['노후 디젤 트럭', '대차 상담'], cols: [['타던 트럭', '매각 지원'], ['출고', '11.30까지'], ['상담', '하루 단위 비용']] },
+    casper: { num: '', text: '생활차 대차 상담', side: ['좁은 골목·주차', '편하게'], cols: [['타던 차', '대차 상담'], ['출고', '연내 상담'], ['크기', '작고 편하게']] },
+  };
+  const PT = {
+    black: { bg: '#141414', bg2: '#2a2622', fg: '#ffffff', sub: '#bdb6ad', acc: '#e2b66f', acc2: '#8a5a1c', card: '#f7f4ee', ink: '#1a1a1a', muted: '#7d746a', foot: '#0b0b0b', label: 'black' },
+    autumn: { bg: '#2b1a10', bg2: '#5a3520', fg: '#ffffff', sub: '#e7cdb2', acc: '#f0a24a', acc2: '#9a4a12', card: '#fbf3e6', ink: '#2b1d10', muted: '#8a6a4a', foot: '#24150c', label: 'autumn' },
+    navy: { bg: '#04214a', bg2: '#0d3a73', fg: '#ffffff', sub: '#c6d6ee', acc: '#e2b66f', acc2: '#7a5a1c', card: '#f5f7fb', ink: '#0b1f3f', muted: '#5f6f86', foot: '#021431', label: 'navy' },
+  };
+  const FONT = '"Noto Sans KR","Noto Sans CJK KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif';
+  const IMG = {};
+  function img(src) {
+    if (IMG[src]) return IMG[src];
+    IMG[src] = new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+    return IMG[src];
+  }
+  function split2(t) {
+    if (t.includes(', ')) { const [a, ...b] = t.split(', '); return [a + ',', b.join(', ')]; }
+    const w = t.split(' '); if (w.length < 3) return [t, ''];
+    let best = 1, diff = 1e9;
+    for (let i = 1; i < w.length; i++) { const d = Math.abs(w.slice(0, i).join(' ').length - w.slice(i).join(' ').length); if (d < diff) { diff = d; best = i; } }
+    return [w.slice(0, best).join(' '), w.slice(best).join(' ')];
+  }
+  async function drawFlyer(cv, cp) {
+    const W = 1200, H = 1697;
+    cv.width = W; cv.height = H;
+    const x = cv.getContext('2d');
+    const th = PT[st.theme] || PT.black, C = CARS[st.car], P = POSTER[st.car];
+    try { await Promise.all([document.fonts.load(`900 80px ${FONT}`), document.fonts.load(`400 40px ${FONT}`), document.fonts.load(`700 40px ${FONT}`)]); } catch (e) { /* 기본 글꼴 */ }
+    const [photo, logo] = await Promise.all([P.photo ? img(`img/cars/${P.photo}.jpg`) : null, img('img/hyundai-logo-white.png')]);
+    const T = (txt, px, py, size, opt = {}) => {
+      x.save(); x.font = `${opt.w || 700} ${size}px ${FONT}`; x.fillStyle = opt.c || th.fg; x.textAlign = opt.a || 'left'; x.textBaseline = 'alphabetic';
+      if (opt.ls) x.letterSpacing = `${opt.ls}px`;
+      x.fillText(txt, px, py); const m = x.measureText(txt).width; x.restore(); return m;
+    };
+    const fit = (txt, size, maxW, w = 700) => { x.save(); x.font = `${w} ${size}px ${FONT}`; let s2 = size; while (x.measureText(txt).width > maxW && s2 > 12) { s2 -= 2; x.font = `${w} ${s2}px ${FONT}`; } x.restore(); return s2; };
+    // 배경
+    let g = x.createLinearGradient(0, 0, 0, 900); g.addColorStop(0, th.bg); g.addColorStop(1, th.bg2);
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    // 사진 영역
+    const PY = 470, PH = 330;
+    if (photo) {
+      const r = Math.max(W / photo.width, PH / photo.height) * 1.0;
+      const dw = photo.width * r, dh = photo.height * r;
+      x.save(); x.beginPath(); x.rect(0, PY, W, PH); x.clip();
+      x.drawImage(photo, (W - dw) / 2, PY + (PH - dh) * 0.62, dw, dh); x.restore();
+      let f = x.createLinearGradient(0, PY, 0, PY + 150); f.addColorStop(0, th.bg2); f.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = f; x.fillRect(0, PY, W, 150);
+      f = x.createLinearGradient(0, PY + PH - 90, 0, PY + PH); f.addColorStop(0, 'rgba(0,0,0,0)'); f.addColorStop(1, 'rgba(0,0,0,.35)'); x.fillStyle = f; x.fillRect(0, PY + PH - 90, W, 90);
+    } else {
+      x.save(); x.globalAlpha = 0.08; x.font = `900 ${fit(C.name.replace(/ .*/, ''), 300, 1150, 900)}px ${FONT}`; x.fillStyle = th.fg; x.textAlign = 'center'; x.fillText(C.name.replace(/ .*/, ''), W / 2, PY + 270); x.restore();
+      const body = { sedan: 'M8 40 L16 30 Q22 22 40 21 L58 14 Q66 11 80 12 L92 14 Q100 16 106 24 L114 30 Q118 32 118 38 L118 44 L8 44 Z', suv: 'M8 42 L10 26 Q12 18 24 17 L40 10 Q46 8 56 8 L96 8 Q104 8 108 16 L114 28 Q118 30 118 36 L118 44 L8 44 Z', suv_s: 'M10 42 L12 28 Q14 20 26 19 L42 12 Q48 10 58 10 L90 10 Q98 10 102 18 L110 28 Q114 30 114 36 L114 44 L10 44 Z', mpv: 'M8 42 L8 22 Q8 12 20 10 L30 6 Q36 4 46 4 L104 4 Q114 4 116 14 L118 36 L118 44 L8 44 Z', truck: 'M6 42 L6 18 Q6 10 14 10 L36 10 Q42 10 42 18 L42 26 L118 26 L118 44 L6 44 Z', mini: 'M16 42 L18 22 Q20 10 34 8 L78 8 Q92 8 96 20 L102 32 Q106 34 106 38 L106 44 L16 44 Z' }[C.body];
+      x.save(); x.translate(W / 2 - 126 * 3.0 / 2, PY + 80); x.scale(3.0, 3.0);
+      const cg = x.createLinearGradient(0, 0, 0, 46); cg.addColorStop(0, th.acc); cg.addColorStop(1, th.acc2);
+      x.fillStyle = cg; x.fill(new Path2D(body));
+      (C.body === 'mini' ? [34, 88] : C.body === 'truck' ? [24, 98] : [30, 96]).forEach((wx) => { x.beginPath(); x.arc(wx, 45, 8, 0, 7); x.fillStyle = '#111'; x.fill(); x.beginPath(); x.arc(wx, 45, 3.4, 0, 7); x.fillStyle = '#bbb'; x.fill(); });
+      x.restore();
+      x.save(); x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.ellipse(W / 2, PY + 228, 240, 14, 0, 0, 7); x.fill(); x.restore();
+    }
+    // 상단 브랜드
+    if (logo) x.drawImage(logo, 64, 58, 210, 210 * logo.height / logo.width);
+    x.fillStyle = th.acc; x.fillRect(296, 54, 3, 40);
+    const br = $('#y-branch').value || '대전충남지역본부';
+    T(br, 318, 87, fit(br, 34, 470, 800), { w: 800 });
+    T('NOVEMBER 2026', W - 64, 84, 20, { a: 'right', c: th.sub, ls: 5, w: 600 });
+    // 라벨 + 헤드라인
+    T(`${st.sgg}${st.dong ? ' ' + st.dong : ''}  ·  ${cp.badge}`.split('').join(''), 64, 172, 26, { c: th.acc, ls: 6, w: 700 });
+    const [l1, l2] = split2(cp.head);
+    T(l1, 64, 270, fit(l1, 92, 1072, 400), { w: 400 });
+    if (l2) T(l2, 64, 378, fit(l2, 100, 1072, 900), { w: 900, c: th.acc });
+    T(cp.sub, 64, l2 ? 440 : 340, fit(cp.sub, 30, 1072, 500), { w: 500, c: th.sub });
+    // 혜택 카드
+    const CY = 800;
+    x.fillStyle = th.card; x.fillRect(0, CY, W, 545);
+    T(`01   ${TYPES[st.type].label}`, 64, CY + 66, 24, { c: th.acc2, ls: 4, w: 700 });
+    x.fillStyle = th.acc2; x.fillRect(64 + 34 + x.measureText('').width, CY + 0, 0, 0);
+    const nm = C.name; const nmS = fit(nm, 54, 700, 900);
+    const nmW = T(nm, 64, CY + 140, nmS, { w: 900, c: th.ink });
+    if (P.side) { T(P.side[0], W - 64, CY + 74, 24, { a: 'right', c: th.muted, ls: 3, w: 500 }); T(P.side[1], W - 64, CY + 130, fit(P.side[1], 44, 380, 800), { a: 'right', c: th.ink, w: 800 }); }
+    // 큰 숫자
+    if (P.num) {
+      const ns = P.num.length > 3 ? 190 : 250;
+      x.save(); x.font = `900 ${ns}px ${FONT}`; const nw = x.measureText(P.num).width;
+      const ng = x.createLinearGradient(0, CY + 170, 0, CY + 400); ng.addColorStop(0, th.acc); ng.addColorStop(1, th.acc2);
+      x.fillStyle = ng; x.fillText(P.num, 56, CY + 380); x.restore();
+      const ux = 56 + nw + 26;
+      T(P.top, ux, CY + 232, fit(P.top, 34, W - ux - 64, 500), { c: th.muted, w: 500 });
+      T(P.u1, ux, CY + 308, 72, { w: 900, c: th.ink });
+      T(P.u2, ux, CY + 384, 72, { w: 900, c: th.acc2 });
+    } else {
+      T(P.text, 64, CY + 330, fit(P.text, 110, 1072, 900), { w: 900, c: th.acc2 });
+    }
+    // 3단 조건
+    x.fillStyle = th.ink; x.fillRect(64, CY + 420, W - 128, 3);
+    const cw = (W - 128) / 3;
+    P.cols.forEach(([lab, val], i) => {
+      const cx = 64 + i * cw + (i ? 28 : 0);
+      if (i) { x.fillStyle = 'rgba(0,0,0,.15)'; x.fillRect(64 + i * cw, CY + 446, 2, 84); }
+      T(lab, cx, CY + 470, 22, { c: th.muted, w: 500 });
+      T(val, cx, CY + 518, fit(val, 34, cw - 40, 800), { w: 800, c: th.ink });
     });
     // 일시·장소·문의
-    const iy = ly - 10;
-    kids.push(s('rect', { x: 36, y: iy, width: W - 72, height: 94, rx: 12, fill: th.card }));
+    const IY = CY + 545;
+    x.fillStyle = th.bg; x.fillRect(0, IY, W, 186);
     [['일시', $('#y-when').value], ['장소', $('#y-place').value], ['문의', $('#y-phone').value || '가까운 현대자동차 지점·대리점']].forEach(([k, v], i) => {
-      kids.push(t(56, iy + 30 + i * 27, k, 16, { fill: th.acc, 'font-weight': 800 }));
-      kids.push(t(106, iy + 30 + i * 27, String(v || '').slice(0, 34), 16, { 'font-weight': 600 }));
+      T(k, 64, IY + 58 + i * 50, 26, { c: th.acc, w: 800, ls: 2 });
+      T(String(v || ''), 160, IY + 58 + i * 50, fit(String(v || ''), 30, W - 224, 700), { w: 700 });
     });
-    // CTA + 쿠폰
-    const cy2 = iy + 124;
-    kids.push(t(300, cy2, cp.cta, 18, { 'text-anchor': 'middle', 'font-weight': 800 }));
+    // 쿠폰 띠
+    let y2 = IY + 186;
     if (cp.ksf) {
-      kids.push(s('rect', { x: 110, y: cy2 + 12, width: 380, height: 30, rx: 15, fill: '#d6413b' }));
-      kids.push(t(300, cy2 + 32, cp.ksf, 14, { 'text-anchor': 'middle', fill: '#fff', 'font-weight': 800 }));
+      x.fillStyle = '#c8342e'; x.fillRect(0, y2, W, 60);
+      T(cp.ksf, W / 2, y2 + 41, fit(cp.ksf, 28, W - 120, 800), { a: 'center', w: 800, c: '#fff' });
+      y2 += 60;
     }
-    // 하단 고지
-    kids.push(t(300, H - 14, `※ ${cp.cond} · 세부 조건은 지점 문의 · 금융은 현대캐피탈 심사 기준`, 11, { 'text-anchor': 'middle', 'font-weight': 400, fill: th.sub }));
-    return s('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, xmlns: NS, id: 'y-svg', role: 'img', 'aria-label': `${C.name} 판촉 전단` }, kids);
+    // 하단
+    x.fillStyle = th.foot; x.fillRect(0, y2, W, H - y2);
+    const cta = cp.cta;
+    T(cta, W / 2, y2 + 54, fit(cta, 38, W - 120, 800), { a: 'center', w: 800, c: th.acc });
+    const fine = `※ ${cp.cond} · 세부 조건은 지점 문의 · 금융은 현대캐피탈 심사 기준`;
+    T(fine, W / 2, y2 + 92, fit(fine, 18, W - 120, 400), { a: 'center', c: th.sub, w: 400 });
+    if (H - y2 > 130) T('HYUNDAI   대전충남지역본부', W / 2, H - 22, 18, { a: 'center', c: th.sub, ls: 3, w: 600 });
   }
 
   /* ---------- 문자·체크리스트 ---------- */
@@ -252,21 +322,17 @@
 
   /* ---------- 저장 ---------- */
   function savePng() {
-    const svg = $('#y-svg'); if (!svg) return;
-    const xml = new XMLSerializer().serializeToString(svg);
-    const img = new Image();
-    img.onload = () => {
-      const c = document.createElement('canvas'); c.width = 1200; c.height = 1696;
-      const x = c.getContext('2d'); x.drawImage(img, 0, 0, c.width, c.height);
-      const a = document.createElement('a'); a.download = `flyer_${st.car}_${Date.now()}.png`; a.href = c.toDataURL('image/png'); a.click();
-    };
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+    const cv = $('#y-canvas'); if (!cv) return;
+    try {
+      const a = document.createElement('a'); a.download = `flyer_${st.car}_${Date.now()}.png`; a.href = cv.toDataURL('image/png'); a.click();
+    } catch (e) { alert('이 환경에서는 저장이 막혀 있어요. 전단 위에서 오른쪽 버튼 → 이미지 저장을 이용해 주세요.'); }
   }
 
   function render() {
     const src = autoFill();
     const cp = copy();
-    $('#y-flyer').replaceChildren(flyerSvg(cp));
+    let cv = $('#y-canvas'); if (!cv) { cv = h('canvas', { id: 'y-canvas', role: 'img', 'aria-label': '판촉 전단 미리보기' }); $('#y-flyer').replaceChildren(cv); }
+    drawFlyer(cv, cp);
     smsBlock(cp); checkBlock(src);
     const C = CARS[st.car];
     $('#y-note').textContent = `${C.ksf ? '' : `${C.name}는 코리아세일페스타 쿠폰 대상이 아니라 쿠폰 문구를 넣지 않았어요. `}금융 조건은 11월 프로모션 기준이며, 배포 전 지점에서 한 번 더 확인하세요.`;
