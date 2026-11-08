@@ -139,9 +139,9 @@
 
   /* ---------- 동 단위 Pin Point ---------- */
   const PIN = {
-    family: { label: '영패밀리(0–9세 + 30–44세)', note: 'SUV·MPV·HEV 가족차 판촉 후보. 지수 = 0–9세 비중 + 30–44세 비중.', val: (r) => r.family_idx, txt: (r) => `${pct(r.family_idx)} (0–9세 ${pct(r.age0_9)})` },
-    young: { label: '2030(20–29세 비중)', note: '첫차·소형SUV 판촉 후보. 대학가가 많이 포함되므로 직장인 밀집 지역(둔산·불당 등)과 함께 보세요.', val: (r) => r.age20_29, txt: (r) => pct(r.age20_29) },
-    senior: { label: '60세 이상 밀집', note: '60세+ 비중 35% 이상인 읍면동 중 60세+ 인원이 많은 순. 포터·캐스퍼·그랜저 순회 판촉 후보.', val: (r) => r.n60p, txt: (r) => `${fmt(r.n60p)}명 (${pct(r.age60p)})` },
+    family: { label: '영패밀리(0–9세 + 30–44세)', note: '아이 키우는 3040이 많은 동 — 싼타페·팰리세이드 판촉', val: (r) => r.family_idx, txt: (r) => `${pct(r.family_idx)} (0–9세 ${pct(r.age0_9)})` },
+    young: { label: '2030(20–29세 비중)', note: '2030이 많은 동 — 아반떼·코나 첫차 판촉', val: (r) => r.age20_29, txt: (r) => pct(r.age20_29) },
+    senior: { label: '60세 이상 밀집', note: '60세 이상이 많은 동 — 그랜저·포터 대차 판촉', val: (r) => r.n60p, txt: (r) => `${fmt(r.n60p)}명 (${pct(r.age60p)})` },
   };
   let pinKey = 'family';
   function pin() {
@@ -318,10 +318,10 @@
 
   /* ---------- 3장: 동을 누르면 그 동의 판촉방안 팝업 ---------- */
   const DONG_PLAY = {
-    family: { car: '싼타페 HEV·팰리세이드', customer: '영유아 자녀를 둔 3040 가구', fin: '싼타페 HEV 60개월 무이자(이자 약 580만원 절감) · 팰리세이드 60개월 무이자 · 서울에서 이주한 다자녀 가구 싼타페 금리 1.9%', how: ['아파트 단지 주말 순회 전시와 키즈존', '어린이집·초등학교 하원 시간대 생활권 홍보', '카시트·유모차 적재 시연, 쏘렌토·카니발 비교 시승'] },
-    young: { car: '아반떼·코나 HEV', customer: '첫 차를 고르는 2030 직장인·사회초년생', fin: '아반떼 퍼스트 무브 월 14만원~(12.31 출고분까지) · 코나·아반떼 HEV 연내 출고 세제 감면 · EV 관심 고객은 HEV로 전환', how: ['퇴근 시간 팝업 시승(업무지구·대학가 인근)', 'SNS·지역 커뮤니티 타깃 광고와 QR 사전예약', '월 납입금 현장 계산으로 첫차 부담 낮추기'] },
-    seniorCity: { car: '그랜저 HEV·쏘나타', customer: '그랜저·쏘나타를 오래 탄 60대 재구매 고객', fin: '쏘나타 전용카드 50만원 · 그랜저 HEV 연내 출고 세제 감면 · 택시는 LPG 쏘나타 대차 · 소상공인은 포터 노후 트럭 대차', how: ['장기 보유 고객 대차 DM·전화', '전통시장·경로당 생활권 상담 부스', '트레이드인 감정으로 기존 차 처분 부담 덜기'] },
-    seniorRural: { car: '포터·캐스퍼', customer: '60대 이상 농업·자영업 생업 운전자', fin: '포터 노후 디젤 트럭 대차 + 코리아세일페스타 쿠폰(최대 100만원) · 노후차 교체 상담', how: ['5일장·농협 하나로마트 연계 순회 전시·시승', '읍·면사무소, 농협 금융과 연계한 할부 상담', '노후 1톤 트럭 교체·폐차 절차 안내'] },
+    family: { car: '싼타페 HEV·팰리세이드', customer: '영유아 자녀를 둔 3040 가구', fin: '싼타페·팰리세이드 60개월 무이자 · 다자녀 이주 가구 1.9%', how: ['아파트 단지 주말 순회 전시와 키즈존', '어린이집·초등학교 하원 시간대 생활권 홍보', '카시트·유모차 적재 시연, 쏘렌토·카니발 비교 시승'] },
+    young: { car: '아반떼·코나 HEV', customer: '첫 차를 고르는 2030 직장인·사회초년생', fin: '아반떼 퍼스트 무브 월 14만원~ · EV 관심 고객은 HEV로', how: ['퇴근 시간 팝업 시승(업무지구·대학가 인근)', 'SNS·지역 커뮤니티 타깃 광고와 QR 사전예약', '월 납입금 현장 계산으로 첫차 부담 낮추기'] },
+    seniorCity: { car: '그랜저 HEV·쏘나타', customer: '그랜저·쏘나타를 오래 탄 60대 재구매 고객', fin: '쏘나타 전용카드 50만원 · 그랜저 HEV 세제 감면', how: ['장기 보유 고객 대차 DM·전화', '전통시장·경로당 생활권 상담 부스', '트레이드인 감정으로 기존 차 처분 부담 덜기'] },
+    seniorRural: { car: '포터·캐스퍼', customer: '60대 이상 농업·자영업 생업 운전자', fin: '포터 노후 트럭 대차 + 쿠폰(최대 100만원)', how: ['5일장·농협 하나로마트 연계 순회 전시·시승', '읍·면사무소, 농협 금융과 연계한 할부 상담', '노후 1톤 트럭 교체·폐차 절차 안내'] },
   };
   function showDongPlan(r, key) {
     const old = document.querySelector('.dong-modal'); if (old) old.remove();
@@ -567,7 +567,7 @@
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '전환 퍼널' });
       st.forEach(([name, n], i) => { const w = Math.max(2, (n / mx) * 600); const y = i * 23; svg.append(s('rect', { x: 140, y, width: w, height: 18, rx: 3, fill: 'var(--accent)', 'fill-opacity': 0.25 + i * 0.18 }), s('text', { x: 0, y: y + 14, text: name }), s('text', { x: 146 + w, y: y + 14, 'font-weight': 600, text: `${fmt(n)}${i ? '대' : '명'}` })); });
       $('#sim-funnel').replaceChildren(svg);
-      $('#sim-note').textContent = `월 신규 등록 대비 비율은 행사 계약을 한 달 실적으로 가정한 값입니다. 행사 계약 중 기존 현대 고객의 재구매는 점유율을 늘리지 않으니, 정복(경쟁차 대차) 비중을 따로 보세요.`;
+      $('#sim-note').textContent = `행사 계약을 한 달 실적으로 가정한 추정입니다.`;
     }
     $('#sim-form').addEventListener('input', calc);
     $('#sim-reset').addEventListener('click', () => { sel.value = '세종시'; $('#sim-leads').value = DEF.leads; ids.forEach((k) => { $('#sim-' + k).value = DEF[k]; }); calc(); });

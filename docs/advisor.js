@@ -639,7 +639,7 @@
     const monthly = p.loan ? `월 약 ${won1(p.loan.m)}` : p.lease ? `월 ${p.lease.gen}만원` : '';
     const STEPS = [
       ['첫인사·관심 열기', `“${where}에 사시는 ${custTxt}분들이 요즘 ${car.name}${josaR(car.name)} 많이 보세요. 11월에는 금융 혜택이 특히 좋아서 먼저 말씀드리고 싶었어요.”`, '현장 판촉이면 무릎담요(전시장 QR 경품)·쿠폰 응모로 대화를 엽니다.'],
-      ['니즈 확인 질문', null, `3~4개만 묻고, 답을 메모해 차종·금융 선택 근거로 씁니다.${W.needs.length ? ' 맨 위 질문은 선택한 고객 유형에 맞춘 질문입니다.' : ''}`, [...new Set([...W.needs, ...(NEEDS[car.type] || NEEDS.family)])].slice(0, 7)],
+      ['니즈 확인 질문', null, `3~4개만 묻고, 답을 메모해 차종·금융 선택 근거로 씁니다.${W.needs.length ? ' 맨 위 질문은 선택한 고객 유형에 맞춘 질문입니다.' : ''}`, [...new Set([...W.needs, ...(NEEDS[car.type] || NEEDS.family)])].slice(0, 5)],
       ['차량 제안', `“${car.persona}에게 ${car.name}${josa(car.name)} 공간·연비·안전에서 가장 균형이 좋아요.”`, st.area ? (A.fits ? '이 지역 판촉 집중 차종이므로 시승을 바로 권합니다.' : `이 지역 집중 차종(${A.focusTxt || '—'})도 함께 비교해 보여 줍니다.`) : '지역을 고르면 그 지역 집중 차종과 비교 포인트가 나옵니다.'],
       ['금융·가격 제시', `“${g.pitch ? g.pitch(p) : lines[0]}”`, `가격표(4번)를 화면으로 보여 주며 차량가 → 혜택 → 실구매가 → ${monthly || '월 납입금'} 순서로 설명합니다. 표준 할부와 나란히 비교하면 설득력이 커집니다.`],
       ['코리아세일페스타·마감으로 클로징', ks[0] ? '“지금 같이 응모해 보실까요? 당첨되면 최대 100만원이고, 11월 30일 출고까지 쓰실 수 있어요.”' : `“이 조건은 ${p.deadline !== '—' ? p.deadline : '11.30 출고'}까지라 이번 달에 결정하시면 가장 유리합니다.”`, '즉시 출고 가능한 재고·색상을 확인하고, 계약 일정을 구체적인 날짜로 잡습니다.'],
@@ -684,7 +684,7 @@
         h('div', {}, [ih('h3', 'check', '체크리스트'), h('ul', { class: 'check' }, allCheck.map((c) => h('li', { text: c, class: W.check.includes(c) ? 'who-item' : null })))]),
       ]),
       ih('h3', 'qa', '예상 질문과 답변', 'g-h'),
-      h('dl', { class: 'qa' }, [...W.qa, ...g.qa, ...COMMON_QA].flatMap(([q, a]) => [h('dt', { text: `Q. ${q}` }), h('dd', { text: `A. ${a}` })])),
+      h('dl', { class: 'qa' }, [...W.qa, ...g.qa, ...COMMON_QA].slice(0, 5).flatMap(([q, a]) => [h('dt', { text: `Q. ${q}` }), h('dd', { text: `A. ${a}` })])),
       h('div', { class: 'guide-cols' }, [
         h('div', {}, [ih('h3', 'shield', '거절할 때 이렇게'), h('dl', { class: 'qa obj' }, OBJ.flatMap(([q, a]) => [h('dt', { text: q }), h('dd', { text: a })]))]),
         h('div', {}, [ih('h3', 'warn', '이건 조심하세요'), h('ul', { class: 'check dont' }, DONT.map((c) => h('li', { text: c })))]),

@@ -487,3 +487,6 @@ svg text:not([font-size]) { font-size: 13px; }
 .ev-rules { margin: 0 0 10px; padding-left: 20px; line-height: 1.7; }
 @media (max-width: 600px) { .evbanner { grid-template-columns: 1fr; } .evb-icon { width: 72px; height: 72px; } }
 @media (prefers-color-scheme: dark) { .evbanner h2, .evswitch h2 { color: #ff8c80; } }
+ul.short { margin: 6px 0 0; padding-left: 20px; line-height: 1.75; font-size: 17px; }
+ul.short li { margin: 2px 0; }
+.verdict ul.short { font-size: 18px; }
