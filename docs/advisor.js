@@ -27,7 +27,7 @@
     { id: 'grandeur', name: '그랜저', ref: 4245, type: 'senior', persona: '그랜저·쏘나타를 오래 탄 50~60대 대차 고객' },
     { id: 'grandeur_hev', name: '그랜저 하이브리드', ref: 4833, type: 'senior', persona: '연비와 정숙성을 원하는 50~60대 대차 고객' },
     { id: 'kona', name: '코나 (HEV 포함)', ref: null, type: 'young', persona: '첫 SUV를 찾는 2030' },
-    { id: 'tucson', name: '디 올 뉴 투싼', ref: 3140, type: 'family', persona: '실속 SUV를 찾는 3040 신혼·영유아 가구' },
+    { id: 'tucson', name: '디 올 뉴 투싼 (HEV 포함)', ref: 3140, type: 'family', persona: '실속 SUV를 찾는 3040 신혼·영유아 가구' },
     { id: 'santafe', name: '싼타페', ref: 4547, range: [3657, 4547], type: 'family', persona: '영유아·초등 자녀를 둔 3040 가구' },
     { id: 'santafe_hev', name: '싼타페 하이브리드', ref: 4977, type: 'family', persona: '연비까지 챙기는 3040 패밀리 가구' },
     { id: 'palisade', name: '팰리세이드', ref: 5586, range: [4383, 5586], type: 'family', persona: '대가족·다자녀 3040~50 고소득 가구' },
@@ -52,8 +52,11 @@
   ];
   const WHO = [
     ['indiv', '개인'], ['biz', '개인사업자'], ['corp', '법인'], ['small', '소상공인'], ['farm', '농업인'],
-    ['multi', '다자녀 이주 가구'], ['staff', '현대차 임직원'], ['aff', '계열사·그룹사 임직원'], ['taxi', '택시'], ['owner', '수입차·제네시스·현대EV 보유'], ['evre', '현대 EV 재구매'],
+    ['multi', '다자녀 이주 가구'], ['staff', '현대차 임직원'], ['aff', '계열사·그룹사 임직원'], ['taxi', '택시'], ['owner', '수입차·제네시스·현대EV 보유'], ['evre', '현대 EV 보유'],
   ];
+  const EV_CLOSED = true; // 2026년 전기차 보조금 공모 전 지역 마감 (11월 현장 확인)
+  const ALT = { ioniq5: ['santafe_hev', 'tucson'], ioniq6: ['grandeur_hev', 'sonata'], ioniq9: ['palisade_hev'], kona_ev: ['avante_hev', 'kona'], nexo: ['santafe_hev', 'grandeur_hev'], porter_ev: ['porter'], ioniq5n: ['avante_n'], ioniq6n: ['avante_n'] };
+  const altOf = (car) => (st.who.taxi && car.ev ? ['sonata'] : ALT[car.id] || []).map((id) => CARS.find((c) => c.id === id));
   const STD = { 36: 5.4, 48: 5.5, 60: 5.6 }; // 모빌리티 표준 할부 금리 (11월 자료 무이자 비교 금리)
   const LEASE = { // 60개월·연 2만km 월 납입금 (만원) [자료 As-is, To-be 일반리스, To-be 이용자명의리스]
     ioniq9: [103, 93, 88], ioniq5: [69, 53, 48], ioniq6: [70, 54, 50], kona_ev: [61, 50, 47],
@@ -77,8 +80,8 @@
     const out = [];
     const add = (o) => out.push(Object.assign({ ok: true, why: [], extra: [], lost: 0, discount: 0, subsidy: 0 }, o));
     const id = car.id;
-    let subsidy = car.ev ? car.subsidy || 0 : 0;
-    if (id === 'porter_ev') subsidy += who.small ? 290 : who.farm ? 97 : 0;
+    let subsidy = car.ev && !EV_CLOSED ? car.subsidy || 0 : 0;
+    if (id === 'porter_ev' && !EV_CLOSED) subsidy += who.small ? 290 : who.farm ? 97 : 0;
     const cp = ctx.coupon && ksfOk(ctx)[0] ? ctx.coupon : 0;
     const net0 = price - subsidy - cp;
 
@@ -185,6 +188,7 @@
       terms: `${months}개월 ${STD[months]}%(모빌리티 표준 할부 가정)${ksfBase ? ' · 싼타페 K-세일페스타 기본혜택 100만원' : ''}` });
 
     // 선택지 점수: 가능한 것 중 고객 혜택(이자 절감 + 할인 − 포기 혜택)이 가장 큰 것을 추천
+    if (EV_CLOSED && car.ev) out.forEach((p) => { if (p.id !== 'std') { p.ok = false; p.why = ['전기차 보조금 공모 마감 — HEV·내연기관 차로 전환 권장']; } else { p.name = '표준 할부 (보조금 없이 구매 시)'; } });
     const usable = out.filter((p) => p.ok);
     usable.forEach((p) => { p.score = p.value + (p.discount || 0) + (p.cashback || 0) - (p.lost || 0); });
     const best = usable.filter((p) => p.id !== 'std').sort((a, b) => b.score - a.score)[0] || usable.find((p) => p.id === 'std');
@@ -320,6 +324,7 @@
     ]);
   }
   const josa = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '은' : '는'; return '는'; };
+  const josaI = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '이' : '가'; return '가'; };
   const josaR = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '을' : '를'; return '를'; };
 
   /* ---------- 입력 ---------- */
@@ -336,19 +341,25 @@
     });
     area.value = st.area;
     const car = $('#f-car');
-    [['현대 승용', (c) => !c.ev && !c.genesis && !/porter/.test(c.id)], ['전기·수소', (c) => c.ev && !/porter/.test(c.id)], ['소형 상용', (c) => /porter/.test(c.id)], ['제네시스', (c) => c.genesis]].forEach(([lab, f]) => {
+    [['현대 승용', (c) => !c.ev && !c.genesis && !/porter/.test(c.id)], ['전기·수소 — 보조금 공모 마감, HEV 전환 상담용', (c) => c.ev && !/porter/.test(c.id)], ['소형 상용', (c) => /porter/.test(c.id)], ['제네시스', (c) => c.genesis]].forEach(([lab, f]) => {
       const g = h('optgroup', { label: lab }); CARS.filter(f).forEach((c) => g.append(h('option', { value: c.id, text: c.name }))); car.append(g);
     });
     car.value = st.car;
     $('#f-who').replaceChildren(...WHO.map(([k, lab]) => h('button', { type: 'button', 'aria-pressed': String(!!st.who[k]), 'data-k': k, text: lab, onclick: (e) => { st.who[k] = !st.who[k]; if (!Object.values(st.who).some(Boolean)) st.who.indiv = true; st.pick = null; e.currentTarget.setAttribute('aria-pressed', String(!!st.who[k])); render(); } })));
     area.addEventListener('change', () => { st.area = area.value; st.pick = null; render(); });
-    car.addEventListener('change', () => { st.car = car.value; const c = CARS.find((x) => x.id === st.car); st.price = c.ref || (st.band ? st.band * 1000 + 500 : 3500); st.band = null; st.pick = null; st.down = /^(santafe|palisade)/.test(c.id) ? 0.2 : c.id === 'nexo' ? 0.05 : c.ev ? 0.01 : 0.1; syncPrice(); render(); });
+    car.addEventListener('change', () => switchCar(car.value));
     $('#f-price').addEventListener('input', (e) => { const v = Number(e.target.value); if (v > 0) { st.price = v; st.band = null; drawBands(); render(); } });
     $('#f-down').addEventListener('input', (e) => { st.down = Number(e.target.value) / 100; st.pick = null; render(); });
     $('#f-months').addEventListener('change', (e) => { st.months = Number(e.target.value); st.pick = null; render(); });
     const drawCoupon = () => $('#f-coupon').replaceChildren(...[[0, '미응모·미당첨'], [50, '50만원 당첨'], [100, '100만원 당첨']].map(([v, lab]) => h('button', { type: 'button', 'aria-pressed': String(st.coupon === v), text: lab, onclick: () => { st.coupon = v; drawCoupon(); render(); } })));
     drawCoupon();
     syncPrice();
+  }
+  function switchCar(id) {
+    st.car = id; $('#f-car').value = id; const c = CARS.find((x) => x.id === id);
+    st.price = c.ref || (st.band ? st.band * 1000 + 500 : 3500); st.band = null; st.pick = null;
+    st.down = /^(santafe|palisade)/.test(c.id) ? 0.2 : c.id === 'nexo' ? 0.05 : c.ev ? 0.01 : 0.1;
+    syncPrice(); render();
   }
   function drawBands() {
     const cur = Math.floor(st.price / 1000);
@@ -372,7 +383,7 @@
     $('#adv-dday').replaceChildren(
       h('div', { class: 'dd hot' }, [h('b', { text: tag(d('2026-11-15')) }), h('span', { text: '11.15 코리아세일페스타 쿠폰 응모 마감' })]),
       h('div', { class: 'dd hot' }, [h('b', { text: tag(d('2026-11-30')) }), h('span', { text: '11.30 출고 마감 — 11월 금융 프로모션·쿠폰' })]),
-      h('div', { class: 'dd' }, [h('b', { text: tag(d('2026-12-31')) }), h('span', { text: '12.31 출고 마감 — 아반떼 퍼스트 무브, HEV·EV 세제 감면' })]),
+      h('div', { class: 'dd' }, [h('b', { text: tag(d('2026-12-31')) }), h('span', { text: '12.31 출고 마감 — 아반떼 퍼스트 무브, HEV 세제 감면' })]),
     );
   }
   const METRIC = { family: ['family_idx', '영패밀리 지수'], young: ['age20_29', '20–29세'], senior: ['age60p', '60세 이상'], biz: ['age60p', '60세 이상'], eco: ['age30_44', '30–44세'], premium: ['age45_59', '45–59세'] };
@@ -400,7 +411,8 @@
     const ks = ksfOk({ car, who: st.who });
     const p = chosen;
     const where = st.area ? st.area : '대전충남';
-    const say = [h('b', { text: where }), `에서 `, h('b', { text: car.name }), `${josa(car.name)} `, h('b', { text: car.persona }), '에게 맞습니다. ',
+    const alts = car.ev && EV_CLOSED ? altOf(car) : [];
+    const say = alts.length ? ['전기차 보조금 공모가 끝나서 ', h('b', { text: car.name }), `${josa(car.name)} 지금 보조금 없이 사셔야 해요. `, h('b', { text: alts.map((a) => a.name).join(' 또는 ') }), `로 안내해 보세요. 하이브리드는 12월 31일 출고분까지 세제 감면이 남아 있어요.`] : [h('b', { text: where }), `에서 `, h('b', { text: car.name }), `${josa(car.name)} `, h('b', { text: car.persona }), '에게 맞습니다. ',
       p && p.id !== 'std' ? [h('b', { text: p.name }), `${josaR(p.name)} 먼저 제안해 보세요.`] : '11월 전용 금융은 없으니 쿠폰·트레이드인으로 부담을 낮춰 보세요.',
       ks[0] ? ' 코리아세일페스타 쿠폰 응모도 잊지 마세요!' : ''];
     const items = A.all ? [
@@ -420,6 +432,7 @@
         h('p', { class: 'chap-no', text: `${areaLabel()} · ${car.name}` }),
         h('p', { class: 'advisor-say' }, say.flat()),
         h('ul', {}, items.map(([a, b]) => h('li', {}, [h('span', { text: a }), b]))),
+        alts.length ? h('div', { class: 'alt-btns' }, alts.map((a) => h('button', { type: 'button', class: 'alt-btn', text: `${a.name}로 바꿔 보기 →`, onclick: () => switchCar(a.id) }))) : null,
       ])]),
     );
     const sv = box.querySelector('.advisor-man'); if (sv) { sv.classList.remove('talk'); void sv.getBoundingClientRect(); sv.classList.add('talk'); }
@@ -429,6 +442,7 @@
     const items = res.list.slice().sort((a, b) => (b.ok - a.ok) || ((b.score || 0) - (a.score || 0)));
     box.replaceChildren(
       ih('h2', 'money', '3. 지금 쓸 수 있는 11월 금융상품'),
+      CARS.find((c) => c.id === st.car).ev && EV_CLOSED ? h('p', { class: 'ev-warn', text: '전기차 보조금 공모가 전 지역에서 마감되어 EV 금융 프로모션은 권하지 않습니다. 아래 ‘HEV·내연기관으로 바꾸면’ 비교를 고객에게 보여 주세요.' }) : null,
       h('p', { class: 'muted small', text: '금융 프로모션끼리는 중복 적용되지 않습니다. 고객에게 가장 큰 혜택 하나를 고르세요. 카드를 누르면 아래 가격 계산이 그 상품으로 바뀝니다.' }),
       h('div', { class: 'prod-list' }, items.map((p) => h('button', { type: 'button', class: `prod ${p.ok ? 'ok' : 'no'} ${p.best ? 'best' : ''} ${st.pick === p.id || (!st.pick && p.best) ? 'on' : ''}`, disabled: !p.ok, onclick: () => { st.pick = p.id; render(); } }, [
         h('span', { class: 'prod-top' }, [ico(p.id === 'zero' ? 'won' : p.id === 'card' ? 'card' : KIND_ICON[p.kind] || 'cal', 'ico sm'), h('span', { class: 'prod-badge', text: !p.ok ? '대상 아님' : p.best ? '추천' : p.kind })]),
@@ -468,7 +482,31 @@
         p.downUsed > st.down ? h('p', { class: 'note', text: `이 상품은 선수율 최소 ${Math.round(p.downUsed * 100)}%가 필요해 그 기준으로 계산했습니다.` }) : null];
     }
     box.replaceChildren(ih('h2', 'calc', '4. 예상 최종 가격'), h('p', { class: 'chap-no', text: `${p.name}${p.best ? ' · 추천' : ''}` }), ...body.filter(Boolean),
-      h('p', { class: 'muted small', text: '추정치입니다. 트림·옵션·선수금·할인·지자체 보조금(대전·세종·충남 실제 공고, ev.or.kr)과 현대캐피탈 심사에 따라 달라집니다.' }));
+      car.ev && EV_CLOSED ? altCompare(car, p) : null,
+      h('p', { class: 'muted small', text: car.ev && EV_CLOSED ? '추정치입니다. 전기차 보조금은 공모 마감으로 0원 기준입니다. 트림·옵션·선수금·할인과 현대캐피탈 심사에 따라 달라집니다.' : '추정치입니다. 트림·옵션·선수금·할인과 현대캐피탈 심사에 따라 달라집니다.' }));
+  }
+  function altCompare(car, p) {
+    const alts = altOf(car);
+    const evM = p.loan ? p.loan.m : null;
+    return h('div', { class: 'alt-cmp' }, [
+      h('h3', { text: 'HEV·내연기관으로 바꾸면' }),
+      h('p', { class: 'muted small', text: `같은 고객 조건(선수율·기간·고객 유형)으로 다시 계산했습니다. ${car.name}${josa(car.name)} 보조금 없이 실구매가 ${won(st.price - (p.coupon || 0))}입니다.` }),
+      h('div', { class: 'alt-cards' }, alts.map((a) => {
+        if (!a.ref) return h('div', { class: 'alt-card' }, [h('b', { text: a.name }), h('p', { text: '자료에 예시 가격이 없어요. 견적 가격을 넣어 비교해 보세요.' }), h('button', { type: 'button', class: 'alt-btn', text: `${a.name}로 바꿔 보기 →`, onclick: () => switchCar(a.id) })]);
+        const down = /^(santafe|palisade)/.test(a.id) ? Math.max(st.down, 0.2) : st.down;
+        const r = evaluate({ car: a, price: a.ref, who: st.who, down, months: st.months, coupon: st.coupon });
+        const b = r.best; const m = b.loan ? b.loan.m : null;
+        const net = a.ref - (b.discount || 0) - (b.coupon || 0);
+        return h('div', { class: 'alt-card' }, [
+          h('b', { text: a.name }),
+          h('span', { class: 'alt-prod', text: b.name }),
+          h('dl', {}, [h('dt', { text: '실구매가' }), h('dd', { text: won(net) }), h('dt', { text: '월 납입금' }), h('dd', { text: m != null ? `약 ${won1(m)} (${b.loan.n}개월)` : b.lease ? `월 ${b.lease.gen}만원` : '—' }),
+            b.saved > 0 ? h('dt', { text: '이자 절감' }) : null, b.saved > 0 ? h('dd', { text: `약 ${won(b.saved)}` }) : null]),
+          evM != null && m != null ? h('p', { class: m < evM ? 'alt-good' : 'alt-note', text: m < evM ? `${car.name}보다 월 약 ${won1(evM - m)} 적어요` : `월 납입금은 약 ${won1(m - evM)} 많지만, 하이브리드 세제 감면·충전 걱정 없음` }) : null,
+          h('button', { type: 'button', class: 'alt-btn', text: `${a.name}로 바꿔 보기 →`, onclick: () => switchCar(a.id) }),
+        ]);
+      })),
+    ]);
   }
   /* ---------- 상담 가이드 ---------- */
   const NEEDS = {
@@ -563,14 +601,14 @@
     indiv: { tip: '소득 증빙과 신용 상태로 할부 한도가 정해집니다. 가심사를 먼저 권하세요.', needs: ['주 운전자가 본인이신가요, 가족도 함께 운전하시나요?'], docs: ['재직증명서 또는 소득금액증명원'], qa: [['신용점수에 영향이 있나요?', '가심사는 조회 기록만 남아 영향이 거의 없어요. 정확한 기준은 현대캐피탈 안내를 함께 드릴게요.']] },
     biz: { tip: '사업용 비용 처리 여부에 따라 할부·리스 선택이 달라집니다.', open: '사장님, 사업하시면서 차를 바꾸실 땐 비용 처리까지 같이 보시면 훨씬 이득이에요.', needs: ['사업자 비용 처리를 하시나요? 업무용 비율은 어느 정도인가요?'], check: ['개인사업자 명의 계약 시 쿠폰·금융 대상 여부 확인'], docs: ['사업자등록증', '소득금액증명원 또는 부가세 과세표준증명'], qa: [['비용 처리가 되나요?', '업무용으로 쓰시면 비용 처리가 가능하고, 한도·조건은 세무 담당과 확인을 권해 드려요.']] },
     corp: { fig: 'corp', label: '법인 담당자', tip: '쿠폰·무이자·전용카드 대상이 아닙니다. 렌트·리스, 제네시스 파이낸스로 제안하세요.', open: '대표님, 법인 차량은 리스·렌트로 운영 비용을 맞추시는 게 가장 깔끔합니다.', reply: '법인 비용 기준으로 견적 부탁드려요.', needs: ['법인 차량은 몇 대 운영하시고 교체 주기는 어떻게 되세요?', '리스·렌트 중 회계 처리에 맞는 방식은 무엇인가요?'], check: ['법인은 코리아세일페스타 쿠폰·무이자 대상 아님', '퍼스트 무브는 법인 잔가 보장 불가'], docs: ['법인 등기부등본', '사업자등록증', '법인 인감증명서·사용인감계'], qa: [['법인도 혜택이 있나요?', '법인은 렌트·리스 프로모션과 제네시스 파이낸스 조건으로 월 비용을 낮춰 드려요.']] },
-    small: { fig: 'biz', label: '소상공인 사장님', tip: '포터 EV 소상공인 추가 보조금, 하루 단위 비용으로 설명하면 잘 통합니다.', open: '사장님, 장사하시느라 바쁘시죠. 하루 커피 한 잔 값으로 차 바꾸는 방법을 알려 드릴게요.', reply: '하루 단위로 들으니 확 와닿네요.', needs: ['가게 영업시간과 배송·장보기 동선은 어떻게 되세요?'], check: ['소상공인 확인서 발급 여부 확인(소상공인시장진흥공단)'], docs: ['소상공인 확인서', '사업자등록증'], qa: [['소상공인 확인서는 어디서 받아요?', '소상공인시장진흥공단 누리집에서 온라인으로 바로 발급받으실 수 있어요.']] },
-    farm: { fig: 'farm', label: '농업인', tip: '농업인 추가 보조금과 농번기 일정을 고려해 출고일을 잡으세요.', open: '올해 농사 마무리하시고 트럭 바꾸시기 딱 좋은 때예요.', reply: '농업인 보조금까지 나오면 해 볼 만하네요.', needs: ['주로 싣는 농산물·농자재와 밭까지 거리는 어떻게 되세요?', '농번기·출하 일정은 언제인가요?'], check: ['농업경영체 등록확인서 확인', '농번기 전 출고 일정 협의'], docs: ['농업경영체 등록확인서'], qa: [['농협 차량 대출이 더 싸지 않나요?', '금리와 보조금, 할인까지 합친 총 부담으로 나란히 비교해 드릴게요.']] },
+    small: { fig: 'biz', label: '소상공인 사장님', tip: '노후 디젤 트럭은 포터 LPG로 대차하고, 하루 단위 비용으로 설명하면 잘 통합니다(EV 보조금은 마감).', open: '사장님, 장사하시느라 바쁘시죠. 하루 커피 한 잔 값으로 차 바꾸는 방법을 알려 드릴게요.', reply: '하루 단위로 들으니 확 와닿네요.', needs: ['가게 영업시간과 배송·장보기 동선은 어떻게 되세요?'], check: ['소상공인 확인서 발급 여부 확인(소상공인시장진흥공단)'], docs: ['소상공인 확인서', '사업자등록증'], qa: [['소상공인 확인서는 어디서 받아요?', '소상공인시장진흥공단 누리집에서 온라인으로 바로 발급받으실 수 있어요.']] },
+    farm: { fig: 'farm', label: '농업인', tip: '농번기 일정을 고려해 출고일을 잡고, 포터 LPG 대차와 코리아세일페스타 쿠폰을 안내하세요(EV 보조금은 마감).', open: '올해 농사 마무리하시고 트럭 바꾸시기 딱 좋은 때예요.', reply: '쿠폰까지 나오면 이번에 바꿔 볼 만하네요.', needs: ['주로 싣는 농산물·농자재와 밭까지 거리는 어떻게 되세요?', '농번기·출하 일정은 언제인가요?'], check: ['농업경영체 등록확인서 확인', '농번기 전 출고 일정 협의'], docs: ['농업경영체 등록확인서'], qa: [['농협 차량 대출이 더 싸지 않나요?', '금리와 보조금, 할인까지 합친 총 부담으로 나란히 비교해 드릴게요.']] },
     multi: { fig: 'family', label: '다자녀 가족', tip: '싼타페 1.9%는 등본으로 자격을 먼저 확인하세요.', open: '이사 오셔서 정신없으셨죠? 다자녀 가정을 위한 금리 혜택이 따로 있어서 꼭 알려 드리고 싶었어요.', reply: '아이들 다 태우기 좋겠네요!', needs: ['서울에서 언제 이사 오셨나요?', '자녀분들 나이가 어떻게 되세요?'], check: ['선택형 주민등록등본(과거 주소 변동·세대원 포함)으로 자격 확인'], docs: ['선택형 주민등록등본'], qa: [['이사 온 지 꽤 됐는데요', '2025년 이후 서울에서 이주했는지 등본으로 확인해 드릴게요.']] },
     staff: { fig: 'office', label: '현대차 임직원', tip: '직원 할인 규정(명의·할인율·재구입 연한)을 먼저 확인하세요.', open: '같은 식구시니까 가장 유리한 조합으로 솔직하게 비교해 드릴게요.', reply: '직원 할인까지 같이 계산해 주세요.', check: ['당사 임직원은 퍼스트 무브·EV 부담 Down·쿠폰 대상 아님'], docs: ['재직증명서'], qa: [['직원 할인 연한이 남았는데요', '재구입 연한 규정을 확인하고, 할인 없이 특화 할부만 쓰는 안도 계산해 드릴게요.']] },
     aff: { fig: 'office', label: '계열사 임직원', tip: '재직증명서 한 장으로 특화 할부 자격을 확인하고, 쿠폰은 유관사 해당 여부를 확인하세요.', open: '그룹사 임직원분들께만 드리는 할부 조건이 있어서 먼저 말씀드리고 싶었어요.', reply: '회사 다니면서 이런 혜택이 있는 줄 몰랐네요.', needs: ['소속 회사와 재직 기간은 어떻게 되세요?', '회사 임직원 차량 할인 제도가 있나요?'], check: ['소속 계열사가 유관사(쿠폰 제외)에 해당하는지 확인'], docs: ['재직증명서(소속 회사 발급)'], qa: [['계열사 직원도 되나요?', '네, 당사·계열사·관계사 재직자가 특화 할부 대상이에요.']] },
     taxi: { fig: 'taxi', label: '택시 기사님', tip: '연료비 절감과 운행 공백 최소화(출고일·충전 동선)를 강조하세요.', open: '기사님, 하루 연료비만 줄여도 한 달이면 꽤 큽니다. 같이 계산해 드릴게요.', reply: '연료비 줄어드는 게 제일 반갑네요.', needs: ['하루 운행 거리와 교대 근무 여부는 어떻게 되세요?', '지금 차량 차령 만료일은 언제인가요?'], check: ['택시는 코리아세일페스타 쿠폰 대상 아님', '차령 만료일 기준으로 출고 일정 맞추기'], docs: ['택시 운송사업 면허 증빙', '대차 차량 등록증'], qa: [['충전하다 영업 손해 보면요?', '근무 동선의 급속충전소와 연료비 절감액을 같이 계산해 드릴게요.']] },
-    owner: { fig: 'premium', label: '수입차 보유 고객', tip: '보유 차 트레이드인 견적과 THE BETTER CHOICE·EV 재구매 혜택을 함께 제시하세요.', open: '지금 타시는 차 덕분에 받으실 수 있는 혜택이 있어요.', reply: '타던 차 처리까지 해 주시면 좋죠.', needs: ['지금 차는 언제 사셨고, 리스 만기·교체 계획이 있으세요?'], check: ['자동차 등록원부로 보유 증빙(계약일 전월 마감 기준)'], docs: ['자동차 등록원부'], qa: [['지금 차 리스 만기가 남았는데요', '승계·중도 해지 비용을 같이 계산해서 갈아타기 좋은 시점을 잡아 드릴게요.']] },
-    evre: { tip: 'EV 재구매 금리 −0.5%p와 유예율 60%를 먼저 안내하세요.', open: '현대 전기차를 타 보셨으니 이번엔 더 좋은 조건으로 바꿔 드릴게요.', reply: '전기차 다시 타는데 금리까지 낮아지면 좋죠.', needs: ['지금 전기차 충전은 주로 어디서 하세요?'], check: ['기존 현대 EV 상환 스케줄표·계약서로 재구매 증빙'], docs: ['기존 EV 계약서 또는 상환 스케줄표'], qa: [['기존 전기차는 어떻게 해요?', '트레이드인으로 매각해 선수금으로 넣으면 월 납입금이 더 내려가요.']] },
+    owner: { fig: 'premium', label: '수입차 보유 고객', tip: '보유 차 트레이드인 견적과 THE BETTER CHOICE 혜택을 함께 제시하세요.', open: '지금 타시는 차 덕분에 받으실 수 있는 혜택이 있어요.', reply: '타던 차 처리까지 해 주시면 좋죠.', needs: ['지금 차는 언제 사셨고, 리스 만기·교체 계획이 있으세요?'], check: ['자동차 등록원부로 보유 증빙(계약일 전월 마감 기준)'], docs: ['자동차 등록원부'], qa: [['지금 차 리스 만기가 남았는데요', '승계·중도 해지 비용을 같이 계산해서 갈아타기 좋은 시점을 잡아 드릴게요.']] },
+    evre: { tip: '전기차 보조금이 끝나 이번엔 HEV로 갈아타기를 제안하세요. 기존 EV는 트레이드인으로 처리합니다.', open: '현대 전기차를 타 보셨으니 이번엔 충전 걱정 없는 하이브리드로 한번 비교해 보시죠.', reply: '하이브리드면 장거리도 편하겠네요.', needs: ['지금 전기차로 불편했던 점(충전·겨울 주행거리)은 무엇이었나요?'], check: ['기존 EV 트레이드인 시세 확인', '보조금 의무 운행 기간이 남았는지 확인(지자체 기준)'], docs: [], qa: [['기존 전기차는 어떻게 해요?', '트레이드인으로 매각해 선수금으로 넣으면 월 납입금이 더 내려가요.']] },
   };
   const WHO_PRI = ['taxi', 'farm', 'small', 'corp', 'multi', 'aff', 'staff', 'owner', 'evre', 'biz', 'indiv'];
   function whoProfile(car) {
@@ -592,7 +630,9 @@
     const ks = ksfOk({ car, who: st.who });
     const A = areaInfo(car);
     const W = whoProfile(car);
-    const lines = [g.say(p, car)];
+    const alts = car.ev && EV_CLOSED ? altOf(car) : [];
+    const altTxt = alts.map((a) => a.name).join(' 또는 ');
+    const lines = alts.length ? [`올해 전기차 보조금 공모가 모두 끝나 지금 ${car.name}${josa(car.name)} 보조금 없이 사셔야 해요. ${altTxt}${josa(alts[alts.length - 1].name)} 충전 걱정이 없고, 하이브리드는 연말 출고까지 세제 감면이 있어요.${alts.some((a) => /^(santafe|palisade)/.test(a.id)) ? ' 싼타페·팰리세이드는 최대 60개월 무이자도 됩니다.' : ''}`] : [g.say(p, car)];
     if (ks[0]) lines.push(st.coupon ? `코리아세일페스타 ${st.coupon}만원 쿠폰까지 반영하면 실구매가가 더 내려갑니다(11.30 출고까지).` : '오늘 코리아세일페스타에 응모하시면 최대 100만원 쿠폰이 나옵니다(11.15 마감, 11.30 출고까지).');
     const where = st.area ? `${st.area}${A.ins && A.ins.place ? `(${A.ins.place} 등)` : ''}` : '대전충남';
     const custTxt = st.area ? (A.ins.customer || A.sg.target || car.persona) : car.persona;
@@ -606,7 +646,12 @@
       ['계약 후 관리', '“출고 일정과 서류는 제가 문자로 정리해 드릴게요. 출고 날 차량 기능도 직접 알려 드리겠습니다.”', '출고 D-3 서류 확인, 출고 당일 기능 안내, 출고 후 1주일 해피콜, 지인 소개 요청.'],
     ];
     if (W.open) STEPS[0][1] = `“${W.open} ${where}에서도 ${custTxt}분들이 ${car.name}${josaR(car.name)} 많이 보세요.”`;
-    const allCheck = [...new Set([...g.check, ...W.check])], allDocs = [...new Set([...g.docs, ...W.docs])];
+    if (alts.length) {
+      STEPS[2] = ['차량 제안 — HEV·내연기관으로 전환', `“같은 예산이면 ${altTxt}${josaI(alts[alts.length - 1].name)} 훨씬 유리해요. 보조금 없는 전기차와 월 납입금을 나란히 보여 드릴게요.”`, '가격표 아래 ‘HEV·내연기관으로 바꾸면’ 비교를 화면으로 보여 주고, 바로 시승을 권합니다.'];
+      STEPS[3][1] = '“전기차는 보조금이 빠져 실구매가가 그대로지만, 하이브리드는 세제 감면에 11월 금융 혜택까지 붙습니다.”';
+    }
+    const evChecks = alts.length ? ['전기차 보조금 공모 마감 — EV 금융·보조금으로 설득하지 않기', `${altTxt} 즉시 출고 재고 확인(HEV 세제 감면 12.31 출고분까지)`] : [];
+    const allCheck = [...new Set([...evChecks, ...g.check, ...W.check])], allDocs = [...new Set([...g.docs, ...W.docs])];
     const memo = () => [
       `[대전충남 11월 금융 상담 메모] ${new Date().toLocaleDateString('ko-KR')}`,
       `지역: ${areaLabel()} / 차종: ${car.name} / 가격: ${st.price.toLocaleString('ko-KR')}만원`,

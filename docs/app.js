@@ -319,9 +319,9 @@
   /* ---------- 3장: 동을 누르면 그 동의 판촉방안 팝업 ---------- */
   const DONG_PLAY = {
     family: { car: '싼타페 HEV·팰리세이드', customer: '영유아 자녀를 둔 3040 가구', fin: '싼타페 HEV 60개월 무이자(이자 약 580만원 절감) · 팰리세이드 60개월 무이자 · 서울에서 이주한 다자녀 가구 싼타페 금리 1.9%', how: ['아파트 단지 주말 순회 전시와 키즈존', '어린이집·초등학교 하원 시간대 생활권 홍보', '카시트·유모차 적재 시연, 쏘렌토·카니발 비교 시승'] },
-    young: { car: '아반떼·코나 HEV', customer: '첫 차를 고르는 2030 직장인·사회초년생', fin: '아반떼 퍼스트 무브 월 14만원~(12.31 출고분까지) · 코나 EV 부담 Down 월 16만원', how: ['퇴근 시간 팝업 시승(업무지구·대학가 인근)', 'SNS·지역 커뮤니티 타깃 광고와 QR 사전예약', '월 납입금 현장 계산으로 첫차 부담 낮추기'] },
-    seniorCity: { car: '그랜저 HEV·쏘나타', customer: '그랜저·쏘나타를 오래 탄 60대 재구매 고객', fin: '쏘나타 전용카드 50만원 · 택시는 EV 택시 동반자 2.7~2.9% · 소상공인은 포터 EV 월 10만원', how: ['장기 보유 고객 대차 DM·전화', '전통시장·경로당 생활권 상담 부스', '트레이드인 감정으로 기존 차 처분 부담 덜기'] },
-    seniorRural: { car: '포터 EV·캐스퍼', customer: '60대 이상 농업·자영업 생업 운전자', fin: '포터 EV 부담 Down 농업인 월 15만원·소상공인 월 10만원 · 노후차 교체 상담', how: ['5일장·농협 하나로마트 연계 순회 전시·시승', '읍·면사무소, 농협 금융과 연계한 할부 상담', '노후 1톤 트럭 교체·폐차 절차 안내'] },
+    young: { car: '아반떼·코나 HEV', customer: '첫 차를 고르는 2030 직장인·사회초년생', fin: '아반떼 퍼스트 무브 월 14만원~(12.31 출고분까지) · 코나·아반떼 HEV 연내 출고 세제 감면 · EV 관심 고객은 HEV로 전환', how: ['퇴근 시간 팝업 시승(업무지구·대학가 인근)', 'SNS·지역 커뮤니티 타깃 광고와 QR 사전예약', '월 납입금 현장 계산으로 첫차 부담 낮추기'] },
+    seniorCity: { car: '그랜저 HEV·쏘나타', customer: '그랜저·쏘나타를 오래 탄 60대 재구매 고객', fin: '쏘나타 전용카드 50만원 · 그랜저 HEV 연내 출고 세제 감면 · 택시는 LPG 쏘나타 대차 · 소상공인은 포터 노후 트럭 대차', how: ['장기 보유 고객 대차 DM·전화', '전통시장·경로당 생활권 상담 부스', '트레이드인 감정으로 기존 차 처분 부담 덜기'] },
+    seniorRural: { car: '포터·캐스퍼', customer: '60대 이상 농업·자영업 생업 운전자', fin: '포터 노후 디젤 트럭 대차 + 코리아세일페스타 쿠폰(최대 100만원) · 노후차 교체 상담', how: ['5일장·농협 하나로마트 연계 순회 전시·시승', '읍·면사무소, 농협 금융과 연계한 할부 상담', '노후 1톤 트럭 교체·폐차 절차 안내'] },
   };
   function showDongPlan(r, key) {
     const old = document.querySelector('.dong-modal'); if (old) old.remove();
@@ -374,7 +374,7 @@
   ];
   const PRI = { '1순위': 1, '2순위': 0.6, '3순위': 0.35, '지키기': 0 };
   let mapSel = '세종시';
-  const finOf = (name) => (/싼타페|팰리세이드/.test(name) ? '60개월 무이자' : /아반떼/.test(name) ? '퍼스트 무브 월 14만~' : /스타리아|쏘나타/.test(name) ? '전용카드 50만원' : /포터 EV/.test(name) ? '월 10만원(소상공인)' : /코나 EV/.test(name) ? 'EV 부담 Down 월 16만' : /아이오닉/.test(name) ? 'EV 부담 Down 월 20만' : /그랜저/.test(name) ? '트레이드인·대차 상담' : /포터/.test(name) ? '포터 EV 전환 상담' : null);
+  const finOf = (name) => (/싼타페|팰리세이드/.test(name) ? '60개월 무이자' : /아반떼/.test(name) ? '퍼스트 무브 월 14만~' : /스타리아|쏘나타/.test(name) ? '전용카드 50만원' : /그랜저/.test(name) ? 'HEV 세제 감면·대차' : /투싼|코나/.test(name) ? 'HEV 세제 감면 + 쿠폰' : /포터/.test(name) ? '노후 트럭 대차 + 쿠폰' : /EV|아이오닉|일렉트릭/.test(name) ? 'HEV로 전환 상담' : null);
   function mapsum() {
     const W = 520, cw = 70, ch = 64, x0 = 14, y0 = 30, H = y0 + 5 * ch + 50;
     const pri = (sgg) => (D.focus.find((f) => f.sgg === sgg) || {}).priority || '지키기';
@@ -623,7 +623,7 @@
       svg.append(s('text', { x: W - 10, y: 18, 'text-anchor': 'end', class: 'muted', text: '연도 표기는 모델년도 끝 두 자리' }));
       $('#rl-myear').replaceChildren(svg); }
     // 표
-    const IMP = { 대전: '50·60대 차주 32만 명 → 그랜저 HEV·쏘나타 대차, 전용카드 50만원', 세종: '차주가 젊고 HEV가 이미 많음 → 싼타페 HEV·아이오닉 업그레이드, 60개월 무이자', 충남: '폐차율·경유 비중 최고, HEV 비중 최저 → 포터·투싼 HEV·싼타페 HEV 대차, 유예형 할부' };
+    const IMP = { 대전: '50·60대 차주 32만 명 → 그랜저 HEV·쏘나타 대차, 전용카드 50만원', 세종: '차주가 젊고 HEV가 이미 많음 → 싼타페 HEV·팰리세이드 업그레이드, 60개월 무이자', 충남: '폐차율·경유 비중 최고, HEV 비중 최저 → 포터·투싼 HEV·싼타페 HEV 대차, 유예형 할부' };
     $('#rl-table').replaceChildren(h('table', { class: 'plain' }, [
       h('thead', {}, h('tr', {}, ['지역', '승용 등록', '경유', 'HEV', 'EV·수소', '1~9월 신규', '1~9월 폐차', '폐차÷신규', '판촉 시사점'].map((x) => h('th', { text: x })))),
       h('tbody', {}, R.map((r) => h('tr', {}, [r.area, fmt(r.car_stock), pct(r.diesel_share), pct(r.hev_share), pct(r.ev_share), fmt(r.new_ytd), fmt(r.scrap_ytd), r.scrap_to_new.toFixed(2), IMP[r.area] || '—'].map((v) => h('td', { text: v }))))),
@@ -639,8 +639,8 @@
     const d0 = dd('2026-11-15'), d1 = dd('2026-11-30'), d2 = dd('2026-12-31');
     $('#fin-dday').replaceChildren(
       h('div', { class: 'dd hot' }, [h('b', { text: tag(d0) }), h('span', { text: '11.15 K-세일페스타 쿠폰 응모 마감 — 상담 고객 전원 응모 안내' })]),
-      h('div', { class: 'dd hot' }, [h('b', { text: tag(d1) }), h('span', { text: '11.30 출고 마감 — 무이자·전용카드·EV 부담 Down·포터 EV·다자녀 등 11월 금융' })]),
-      h('div', { class: 'dd' }, [h('b', { text: tag(d2) }), h('span', { text: '12.31 출고 마감 — 아반떼 퍼스트 무브, HEV·EV 세제 감면' })]),
+      h('div', { class: 'dd hot' }, [h('b', { text: tag(d1) }), h('span', { text: '11.30 출고 마감 — 무이자·전용카드·다자녀 1.9%·코리아세일페스타 쿠폰' })]),
+      h('div', { class: 'dd' }, [h('b', { text: tag(d2) }), h('span', { text: '12.31 출고 마감 — 아반떼 퍼스트 무브, HEV 세제 감면' })]),
       h('div', { class: 'dd muted-dd' }, [h('b', { text: '중복 불가' }), h('span', { text: '금융 프로모션끼리는 하나만 — 고객별 최대 혜택 하나를 고르세요' })]),
     );
     // 월 납입금 막대

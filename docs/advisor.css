@@ -214,3 +214,24 @@ h3.ico-h .ico { width: 34px; height: 34px; }
 .check li.who-item::after { content: '고객 유형'; margin-left: 6px; font-size: 11px; font-weight: 700; color: #fff; background: var(--navy); border-radius: 999px; padding: 1px 7px; vertical-align: 1px; }
 @media (max-width: 600px) { .who-box li b { display: block; } }
 @media (prefers-color-scheme: dark) { .who-box h3 { color: var(--fg); } }
+
+/* EV 보조금 마감 → HEV 전환 */
+.adv-evnote { display: block; margin: 0 0 10px; padding: 8px 14px; border-radius: 10px; background: rgba(192, 53, 47, .28); border: 1px solid rgba(255, 140, 128, .6); color: #fff; font-size: 15px; line-height: 1.55; }
+.adv-evnote b { background: #c0352f; border-radius: 6px; padding: 1px 8px; margin-right: 6px; }
+.ev-warn { border: 2px solid #c0352f; background: rgba(192, 53, 47, .06); color: #a52a24; border-radius: 10px; padding: 10px 14px; font-weight: 600; margin: 0 0 12px; }
+.alt-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.alt-btn { font: inherit; font-size: 15px; font-weight: 700; padding: 8px 14px; border-radius: 999px; border: 0; background: #1d7a4a; color: #fff; cursor: pointer; }
+.alt-btn:hover { background: #166039; }
+.alt-cmp { margin-top: 18px; border: 2px solid #1d7a4a; border-radius: 12px; padding: 14px 16px; background: rgba(29, 122, 74, .05); }
+.alt-cmp h3 { margin: 0 0 4px; color: #1d7a4a; font-size: 18px; }
+.alt-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 10px; margin-top: 10px; }
+.alt-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.alt-card > b { font-size: 17px; }
+.alt-prod { font-size: 13px; color: var(--muted); }
+.alt-card dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; font-size: 15px; }
+.alt-card dt { color: var(--muted); }
+.alt-card dd { margin: 0; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.alt-good { margin: 0; color: #1d7a4a; font-weight: 700; }
+.alt-note { margin: 0; color: #9a6a2a; font-size: 14px; }
+.alt-card .alt-btn { align-self: flex-start; margin-top: 4px; }
+@media (prefers-color-scheme: dark) { .ev-warn { color: #ff8c80; } .alt-cmp h3 { color: #6fd39b; } }
