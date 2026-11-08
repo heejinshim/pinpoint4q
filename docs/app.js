@@ -54,13 +54,13 @@
   (function kpis() {
     if (!$('#kpis')) return;
     const pop = D.sgg.reduce((x, r) => x + r.pop, 0);
-    const reg = D.area.filter((a) => a.area !== '벤치마크').reduce((x, a) => x + (a.reg_sido_total || 0), 0);
+    const reg = D.area.filter((a) => a.area !== '벤치마크').reduce((x, a) => x + Math.round((a.reg_sido_total || 0) * (a.area === '충남' ? 12 / 9 : 1)), 0);
     const ev = (y, m) => D.ev.filter((r) => r.area === '대전충남 소속' && r.year === y && (!m || r.maker === m)).reduce((x, r) => x + r.n, 0);
     const ms = (y) => ev(y, '현대') / ev(y);
     const t = (label, big, sub, cls) => h('div', { class: 'tile' }, [h('span', { text: label }), h('b', { class: 'big ' + (cls || ''), text: big }), h('span', { text: sub })]);
     $('#kpis').replaceChildren(
       t('3개 시도 인구', `${(pop / 10000).toFixed(1)}만 명`, `시군구 ${D.sgg.length}곳 · 읍면동 ${D.dong.length}곳`),
-      t('2025년 신규 등록', `${fmt(reg)}대`, '대전+세종+충남 전체'),
+      t('연간 신규 등록(추정)', `${fmt(reg)}대`, '대전·세종 2025년 + 충남 2026년 연환산'),
       t('전기차 등록 2026 누적', `${fmt(ev('2026 누적'))}대`, `2025년 연간 대비 +${((ev('2026 누적') / ev('2025') - 1) * 100).toFixed(0)}%`),
       t('현대 전기차 점유율 2026', pct(ms('2026 누적')), `2024년 ${pct(ms('2024'))}에서 하락`, 'bad'),
     );
@@ -97,7 +97,7 @@
         h('h3', { text: `${r.sido} ${r.sgg}${dg ? ' ' + (dg.gu ? dg.gu.replace('천안시 ', '') + ' ' : '') + dg.dong : ''} · 인구 ${fmt(r.pop)}명` }),
         h('p', { text: `0–9세 ${pct(r.age0_9)} · 20–29세 ${pct(r.age20_29)} · 30–44세 ${pct(r.age30_44)} · 45–59세 ${pct(r.age45_59)} · 60세 이상 ${pct(r.age60p)} · 영패밀리 지수 ${pct(r.family_idx)}` }),
         dg ? h('p', { text: `소속 ${sgr.sgg} 평균 대비: 0–9세 ${pct(sgr.age0_9)}, 30–44세 ${pct(sgr.age30_44)}, 60세 이상 ${pct(sgr.age60p)}` })
-          : h('p', { text: sgr.reg != null ? `2025년 신규 등록 ${fmt(sgr.reg)}대(천명당 ${sgr.per1000}대) · 현대 ${pct(sgr.hyundai)} · HEV ${pct(sgr.hev)} · EV·수소 ${pct(sgr.ev)} · 수입 ${pct(sgr.imports)} · 소형상용 ${pct(sgr.truck)}` : '차량 상세 자료 없음 — 인구 구조로 추정한 타겟입니다' }),
+          : h('p', { text: sgr.reg != null ? `${sgr.sido === '충남' ? '2026년 1~9월' : '2025년'} 신규 등록 ${fmt(sgr.reg)}대(연간 천명당 ${sgr.per1000}대) · 현대 ${pct(sgr.hyundai)} · HEV ${pct(sgr.hev)} · EV·수소 ${pct(sgr.ev)} · 수입 ${pct(sgr.imports)} · 소형상용 ${pct(sgr.truck)}` : '차량 상세 자료 없음 — 인구 구조로 추정한 타겟입니다' }),
         h('p', { class: 'target', text: `타겟 · 추천 차종: ${sgr.target || '—'}` }),
       ]));
     }
@@ -414,7 +414,7 @@
     $('#map-panel').replaceChildren(...[
       h('p', { class: 'chap-no', text: `${sd} ${mapSel} · ${foc[0] ? foc[0].priority : '지키기'}` }),
       h('h3', { text: area && area.target ? area.target : mapSel }),
-      h('p', { class: 'sub-h', text: `많이 팔린 차 Top 3 — ${sd}${sd === '충남' ? '(계룡·공주·금산)' : ''} 2025년 신규 등록 비중` }),
+      h('p', { class: 'sub-h', text: `많이 팔린 차 Top 3 — ${sd} ${sd === '충남' ? '2026년 1~9월' : '2025년'} 신규 등록 비중` }),
       h('div', { class: 'mcards' }, top.slice(0, 3).map(card)),
       hyBest && hyBest.rank > 3 ? h('p', { class: 'note', text: `현대 최상위는 ${hyBest.rank}위 ${hyBest.model}(${pct(hyBest.share)})입니다. Top 3가 모두 경쟁 모델입니다.` }) : null,
       h('p', { class: 'sub-h', text: '우리가 판촉해야 할 차' }),
@@ -493,7 +493,7 @@
   const FLOW = {
     nodes: [
       { id: 'pop', col: 0, label: '주민등록 인구', sub: '읍면동·1세 단위', href: 'ch2-region.html' },
-      { id: 'reg', col: 0, label: '2025 신규 등록', sub: '시군구·차종·연료', href: 'ch2-region.html' },
+      { id: 'reg', col: 0, label: '신규 등록', sub: '대전·세종 2025 · 충남 2026', href: 'ch2-region.html' },
       { id: 'evd', col: 0, label: '전기차 등록 추이', sub: '2024–2026', href: 'ch4-market.html' },
       { id: 'sal', col: 0, label: '월별 내수 판매', sub: '2009–2025', href: 'ch1-background.html' },
       { id: 'old', col: 0, label: '노후차·대차 수요', sub: 'KAMA·조사 보도', href: 'ch5-replacement.html' },
@@ -545,7 +545,7 @@
   function sim() {
     const areas = D.sgg.filter((r) => r.reg != null).sort((a, b) => b.reg - a.reg);
     const sel = $('#sim-area');
-    sel.replaceChildren(...areas.map((r) => h('option', { value: r.sgg, text: `${r.sido} ${r.sgg} (2025년 ${fmt(r.reg)}대)` })));
+    sel.replaceChildren(...areas.map((r) => h('option', { value: r.sgg, text: `${r.sido} ${r.sgg} (${r.sido === '충남' ? '2026년 1~9월' : '2025년'} ${fmt(r.reg)}대)` })));
     sel.value = '세종시';
     const DEF = { leads: 1200, drive: 25, quote: 50, close: 40, deliv: 75 };
     const ids = ['drive', 'quote', 'close', 'deliv'];
@@ -555,7 +555,7 @@
       ids.forEach((k) => { $('#v-' + k).textContent = v[k] + '%'; });
       const st = [['방문·리드', v.leads], ['시승', v.leads * v.drive / 100]];
       st.push(['견적 상담', st[1][1] * v.quote / 100]); st.push(['계약', st[2][1] * v.close / 100]); st.push(['연내 출고', st[3][1] * v.deliv / 100]);
-      const month = a.reg / 12, hyMonth = month * a.hyundai, con = st[3][1], del = st[4][1];
+      const month = a.reg / (a.sido === '충남' ? 9 : 12), hyMonth = month * a.hyundai, con = st[3][1], del = st[4][1];
       const t = (label, big, sub, cls) => h('div', { class: 'tile' }, [h('span', { text: label }), h('b', { class: 'big ' + (cls || ''), text: big }), h('span', { text: sub })]);
       $('#sim-tiles').replaceChildren(
         t('예상 계약', `${fmt(con)}대`, `리드 대비 ${(con / Math.max(1, v.leads) * 100).toFixed(1)}%`),
