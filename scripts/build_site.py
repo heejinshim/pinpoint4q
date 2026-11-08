@@ -50,6 +50,7 @@ def main() -> None:
         "top10": records(pd.read_csv(P / "model_top10_2025.csv")),
         "focus": records(pd.read_csv(P / "promo_focus.csv")),
         "insight": records(pd.read_csv(P / "promo_insight.csv")),
+        "issues": records(pd.read_csv(P / "local_issues.csv").fillna("")),
         "repl": records(pd.read_csv(P / "replacement_region.csv")),
         "myear": records(pd.read_csv(P / "model_year_national.csv")),
         "finMonthly": records(pd.read_csv(P / "finance_monthly_2611.csv")),

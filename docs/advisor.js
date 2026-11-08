@@ -324,6 +324,7 @@
     ]);
   }
   const josa = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '은' : '는'; return '는'; };
+  const wkey = (w) => (String(w).match(/20\d\d(\.\d\d)?/) || ['9999'])[0].padEnd(7, '.00');
   const josaI = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '이' : '가'; return '가'; };
   const josaR = (w) => { const c = w.trim().slice(-1).charCodeAt(0); if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 ? '을' : '를'; return '를'; };
 
@@ -424,6 +425,8 @@
       ['추천 동', A.dongs.join(' · ') || '—'],
       ['지역 적합도', A.fits ? '이 지역 판촉 집중 차종입니다.' : `이 지역 집중 차종은 ${A.focusTxt || '—'}입니다. 함께 비교 제안하세요.`],
     ];
+    const iss = (D.issues || []).filter((q) => q.size !== '0세대' && (!st.area || q.sgg === st.area)).sort((x, y) => wkey(x.when).localeCompare(wkey(y.when))).slice(0, st.area ? 2 : 3);
+    if (iss.length) items.push(['지역 이슈', iss.map((q) => `${q.when} ${st.area ? '' : q.sgg + ' '}${q.title}(${q.size})`).join(' · ')]);
     items.push(['코리아세일페스타', ks[0] ? `쿠폰 대상 차종 — 오늘 응모 안내(당첨 시 50·100만원, 11.15 응모·11.30 출고)${st.coupon ? ` · ${st.coupon}만원 당첨 반영` : ''}` : `쿠폰 제외 — ${ks[1]}`]);
     const box = $('#o-target');
     box.replaceChildren(

@@ -490,3 +490,20 @@ svg text:not([font-size]) { font-size: 13px; }
 ul.short { margin: 6px 0 0; padding-left: 20px; line-height: 1.75; font-size: 17px; }
 ul.short li { margin: 2px 0; }
 .verdict ul.short { font-size: 18px; }
+
+/* 지역 이슈 */
+.issues { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 10px; margin: 12px 0; }
+.issue { display: flex; gap: 12px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: var(--panel); }
+.issue-when { flex: none; width: 96px; word-break: keep-all; display: flex; flex-direction: column; gap: 4px; }
+.issue-when b { font-size: 15px; color: var(--navy); }
+.issue-when span { font-size: 12px; font-weight: 700; border-radius: 999px; padding: 1px 8px; align-self: flex-start; background: var(--accent-soft); color: var(--navy); }
+.k-기업 .issue-when span { background: rgba(200, 137, 58, .18); color: #8a5a1c; }
+.k-기관 .issue-when span { background: rgba(29, 122, 74, .14); color: #1d7a4a; }
+.k-분양 .issue-when span { background: rgba(120, 120, 120, .15); color: var(--muted); }
+.issue-body p { margin: 0 0 3px; line-height: 1.5; }
+.issue-t { font-size: 16px; }
+.issue-w { font-size: 13px; color: var(--muted); }
+.issue-a { font-size: 15px; color: #1d7a4a; font-weight: 600; }
+.issue-s { font-size: 12px; }
+.issue-li a { font-weight: 600; }
+@media (prefers-color-scheme: dark) { .issue-when b { color: var(--fg); } }

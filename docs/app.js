@@ -290,6 +290,36 @@
     [[18, 30], [124, 22], [12, 92]].forEach(([x, y], i) => sv.append(s('path', { d: `M${x} ${y - 7} L${x + 2} ${y - 2} L${x + 7} ${y} L${x + 2} ${y + 2} L${x} ${y + 7} L${x - 2} ${y + 2} L${x - 7} ${y} L${x - 2} ${y - 2} Z`, fill: '#e2b66f', class: `spark sp${i}` })));
     return sv;
   }
+  /* ---------- 지역 이슈 (입주·기업·기관) ---------- */
+  const wkey = (w) => (String(w).match(/20\d\d(\.\d\d)?/) || ['9999'])[0].padEnd(7, '.00');
+  const normDong = (x) => String(x || '').replace(/\d+(?=[가-힣]*동$)/, '').replace(/제(?=\d)/, '');
+  const issuesOf = (sgg, dong) => (D.issues || []).filter((q) => q.sgg === sgg && q.size !== '0세대' && (!dong || String(q.dong).split('·').some((d) => d && normDong(dong) === d))).sort((a, b) => wkey(a.when).localeCompare(wkey(b.when)));
+  const issueTxt = (q) => `${q.when} ${q.title}(${q.size})`;
+  function issueLi(list) {
+    if (!list.length) return null;
+    const kids = [h('span', { text: '지역 이슈' })];
+    list.slice(0, 2).forEach((q, i) => { if (i) kids.push(h('br')); kids.push(h('a', { href: q.url, target: '_blank', rel: 'noopener', text: issueTxt(q) }), ` → ${q.action}`); });
+    return h('li', { class: 'issue-li' }, kids);
+  }
+  function issues() {
+    const box = $('#issues-list'); if (!box) return;
+    const all = (D.issues || []).filter((q) => q.size !== '0세대');
+    const draw = (sd) => {
+      tabs($('#issues-tabs'), [['전체', '전체'], ['대전', '대전'], ['세종', '세종'], ['충남', '충남']], sd, draw);
+      const kinds = { 입주: '새 아파트 입주', 분양: '분양', 기업: '기업 투자·이전', 기관: '기관 이전' };
+      const rs = all.filter((q) => sd === '전체' || q.sido === sd).sort((a, b) => wkey(a.when).localeCompare(wkey(b.when)));
+      box.replaceChildren(...rs.map((q) => h('div', { class: `issue k-${q.kind}` }, [
+        h('div', { class: 'issue-when' }, [h('b', { text: q.when }), h('span', { text: kinds[q.kind] || q.kind })]),
+        h('div', { class: 'issue-body' }, [
+          h('p', { class: 'issue-t' }, [h('b', { text: q.title }), ` · ${q.size}`]),
+          h('p', { class: 'issue-w', text: `${q.sido} ${q.sgg}${q.dong ? ' ' + q.dong : ''}` }),
+          h('p', { class: 'issue-a', text: `→ ${q.action}` }),
+          h('p', { class: 'issue-s' }, [h('a', { href: q.url, target: '_blank', rel: 'noopener', text: `${q.src} (${q.date})` })]),
+        ]),
+      ])));
+    };
+    draw('전체');
+  }
   function showAdvisor(sgg) {
     const box = $('#mapsum'); if (!box) return;
     const ins = (D.insight || []).find((r) => r.sgg === sgg); if (!ins) return;
@@ -306,6 +336,7 @@
           h('li', {}, [h('span', { text: '근거' }), ins.fact]),
           h('li', {}, [h('span', { text: '추천 현장' }), ins.place]),
           h('li', {}, [h('span', { text: '금융' }), ins.finance]),
+          issueLi(issuesOf(sgg)),
         ]),
         h('p', { class: 'links' }, [h('a', { href: 'ch3-pinpoint.html', text: '동 단위 판촉방안 →' }), ' ', h('a', { href: 'ch2-region.html', text: '동별 인구 보기 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: sd, sgg })); } catch (e) { /* 저장소 없음 */ } } })]),
       ]),
@@ -351,6 +382,7 @@
             h('li', {}, [h('span', { text: '근거' }), facts]),
             h('li', {}, [h('span', { text: '금융' }), P.fin]),
             h('li', {}, [h('span', { text: '현장 판촉' }), P.how.join(' · ')]),
+            issueLi(issuesOf(r.sgg, r.dong)),
           ]),
           h('p', { class: 'links' }, [
             h('a', { href: 'ch2-region.html', text: '이 동 인구 구성 보기 →', onclick: () => { try { sessionStorage.setItem('pp-drill', JSON.stringify({ sido: r.sido, sgg: r.sgg, dong: r.dong })); } catch (e) { /* 저장소 없음 */ } } }), ' ',
@@ -671,4 +703,5 @@
     document.querySelectorAll('#poster-tabs button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     $('#poster-img').src = b.dataset.src;
   }));
+  if ($('#issues')) issues();
 })();
